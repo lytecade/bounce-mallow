@@ -1,15 +1,21 @@
 <!doctype html>
 <head>
 	<title>Marshmallow Rollout</title>
-    <meta charset="utf-8">
-    <script src="js/phaser.min.js"></script>
-    <script src="js/main.js"></script>
-    <style>
-        canvas {
-            margin: 0 auto;
-        }
-    </style>
+	<meta charset="utf-8">
+	<style>
+		canvas {
+			display : block;   
+			margin : auto;
+		}
+	</style>
 </head>
 <body>
-    <div id="game"></div>
+	<div id="game"></div>
+	<script src="js/phaser.min.js"></script>
+	<script src="js/game.index.js" type="module"></script>
+    <script nomodule>
+      alert(
+	  	"This browser does not support JavaScript Modules."
+      );
+    </script>	
 </body>
