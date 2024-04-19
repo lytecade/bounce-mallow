@@ -1,0 +1,7 @@
+services:
+  client:
+    image: nginx:stable-alpine-slim
+    ports:
+      - 80:80
+    volumes:
+      - .:/usr/share/nginx/html
