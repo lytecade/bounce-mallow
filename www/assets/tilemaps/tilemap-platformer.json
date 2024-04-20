@@ -71,11 +71,11 @@
         {
          "columns":32,
          "firstgid":1,
-         "image":"..\/tilesets\/0x72-industrial-tileset-32px-extruded.png",
+         "image":"..\/tilesets\/tileset-platformer-test.png",
          "imageheight":1088,
          "imagewidth":1088,
          "margin":1,
-         "name":"0x72-industrial-tileset-32px-extruded",
+         "name":"tileset-platformer-test",
          "spacing":2,
          "tilecount":1024,
          "tileheight":32,

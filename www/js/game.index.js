@@ -5,8 +5,15 @@ const config = {
 	type: Phaser.AUTO,
 	width: 800,
 	height: 600,
-	backgroundColor: "#e1e1e1",
+	pixelArt: true,
+	backgroundColor: "#1d212d",
 	scene: PlatformScene,
+	physics: {
+		default: "arcade",
+		arcade: {
+			gravity: { y: 1000 },
+		},
+	},
 };
 
 const game = new Phaser.Game(config);
