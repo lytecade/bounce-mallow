@@ -1,6 +1,12 @@
 export default class PlatformScene extends Phaser.Scene {
 	preload() {
 		this.load.image("background", "../assets/images/background-platformer.png");
+		this.load.spritesheet("player", "/assets/spritesheets/spritesheets-player.png", {
+			frameWidth:32,
+			frameHeight:32,
+			margin:1,
+			spacing:2
+		});
 		this.load.image("tiles", "../assets/tilesets/tileset-platformer-test.png");
 		this.load.tilemapTiledJSON("map", "../assets/tilemaps/tilemap-platformer.json");
 	}
