@@ -1,4 +1,4 @@
-import PlatformScene from "./game.platform-scene.js";
+import PlatformScene from "./game-platform-scene.js";
 
 const config = {
 	parent: "game",
