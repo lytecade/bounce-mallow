@@ -3,11 +3,11 @@ import Player from "./game-player.js"
 export default class PlatformScene extends Phaser.Scene {
 	preload() {
 		this.load.image("background", "../assets/images/background-platformer.png");
-		this.load.spritesheet("player", "/assets/spritesheets/spritesheets-player.png", {
-			frameWidth:32,
-			frameHeight:32,
-			margin:1,
-			spacing:2
+		this.load.spritesheet("player", "/assets/spritesheets/spritesheets-player-2.png", {
+			frameWidth:64,
+			frameHeight:64,
+			margin:2,
+			spacing:4
 		});
 		this.load.image("tiles", "../assets/tilesets/tileset-platformer-test.png");
 		this.load.tilemapTiledJSON("map", "../assets/tilemaps/tilemap-platformer.json");
@@ -25,7 +25,7 @@ export default class PlatformScene extends Phaser.Scene {
 		const tiles = map.addTilesetImage("tileset-platformer-test", "tiles");
 		this.groundLayer = map.createLayer("ground", tiles);
 
-		this.player = new Player(this, 256, 256);
+		this.player = new Player(this, 192, 0);
 		this.physics.world.addCollider(this.player.sprite, this.groundLayer);
 		this.groundLayer.setCollisionByProperty({ collides: true });
 	}
