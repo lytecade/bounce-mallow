@@ -25,10 +25,9 @@ export default class PlatformScene extends Phaser.Scene {
 		const tiles = map.addTilesetImage("tileset-platformer-test", "tiles");
 		this.groundLayer = map.createLayer("ground", tiles);
 
-		this.player = new Player(this, 150, 150);
+		this.player = new Player(this, 256, 256);
 		this.physics.world.addCollider(this.player.sprite, this.groundLayer);
-		//this.groundLayer.setCollisionByProperty({ collides: true });
-		this.groundLayer.setCollisionByExclusion([0]);
+		this.groundLayer.setCollisionByProperty({ collides: true });
 	}
 
 	update() {
