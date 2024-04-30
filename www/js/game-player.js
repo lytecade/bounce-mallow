@@ -18,8 +18,8 @@ export default class Player {
 			.sprite(x, y, "player", 0)
 			.setDrag(1000, 0)
 			.setMaxVelocity(300, 800)
-			.setSize(18, 24)
-			.setOffset(7, 9);
+			.setSize(36, 48)
+			.setOffset(14, 18);
 		const { LEFT, RIGHT, UP, W, A, D } = Phaser.Input.Keyboard.KeyCodes;
 		this.keys = scene.input.keyboard.addKeys({
 			left: LEFT,
@@ -38,7 +38,7 @@ export default class Player {
 	update() {
 		const { keys, sprite } = this;
 		const onGround = sprite.body.blocked.down;
-		const acceleration = onGround ? 600 : 200;
+		const acceleration = onGround ? 900 : 300;
 
 		if (keys.left.isDown || keys.a.isDown) {
 			sprite.setAccelerationX(-acceleration);
