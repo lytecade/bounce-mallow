@@ -2,6 +2,7 @@ import Player from "./game-player.js"
 
 export default class PlatformScene extends Phaser.Scene {
 	preload() {
+		this.load.audio('jump', 'assets/audio/sfx-jump.wav');
 		this.load.image("background", "../assets/images/background-platformer.png");
 		this.load.spritesheet("player", "/assets/spritesheets/spritesheets-player-2.png", {
 			frameWidth:64,
@@ -25,6 +26,8 @@ export default class PlatformScene extends Phaser.Scene {
 		const map = this.make.tilemap({ key: "map" });
 		const tiles = map.addTilesetImage("tileset-platformer-test", "tiles");
 		this.groundLayer = map.createLayer("ground", tiles);
+
+		this.jumpSound = this.sound.add('jump');
 
 		this.player = new Player(this, 192, 0);
 		this.physics.world.addCollider(this.player.sprite, this.groundLayer);
