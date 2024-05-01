@@ -53,7 +53,7 @@ export default class Player {
 		}
 
 		if (onGround && (keys.up.isDown || keys.w.isDown)) {
-			sprite.setVelocityY(-700);
+			sprite.setVelocityY(-528);
 			this.scene.jumpSound.play();
 		}
 
