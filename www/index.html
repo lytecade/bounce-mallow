@@ -14,6 +14,26 @@
 <body>
 	<div id="game"></div>
 	<script src="js/phaser.min.js"></script>
-	<script src="js/game-index.js" type="module"></script>
-	<script nomodule></script>	
+	<script type="module">
+		import PlatformScene from "./js/game-platform-scene.js";
+		const config = {
+			parent: "game",
+			type: Phaser.AUTO,
+			width: 960,
+			height: 540,
+			pixelArt: true,
+			scene: PlatformScene,
+			physics: {
+				default: "arcade",
+				arcade: {
+					gravity: { y: 1000 },
+				},
+			},
+			scale: {
+				mode: Phaser.Scale.ENVELOP,
+				autoCenter: Phaser.Scale.CENTER_BOTH,
+			}
+		};
+		const game = new Phaser.Game(config);
+	</script>
 </body>
