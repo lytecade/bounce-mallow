@@ -16,23 +16,19 @@ export default class PlatformScene extends Phaser.Scene {
 
 	create() {	
 		const backgroundImage = this.add.image(0, 0, 'background');
+		const map = this.make.tilemap({ key: "map" });
+		const tiles = map.addTilesetImage("tileset-platformer-test", "tiles");
 		backgroundImage.setOrigin(0, 0);
 		backgroundImage.setScale(
 			this.sys.game.config.width / backgroundImage.width,
 			this.sys.game.config.height / backgroundImage.height
 		);
 		backgroundImage.setScrollFactor(0);
-		
-		const map = this.make.tilemap({ key: "map" });
-		const tiles = map.addTilesetImage("tileset-platformer-test", "tiles");
 		this.groundLayer = map.createLayer("ground", tiles);
-
 		this.jumpSound = this.sound.add('jump');
-
 		this.player = new Player(this, 192, 0);
 		this.physics.world.addCollider(this.player.sprite, this.groundLayer);
 		this.groundLayer.setCollisionByProperty({ collides: true });
-
 		this.cameras.main.startFollow(this.player.sprite);
 		this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 	}
