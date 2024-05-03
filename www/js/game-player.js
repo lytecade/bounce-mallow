@@ -19,7 +19,7 @@ export default class Player {
 			.setDrag(1000, 0)
 			.setMaxVelocity(300, 500)
 			.setSize(18, 24)
-			.setOffset(7, 9);
+			.setOffset(7, 8);
 		const { LEFT, RIGHT, UP, W, A, D } = Phaser.Input.Keyboard.KeyCodes;
 		this.keys = scene.input.keyboard.addKeys({
 			left: LEFT,
