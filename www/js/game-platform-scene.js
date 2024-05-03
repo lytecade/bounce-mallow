@@ -4,11 +4,11 @@ export default class PlatformScene extends Phaser.Scene {
 	preload() {
 		this.load.audio('jump', 'assets/audio/sfx-jump.wav');
 		this.load.image("background", "../assets/images/background-platformer-small.png");
-		this.load.spritesheet("player", "/assets/spritesheets/spritesheets-player-smallx.png", {
-			frameWidth:16,
-			frameHeight:16,
+		this.load.spritesheet("player", "/assets/spritesheets/spritesheets-player-small.png", {
+			frameWidth:32,
+			frameHeight:32,
 			margin:1,
-			spacing:1
+			spacing:2
 		});
 		this.load.image("tiles", "../assets/tilesets/tileset-platformer-test-small-2.png");
 		this.load.tilemapTiledJSON("map", "../assets/tilemaps/tilemap-platformer-small-2.json");
