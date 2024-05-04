@@ -35,11 +35,11 @@
         {
          "columns":4,
          "firstgid":1,
-         "image":"..\/tilesets\/tileset-platformer-test-small-2.png",
+         "image":"..\/tilesets\/tileset-platform.png",
          "imageheight":160,
          "imagewidth":128,
          "margin":0,
-         "name":"tileset-platformer-test-small-2",
+         "name":"tileset-platform",
          "spacing":0,
          "tilecount":20,
          "tileheight":32,

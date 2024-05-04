@@ -10,14 +10,14 @@ export default class PlatformScene extends Phaser.Scene {
 			margin:1,
 			spacing:2
 		});
-		this.load.image("tiles", "../assets/tilesets/tileset-platformer-test-small-2.png");
-		this.load.tilemapTiledJSON("map", "../assets/tilemaps/tilemap-platformer-small-2.json");
+		this.load.image("tiles", "../assets/tilesets/tileset-platform.png");
+		this.load.tilemapTiledJSON("map", "../assets/tilemaps/tilemap-platform.json");
 	}
 
 	create() {	
 		const backgroundImage = this.add.image(0, 0, 'background');
 		const map = this.make.tilemap({ key: "map" });
-		const tiles = map.addTilesetImage("tileset-platformer-test-small-2", "tiles");
+		const tiles = map.addTilesetImage("tileset-platform", "tiles");
 		backgroundImage.setOrigin(0, 0);
 		backgroundImage.setScale(
 			this.sys.game.config.width / backgroundImage.width,
