@@ -3,8 +3,8 @@ import Player from "./game-player.js"
 export default class PlatformScene extends Phaser.Scene {
 	preload() {
 		this.load.audio('jump', 'assets/audio/sfx-jump.wav');
-		this.load.image("background", "../assets/images/background-platformer-small.png");
-		this.load.spritesheet("player", "/assets/spritesheets/spritesheets-player-small.png", {
+		this.load.image("background", "../assets/images/background-hills.png");
+		this.load.spritesheet("player", "/assets/spritesheets/spritesheets-player.png", {
 			frameWidth:32,
 			frameHeight:32,
 			margin:1,
