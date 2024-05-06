@@ -39,6 +39,7 @@ export default class Player {
 		const { keys, sprite } = this;
 		const onGround = sprite.body.blocked.down;
 		const acceleration = onGround ? 200 : 100;
+		let canJump = true;
 		if (keys.left.isDown || keys.a.isDown) {
 			sprite.setAccelerationX(-acceleration);
 			sprite.setFlipX(true);
@@ -49,8 +50,14 @@ export default class Player {
 			sprite.setAccelerationX(0);
 		}
 		if (onGround && (keys.up.isDown || keys.w.isDown)) {
-			sprite.setVelocityY(-375);
-			this.scene.jumpSound.play();
+			if(this.canJump === true) {
+				sprite.setVelocityY(-375);
+				this.scene.jumpSound.play();
+				this.canJump = false;
+			}
+		} 
+		if (onGround && (keys.up.isUp && keys.w.isUp)) {
+			this.canJump = true;
 		}
 		if (onGround) {
 			if (sprite.body.velocity.x !== 0) {
