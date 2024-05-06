@@ -1,6 +1,7 @@
 export default class Player {
-	constructor(scene, x, y) {
+	constructor(scene, x, y, sys) {
 		this.scene = scene;
+		this.sys = sys;
 		const anims = scene.anims;
 		anims.create({
 			key: "player-idle",
@@ -70,9 +71,13 @@ export default class Player {
 			sprite.anims.stop();
 			sprite.setTexture("player", 10);
 		}
+		if (sprite.body.velocity.y >= 500) {
+			this.destroy();
+		}
 	}
 
 	destroy() {
+		this.scene.loseSound.play();
 		this.sprite.destroy();
 	}
 }
