@@ -38,46 +38,49 @@ export default class Player {
 
 	update() {
 		const { keys, sprite } = this;
-		const onGround = sprite.body.blocked.down;
-		const acceleration = onGround ? 200 : 100;
-		let canJump = true;
-		if (keys.left.isDown || keys.a.isDown) {
-			sprite.setAccelerationX(-acceleration);
-			sprite.setFlipX(true);
-		} else if (keys.right.isDown || keys.d.isDown) {
-			sprite.setAccelerationX(acceleration);
-			sprite.setFlipX(false);
-		} else {
-			sprite.setAccelerationX(0);
-		}
-		if (onGround && (keys.up.isDown || keys.w.isDown)) {
-			if(this.canJump === true) {
-				sprite.setVelocityY(-375);
-				this.scene.jumpSound.play();
-				this.canJump = false;
+		if(sprite.body !== undefined) {
+			const onGround = sprite.body.blocked.down;
+			const acceleration = onGround ? 200 : 100;
+			let canJump = true;
+			if (keys.left.isDown || keys.a.isDown) {
+				sprite.setAccelerationX(-acceleration);
+				sprite.setFlipX(true);
+			} else if (keys.right.isDown || keys.d.isDown) {
+				sprite.setAccelerationX(acceleration);
+				sprite.setFlipX(false);
+			} else {
+				sprite.setAccelerationX(0);
 			}
-		} 
-		if (onGround && (keys.up.isUp && keys.w.isUp)) {
-			this.canJump = true;
-		}
-		if (onGround) {
-			if (sprite.body.velocity.x !== 0) {
-				sprite.anims.play("player-run", true);
+			if (onGround && (keys.up.isDown || keys.w.isDown)) {
+				if(this.canJump === true) {
+					sprite.setVelocityY(-375);
+					this.scene.jumpSound.play();
+					this.canJump = false;
+				}
+			} 
+			if (onGround && (keys.up.isUp && keys.w.isUp)) {
+				this.canJump = true;
 			}
-			else { 
-				sprite.anims.play("player-idle", true);
+			if (onGround) {
+				if (sprite.body.velocity.x !== 0) {
+					sprite.anims.play("player-run", true);
+				}
+				else { 
+					sprite.anims.play("player-idle", true);
+				}
+			} else {
+				sprite.anims.stop();
+				sprite.setTexture("player", 10);
 			}
-		} else {
-			sprite.anims.stop();
-			sprite.setTexture("player", 10);
-		}
-		if (sprite.body.velocity.y >= 500) {
-			this.destroy();
-		}
+			if (sprite.body.velocity.y >= 500) {
+				this.destroy();
+			}
+		}	
 	}
 
 	destroy() {
 		this.scene.loseSound.play();
 		this.sprite.destroy();
+		this.scene.resetSceneCall();	
 	}
 }

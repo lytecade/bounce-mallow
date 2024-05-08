@@ -38,4 +38,12 @@ export default class PlatformScene extends Phaser.Scene {
 	update() {
 		this.player.update();
 	}
+
+	resetScene() {
+		this.scene.restart();
+	}
+
+	resetSceneCall() {
+		this.time.delayedCall(2000, this.resetScene, [], this);
+	}
 }
