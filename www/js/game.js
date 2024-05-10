@@ -1,3 +1,5 @@
+import Utils from "/js/utils.js";
+
 class Player {
 	constructor(scene, x, y, sys) {
 		this.scene = scene;
@@ -87,6 +89,7 @@ class PlatformScene extends Phaser.Scene {
 		this.load.audio('jump', '/assets/audio/sfx-jump.wav');
 		this.load.audio('lose', '/assets/audio/sfx-lose.wav');
 		this.load.image("background", "/assets/images/background-hills.png");
+		this.load.image("background-front", "/assets/images/background-hills-front.png");
 		this.load.spritesheet("player", "/assets/spritesheets/spritesheets-player.png", {
 			frameWidth:16,
 			frameHeight:16,
@@ -97,15 +100,12 @@ class PlatformScene extends Phaser.Scene {
 		this.load.tilemapTiledJSON("map", "../assets/tilemaps/tilemap-platform.json");
 	}
 	create() {	
-		const backgroundImage = this.add.image(0, 0, 'background');
+		Utils.createAlignedBackground(this, 1, 'background', 0);
+		Utils.createAlignedBackground(this, 3, 'background-front', 0.25);
+
 		const map = this.make.tilemap({ key: "map" });
 		const tiles = map.addTilesetImage("tileset-platform", "tiles");
-		backgroundImage.setOrigin(0, 0);
-		backgroundImage.setScale(
-			this.sys.game.config.width / backgroundImage.width,
-			this.sys.game.config.height / backgroundImage.height
-		);
-		backgroundImage.setScrollFactor(0);
+
 		this.groundLayer = map.createLayer("ground", tiles);
 		this.jumpSound = this.sound.add('jump');
 		this.loseSound = this.sound.add('lose');
