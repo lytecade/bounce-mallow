@@ -68,7 +68,7 @@ class Player {
 				}
 			} else {
 				sprite.anims.stop();
-				sprite.setTexture("player", 10);
+				sprite.setTexture("player", 9);
 			}
 			if (sprite.body.velocity.y >= 500) {
 				this.destroy();
