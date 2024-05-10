@@ -19,8 +19,8 @@ class Player {
 			.sprite(x, y, "player", 0)
 			.setDrag(1000, 0)
 			.setMaxVelocity(300, 500)
-			.setSize(18, 24)
-			.setOffset(7, 8);
+			.setSize(9, 12)
+			.setOffset(3, 4);
 		const { LEFT, RIGHT, UP, W, A, D } = Phaser.Input.Keyboard.KeyCodes;
 		this.keys = scene.input.keyboard.addKeys({
 			left: LEFT,
@@ -51,7 +51,7 @@ class Player {
 			}
 			if (onGround && (keys.up.isDown || keys.w.isDown)) {
 				if(this.canJump === true) {
-					sprite.setVelocityY(-375);
+					sprite.setVelocityY(-250);
 					this.scene.jumpSound.play();
 					this.canJump = false;
 				}
@@ -88,10 +88,10 @@ class PlatformScene extends Phaser.Scene {
 		this.load.audio('lose', '/assets/audio/sfx-lose.wav');
 		this.load.image("background", "/assets/images/background-hills.png");
 		this.load.spritesheet("player", "/assets/spritesheets/spritesheets-player.png", {
-			frameWidth:32,
-			frameHeight:32,
+			frameWidth:16,
+			frameHeight:16,
 			margin:1,
-			spacing:2
+			spacing:1
 		});
 		this.load.image("tiles", "../assets/tilesets/tileset-platform.png");
 		this.load.tilemapTiledJSON("map", "../assets/tilemaps/tilemap-platform.json");
@@ -109,7 +109,7 @@ class PlatformScene extends Phaser.Scene {
 		this.groundLayer = map.createLayer("ground", tiles);
 		this.jumpSound = this.sound.add('jump');
 		this.loseSound = this.sound.add('lose');
-		this.player = new Player(this, 64, 256, this.sys);
+		this.player = new Player(this, 32, 118, this.sys);
 		this.physics.world.addCollider(this.player.sprite, this.groundLayer);
 		this.groundLayer.setCollisionByProperty({ collides: true });
 		this.cameras.main.startFollow(this.player.sprite);
@@ -129,8 +129,8 @@ class PlatformScene extends Phaser.Scene {
 const config = {
 	parent: "game",
 	type: Phaser.AUTO,
-	width: 480,
-	height: 270,
+	width: 240,
+	height: 150,
 	pixelArt: true,
 	scene: PlatformScene,
 	physics: {
