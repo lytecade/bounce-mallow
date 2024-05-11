@@ -1,11 +1,16 @@
 export default class Util {
-	static createAlignedBackground = (scene, count, texture, scrollFactor) => {
+	static loadResources = (resourceCollection) => {
+		for (const [key, value] of resourceCollection) {
+			console.log(`Key: ${key}, Type: ${value.type}, Name: ${value.name}`);
+		}
+	}
+	static createBackgrounds = (scene, count, texture, scrollFactor) => {
 		let trackingXValue = 0;
 		for(let i = 0; i < count; ++i) {
-			const backgroundImage = scene.add.image(trackingXValue, 0, texture)
+			const currentImage = scene.add.image(trackingXValue, 0, texture)
 				.setOrigin(0, 0)
 				.setScrollFactor(scrollFactor);
-			trackingXValue += backgroundImage.width;
+			trackingXValue += currentImage.width;
 		}	
 	}
 }

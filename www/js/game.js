@@ -1,4 +1,5 @@
 import Utils from "/js/utils.js";
+import { AUDIO_RESOURCES_STD } from "/js/constants.js";
 
 class Player {
 	constructor(scene, x, y, sys) {
@@ -86,8 +87,10 @@ class Player {
 
 class PlatformScene extends Phaser.Scene {
 	preload() {
-		this.load.audio('jump', '/assets/audio/sfx-jump.wav');
-		this.load.audio('lose', '/assets/audio/sfx-lose.wav');
+		Utils.loadResources(AUDIO_RESOURCES_STD);
+
+		this.load.audio('sfx-jump', '/assets/audio/sfx-jump.wav');
+		this.load.audio('sfx-lose', '/assets/audio/sfx-lose.wav');
 		this.load.image("background", "/assets/images/background-hills.png");
 		this.load.image("background-front", "/assets/images/background-hills-front.png");
 		this.load.spritesheet("player", "/assets/spritesheets/spritesheets-player.png", {
@@ -100,15 +103,15 @@ class PlatformScene extends Phaser.Scene {
 		this.load.tilemapTiledJSON("map", "../assets/tilemaps/tilemap-platform.json");
 	}
 	create() {	
-		Utils.createAlignedBackground(this, 1, 'background', 0);
-		Utils.createAlignedBackground(this, 3, 'background-front', 0.25);
+		Utils.createBackgrounds(this, 1, 'background', 0);
+		Utils.createBackgrounds(this, 3, 'background-front', 0.25);
 
 		const map = this.make.tilemap({ key: "map" });
 		const tiles = map.addTilesetImage("tileset-platform", "tiles");
 
 		this.groundLayer = map.createLayer("ground", tiles);
-		this.jumpSound = this.sound.add('jump');
-		this.loseSound = this.sound.add('lose');
+		this.jumpSound = this.sound.add('sfx-jump');
+		this.loseSound = this.sound.add('sfx-lose');
 		this.player = new Player(this, 32, 118, this.sys);
 		this.physics.world.addCollider(this.player.sprite, this.groundLayer);
 		this.groundLayer.setCollisionByProperty({ collides: true });
