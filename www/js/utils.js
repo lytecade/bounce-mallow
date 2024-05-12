@@ -1,7 +1,11 @@
-export default class Util {
-	static loadResources = (resourceCollection) => {
+export default class Utils {
+	static loadResources = (scene, resourceCollection) => {
 		for (const [key, value] of resourceCollection) {
-			console.log(`Key: ${key}, Type: ${value.type}, Name: ${value.name}`);
+			let resourcePath = "/assets/" + value.type + "/" + value.name + "." + value.ext;
+			console.log(resourcePath);
+			if(value.type === 'audio') {
+				scene.load.audio(value.name, resourcePath);
+			}
 		}
 	}
 	static createBackgrounds = (scene, count, texture, scrollFactor) => {

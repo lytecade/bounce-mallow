@@ -87,10 +87,8 @@ class Player {
 
 class PlatformScene extends Phaser.Scene {
 	preload() {
-		Utils.loadResources(AUDIO_RESOURCES_STD);
+		Utils.loadResources(this, AUDIO_RESOURCES_STD);
 
-		this.load.audio('sfx-jump', '/assets/audio/sfx-jump.wav');
-		this.load.audio('sfx-lose', '/assets/audio/sfx-lose.wav');
 		this.load.image("background", "/assets/images/background-hills.png");
 		this.load.image("background-front", "/assets/images/background-hills-front.png");
 		this.load.spritesheet("player", "/assets/spritesheets/spritesheets-player.png", {
