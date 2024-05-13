@@ -1,5 +1,5 @@
 import Utils from "/js/utils.js";
-import { AUDIO_RESOURCES_STD, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
+import { BASE_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
 
 class Player {
 	constructor(scene, x, y, sys) {
@@ -8,18 +8,18 @@ class Player {
 		const anims = scene.anims;
 		anims.create({
 			key: "player-idle",
-			frames: anims.generateFrameNumbers("player", { start: 0, end: 3 }),
+			frames: anims.generateFrameNumbers("sprite-player", { start: 0, end: 3 }),
 			frameRate: 3,
 			repeat: -1,
 		});
 		anims.create({
 			key: "player-run",
-			frames: anims.generateFrameNumbers("player", { start: 8, end: 15 }),
+			frames: anims.generateFrameNumbers("sprite-player", { start: 8, end: 15 }),
 			frameRate: 12,
 			repeat: -1,
 		});
 		this.sprite = scene.physics.add
-			.sprite(x, y, "player", 0)
+			.sprite(x, y, "sprite-player", 0)
 			.setDrag(1000, 0)
 			.setMaxVelocity(150, 500)
 			.setSize(9, 12)
@@ -71,7 +71,7 @@ class Player {
 				}
 			} else {
 				sprite.anims.stop();
-				sprite.setTexture("player", 9);
+				sprite.setTexture("sprite-player", 9);
 			}
 			if (sprite.body.velocity.y >= 500) {
 				this.destroy();
@@ -87,32 +87,25 @@ class Player {
 
 class PlatformScene extends Phaser.Scene {
 	preload() {
-		Utils.loadResources(this, AUDIO_RESOURCES_STD);
+		Utils.loadResources(this, BASE_RESOURCES);
 		Utils.loadResources(this, BACKGROUND_RESOURCES_HILLS);
-		//this.load.image("background-hills", "/assets/images/background-hills.png");
-		//this.load.image("background-hills-front", "/assets/images/background-hills-front.png");
-		this.load.spritesheet("player", "/assets/spritesheets/spritesheets-player.png", {
-			frameWidth:16,
-			frameHeight:16,
-			margin:1,
-			spacing:1
-		});
-		this.load.image("tiles", "../assets/tilesets/tileset-platform.png");
-		this.load.tilemapTiledJSON("map", "../assets/tilemaps/tilemap-platform.json");
 	}
 	create() {	
 		Utils.createBackgrounds(this, 1, 'background-hills', 0);
 		Utils.createBackgrounds(this, 3, 'background-hills-front', 0.25);
 
-		const map = this.make.tilemap({ key: "map" });
-		const tiles = map.addTilesetImage("tileset-platform", "tiles");
+		this.player = new Player(this, 32, 118, this.sys);
+		
+		const map = this.make.tilemap({ key: "tilemap-platform" });
+		const tiles = map.addTilesetImage("tileset-platform", "tileset-platform");
 
 		this.groundLayer = map.createLayer("ground", tiles);
-		this.jumpSound = this.sound.add('sfx-jump');
-		this.loseSound = this.sound.add('sfx-lose');
-		this.player = new Player(this, 32, 118, this.sys);
 		this.physics.world.addCollider(this.player.sprite, this.groundLayer);
 		this.groundLayer.setCollisionByProperty({ collides: true });
+
+		this.jumpSound = this.sound.add('sfx-jump');
+		this.loseSound = this.sound.add('sfx-lose');
+		
 		this.cameras.main.startFollow(this.player.sprite);
 		this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 	}

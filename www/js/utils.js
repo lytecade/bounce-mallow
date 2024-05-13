@@ -4,11 +4,18 @@ export default class Utils {
 			let resourcePath = "/assets/" + value.type + "/" + value.name + "." + value.ext;
 			console.log(resourcePath);
 			switch(value.type) {
-				case 'audio':
+				case "audio":
 					scene.load.audio(value.name, resourcePath);
 					break;
-				case 'images':
+				case "images":
+				case "tilesets":
 					scene.load.image(value.name, resourcePath);
+					break;
+				case "spritesheets":
+					scene.load.spritesheet(value.name, resourcePath, value.options);
+					break;
+				case "tilemaps":
+					scene.load.tilemapTiledJSON(value.name, resourcePath);
 					break;
 				default:
 					break;
