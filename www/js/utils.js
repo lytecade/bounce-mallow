@@ -3,8 +3,15 @@ export default class Utils {
 		for (const [key, value] of resourceCollection) {
 			let resourcePath = "/assets/" + value.type + "/" + value.name + "." + value.ext;
 			console.log(resourcePath);
-			if(value.type === 'audio') {
-				scene.load.audio(value.name, resourcePath);
+			switch(value.type) {
+				case 'audio':
+					scene.load.audio(value.name, resourcePath);
+					break;
+				case 'images':
+					scene.load.image(value.name, resourcePath);
+					break;
+				default:
+					break;
 			}
 		}
 	}

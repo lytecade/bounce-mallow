@@ -1,5 +1,5 @@
 import Utils from "/js/utils.js";
-import { AUDIO_RESOURCES_STD } from "/js/constants.js";
+import { AUDIO_RESOURCES_STD, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
 
 class Player {
 	constructor(scene, x, y, sys) {
@@ -88,9 +88,9 @@ class Player {
 class PlatformScene extends Phaser.Scene {
 	preload() {
 		Utils.loadResources(this, AUDIO_RESOURCES_STD);
-
-		this.load.image("background", "/assets/images/background-hills.png");
-		this.load.image("background-front", "/assets/images/background-hills-front.png");
+		Utils.loadResources(this, BACKGROUND_RESOURCES_HILLS);
+		//this.load.image("background-hills", "/assets/images/background-hills.png");
+		//this.load.image("background-hills-front", "/assets/images/background-hills-front.png");
 		this.load.spritesheet("player", "/assets/spritesheets/spritesheets-player.png", {
 			frameWidth:16,
 			frameHeight:16,
@@ -101,8 +101,8 @@ class PlatformScene extends Phaser.Scene {
 		this.load.tilemapTiledJSON("map", "../assets/tilemaps/tilemap-platform.json");
 	}
 	create() {	
-		Utils.createBackgrounds(this, 1, 'background', 0);
-		Utils.createBackgrounds(this, 3, 'background-front', 0.25);
+		Utils.createBackgrounds(this, 1, 'background-hills', 0);
+		Utils.createBackgrounds(this, 3, 'background-hills-front', 0.25);
 
 		const map = this.make.tilemap({ key: "map" });
 		const tiles = map.addTilesetImage("tileset-platform", "tiles");
