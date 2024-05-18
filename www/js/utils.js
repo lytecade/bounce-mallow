@@ -34,7 +34,12 @@ export default class Utils {
     static createSounds = (scene, resourceCollection) => {
         for (const [key, value] of resourceCollection) {
             if(value.type === "audio") {
-                scene.sound.add(value.name);
+                if(value.name.includes("jump")) {
+                    scene.jumpSound = scene.sound.add(value.name);
+                }
+                if(value.name.includes("lose")) {
+                    scene.loseSound = scene.sound.add(value.name);
+                }
             }
         }
     }
