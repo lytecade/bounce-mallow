@@ -31,4 +31,11 @@ export default class Utils {
             trackingXValue += currentImage.width;
         }    
     }
+    static createSounds = (scene, resourceCollection) => {
+        for (const [key, value] of resourceCollection) {
+            if(value.type === "audio") {
+                scene.sound.add(value.name);
+            }
+        }
+    }
 }

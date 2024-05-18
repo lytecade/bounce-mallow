@@ -93,7 +93,8 @@ class PlatformScene extends Phaser.Scene {
     create() {    
         Utils.createBackgrounds(this, 1, 'background-hills', 0);
         Utils.createBackgrounds(this, 3, 'background-hills-front', 0.25);
-
+        Utils.createSounds(this, BASE_RESOURCES);
+        
         this.player = new Player(this, 32, 118, this.sys);
         
         const map = this.make.tilemap({ key: "tilemap-platform" });
@@ -103,8 +104,6 @@ class PlatformScene extends Phaser.Scene {
         this.physics.world.addCollider(this.player.sprite, this.groundLayer);
         this.groundLayer.setCollisionByProperty({ collides: true });
 
-        this.jumpSound = this.sound.add('sfx-jump');
-        this.loseSound = this.sound.add('sfx-lose');
         
         this.cameras.main.startFollow(this.player.sprite);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
