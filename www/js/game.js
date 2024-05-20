@@ -73,9 +73,11 @@ class Player {
                 sprite.anims.stop();
                 sprite.setTexture("sprite-player", 9);
             }
+            /* 
             if (sprite.body.velocity.y >= 500) {
                 this.destroy();
             }
+            */
         }    
     }
     destroy() {
@@ -93,27 +95,40 @@ class PlatformScene extends Phaser.Scene {
     create() {    
         Utils.createBackgrounds(this, 1, 'background-hills', 0);
         Utils.createBackgrounds(this, 3, 'background-hills-front', 0.25);
-        
+       
+        // Start Player and Map 
         this.player = new Player(this, 32, 118, this.sys);
-        
         const map = this.make.tilemap({ key: "tilemap-platform" });
         const tiles = map.addTilesetImage("tileset-platform", "tileset-platform");
 
+        // Ground Layer
         this.groundLayer = map.createLayer("ground", tiles);
-        this.physics.world.addCollider(this.player.sprite, this.groundLayer);
-        this.groundLayer.setCollisionByProperty({ collides: true });
+        this.loseLayer = map.createLayer("lose", tiles);
 
+        this.physics.world.addCollider(this.player.sprite, this.groundLayer);
+        this.physics.world.addCollider(this.player.sprite, this.loseLayer);
+        this.groundLayer.setCollisionByProperty({ collides: true });
+        this.loseLayer.setCollisionByProperty({ collides: true });
+
+        // Create Sounds
         Utils.createSounds(this, BASE_RESOURCES);
-        
+
+        // Start Camera Position 
         this.cameras.main.startFollow(this.player.sprite);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     }
     update() {
         this.player.update();
     }
+    
+    loseFunction(player, tile) {
+        console.log("Working....");    
+    }
+
     resetScene() {
         this.scene.restart();
     }
+
     resetSceneCall() {
         this.time.delayedCall(2000, this.resetScene, [], this);
     }
