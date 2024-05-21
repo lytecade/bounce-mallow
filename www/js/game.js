@@ -95,7 +95,7 @@ class PlatformScene extends Phaser.Scene {
     create() {    
         Utils.createBackgrounds(this, 1, 'background-hills', 0);
         Utils.createBackgrounds(this, 3, 'background-hills-front', 0.25);
-       
+ 
         // Start Player and Map 
         this.player = new Player(this, 32, 118, this.sys);
         const map = this.make.tilemap({ key: "tilemap-platform" });
@@ -106,9 +106,19 @@ class PlatformScene extends Phaser.Scene {
         this.loseLayer = map.createLayer("lose", tiles);
 
         this.physics.world.addCollider(this.player.sprite, this.groundLayer);
-        this.physics.world.addCollider(this.player.sprite, this.loseLayer);
         this.groundLayer.setCollisionByProperty({ collides: true });
-        this.loseLayer.setCollisionByProperty({ collides: true });
+
+        this.playerLoseCollider = this.physics.add.overlap(
+            this.player.sprite,
+            this.loseLayer,
+            () => {
+                console.log("done");
+            },
+            (player, tile) => {
+                return tile.index === 1;
+            },
+            this
+        );
 
         // Create Sounds
         Utils.createSounds(this, BASE_RESOURCES);
