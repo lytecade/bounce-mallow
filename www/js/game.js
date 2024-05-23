@@ -112,7 +112,9 @@ class PlatformScene extends Phaser.Scene {
             this.player.sprite,
             this.loseLayer,
             () => {
-                console.log("done");
+                if(this.player.sprite) {
+                    this.player.destroy();
+                }    
             },
             (player, tile) => {
                 return tile.index === 1;
@@ -129,10 +131,6 @@ class PlatformScene extends Phaser.Scene {
     }
     update() {
         this.player.update();
-    }
-    
-    loseFunction(player, tile) {
-        console.log("Working....");    
     }
 
     resetScene() {
