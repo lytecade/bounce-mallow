@@ -73,11 +73,6 @@ class Player {
                 sprite.anims.stop();
                 sprite.setTexture("sprite-player", 9);
             }
-            /* 
-            if (sprite.body.velocity.y >= 500) {
-                this.destroy();
-            }
-            */
         }    
     }
     destroy() {
@@ -96,12 +91,10 @@ class PlatformScene extends Phaser.Scene {
         Utils.createBackgrounds(this, 1, 'background-hills', 0);
         Utils.createBackgrounds(this, 3, 'background-hills-front', 0.25);
  
-        // Start Player and Map 
         this.player = new Player(this, 32, 118, this.sys);
         const map = this.make.tilemap({ key: "tilemap-platform" });
         const tiles = map.addTilesetImage("tileset-platform", "tileset-platform");
 
-        // Set Up Tilemap Layers
         this.groundLayer = map.createLayer("ground", tiles);
         this.loseLayer = map.createLayer("lose", tiles);
         this.physics.world.addCollider(this.player.sprite, this.groundLayer);
@@ -120,10 +113,8 @@ class PlatformScene extends Phaser.Scene {
             this
         );
 
-        // Create Sounds
         Utils.createSounds(this, BASE_RESOURCES);
 
-        // Start Camera Position 
         this.cameras.main.startFollow(this.player.sprite);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     }
@@ -132,14 +123,7 @@ class PlatformScene extends Phaser.Scene {
     }
 
     resetSceneCall() {
-        this.time.delayedCall(
-            2000, 
-            () => {
-                this.scene.restart();
-            }, 
-            [], 
-            this
-        );
+        this.time.delayedCall(2000, () => { this.scene.restart(); }, [], this);
     }
 }
 
