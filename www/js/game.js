@@ -101,13 +101,11 @@ class PlatformScene extends Phaser.Scene {
         const map = this.make.tilemap({ key: "tilemap-platform" });
         const tiles = map.addTilesetImage("tileset-platform", "tileset-platform");
 
-        // Ground Layer
+        // Set Up Tilemap Layers
         this.groundLayer = map.createLayer("ground", tiles);
         this.loseLayer = map.createLayer("lose", tiles);
-
         this.physics.world.addCollider(this.player.sprite, this.groundLayer);
         this.groundLayer.setCollisionByProperty({ collides: true });
-
         this.playerLoseCollider = this.physics.add.overlap(
             this.player.sprite,
             this.loseLayer,
@@ -133,12 +131,15 @@ class PlatformScene extends Phaser.Scene {
         this.player.update();
     }
 
-    resetScene() {
-        this.scene.restart();
-    }
-
     resetSceneCall() {
-        this.time.delayedCall(2000, this.resetScene, [], this);
+        this.time.delayedCall(
+            2000, 
+            () => {
+                this.scene.restart();
+            }, 
+            [], 
+            this
+        );
     }
 }
 
