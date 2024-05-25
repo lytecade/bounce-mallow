@@ -2,10 +2,10 @@ export const BASE_RESOURCES = new Map([
     ["sfx-jump", { type: "audio", name: "sfx-jump", ext: "wav", options: {} }],
     ["sfx-lose", { type: "audio", name: "sfx-lose", ext: "wav", options: {} }],
     ["sprite-player", { type: "spritesheets", name: "sprite-player", ext: "png", options: {
-        frameWidth:16,
-        frameHeight:16,
-        margin:1,
-        spacing:1
+        frameWidth:8,
+        frameHeight:8,
+        margin:0,
+        spacing:0
     } }],
     ["tileset-platform", { type: "tilesets", name: "tileset-platform", ext: "png", options: {} }],
     ["tilemap-platform", { type: "tilemaps", name: "tilemap-platform", ext: "json", options: {} }]

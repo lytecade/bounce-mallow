@@ -18,12 +18,10 @@ class Player {
             frameRate: 12,
             repeat: -1,
         });
-        this.sprite = scene.physics.add
-            .sprite(x, y, "sprite-player", 0)
-            .setDrag(1000, 0)
+        this.sprite = scene.physics.add.sprite(x, y, "sprite-player", 0).setDrag(1000, 0)
             .setMaxVelocity(150, 500)
-            .setSize(9, 12)
-            .setOffset(3, 4);
+            .setSize(7, 8);
+
         const { LEFT, RIGHT, UP, W, A, D } = Phaser.Input.Keyboard.KeyCodes;
         this.keys = scene.input.keyboard.addKeys({
             left: LEFT,
