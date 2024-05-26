@@ -89,7 +89,7 @@ class PlatformScene extends Phaser.Scene {
         Utils.createBackgrounds(this, 1, 'background-hills', 0);
         Utils.createBackgrounds(this, 3, 'background-hills-front', 0.25);
  
-        this.player = new Player(this, 32, 118, this.sys);
+        this.player = new Player(this, 16, 56, this.sys);
         const map = this.make.tilemap({ key: "tilemap-platform" });
         const tiles = map.addTilesetImage("tileset-platform", "tileset-platform");
 
@@ -106,7 +106,7 @@ class PlatformScene extends Phaser.Scene {
                 }    
             },
             (player, tile) => {
-                return tile.index === 1;
+                return (tile.index === 1 || tile.index === 20);
             },
             this
         );
@@ -128,8 +128,8 @@ class PlatformScene extends Phaser.Scene {
 const config = {
     parent: "game",
     type: Phaser.AUTO,
-    width: 240,
-    height: 150,
+    width: 120,
+    height: 72,
     pixelArt: true,
     scene: PlatformScene,
     physics: {
