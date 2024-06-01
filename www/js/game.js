@@ -51,6 +51,9 @@ class PlatformScene extends Phaser.Scene {
     }
     update() {
         this.player.update();
+        this.enemies.forEach(enemy => {
+            enemy.update();
+        });
     }
     resetSceneCall() {
         this.time.delayedCall(2000, () => { this.scene.restart(); }, [], this);

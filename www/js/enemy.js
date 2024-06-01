@@ -1,7 +1,6 @@
 export default class Enemy {
     constructor(scene, x, y) {
         this.scene = scene;
-        this.sys = sys;
         const anims = scene.anims;
         anims.create({
             key: "enemy-idle",
