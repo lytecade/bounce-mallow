@@ -1,5 +1,6 @@
 import Utils from "/js/utils.js";
 import Player from "/js/player.js";
+import Enemy from "/js/enemy.js";
 import { BASE_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
 
 class PlatformScene extends Phaser.Scene {
@@ -35,22 +36,12 @@ class PlatformScene extends Phaser.Scene {
             },
             this
         );
-       
-        this.enemies = [];
- 
+      
+        this.enemies = []; 
         this.enemyLayer = map.getObjectLayer("enemy");
         this.enemyLayer.objects.forEach(enemyObject => {
-            const enemy = this.physics.add.sprite(enemyObject.x, enemyObject.y, "sprite-enemy-spike");
-            enemy.body.setSize(16, 16);
+            const enemy = new Enemy(this, enemyObject.x, enemyObject.y);
             this.enemies.push(enemy);
-
-            const currentAnims = anims;
-            currentAnims.create({
-                key: 'enemyIdle',
-                frames: currentAnims.generateFrameNumbers("sprite-enemy-spike", { start: 0, end: 3 }),
-                frameRate: 3,
-                repeat: -1
-            });
         });
 
         Utils.createSounds(this, BASE_RESOURCES);
