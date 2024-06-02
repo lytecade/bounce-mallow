@@ -42,10 +42,10 @@ class PlatformScene extends Phaser.Scene {
         this.cameras.main.startFollow(this.player.sprite);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     }
-    update() {
+    update(time, delta) {
         this.player.update();
         this.enemies.forEach(enemy => {
-            enemy.update();
+            enemy.update(time, delta);
         });
     }
     resetSceneCall() {

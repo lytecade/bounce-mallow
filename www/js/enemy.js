@@ -14,7 +14,14 @@ export default class Enemy {
         this.sprite = scene.physics.add.sprite(x, y, "sprite-enemy-spike", 0).setSize(8, 8);
         scene.physics.world.addCollider(this.sprite, scene.groundLayer);
     }
-    update() {
+    update(time, delta) {
         this.sprite.anims.play("enemy-idle", true);
+        if (!this.moveTimer) {
+            this.moveTimer = time;
+        }
+        if (time - this.moveTimer > 3000) {
+            this.moveTimer = time;
+            console.log("Three second rule!");
+        }
     }
 }
