@@ -12,7 +12,7 @@ export default class Enemy {
             repeat: -1,
         });
         this.sprite = scene.physics.add.sprite(x, y, "sprite-enemy-spike", 0).setSize(8, 8);
-        scene.physics.world.addCollider(this.sprite, scene.groundLayer);
+        this.scene.physics.world.addCollider(this.sprite, scene.groundLayer);
     }
     update(time, delta) {
         this.sprite.anims.play("enemy-idle", true);
@@ -21,7 +21,14 @@ export default class Enemy {
         }
         if (time - this.moveTimer > 3000) {
             this.moveTimer = time;
-            console.log("Three second rule!");
+            this.moveEnemy();
         }
+    }
+    moveEnemy() {
+        const moveDistance = 32;
+        const moveSpeed = 100;
+        console.log(this.scene);
+        console.log(this.sprite);
+        console.log("Three second rule!");
     }
 }
