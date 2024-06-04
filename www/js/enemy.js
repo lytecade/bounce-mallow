@@ -35,21 +35,26 @@ export default class Enemy {
     }
     moveEnemy() {
         this.sprite.anims.play("enemy-walk", true);
-        const moveDistance = 16;
-        const moveSpeed = 1400;
+        const moveDistance = 32;
+        const moveSpeed = 1600;
         console.log(this.sprite.body.position.x);
         console.log(this.sprite.x);
+
+        const snapshotSprite = JSON.parse(JSON.stringify(this.sprite));
+        
         this.scene.tweens.add({
             targets: this.sprite,
             x: this.sprite.x + moveDistance,
             duration: moveSpeed,
             onComplete: () => {
+                console.log("First done");
                 this.scene.tweens.add({
                     targets: this.sprite,
                     x: this.sprite.x - moveDistance,
                     duration: moveSpeed,
                     onComplete: () => {
-                        this.sprite.setPosition(this.sprite.body.position.x, this.sprite.body.position.y);
+                        console.log("Second done");
+                        this.sprite.setPosition(snapshotSprite.x, snapshotSprite.y);
                         this.sprite.anims.play("enemy-idle", true);
                     }
                 });
