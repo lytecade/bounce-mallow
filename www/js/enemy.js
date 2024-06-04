@@ -22,17 +22,34 @@ export default class Enemy {
         });
         this.sprite = scene.physics.add.sprite(x, y, "sprite-enemy-spike", 0).setSize(8, 8);
         this.scene.physics.world.addCollider(this.sprite, scene.groundLayer);
+        this.isStationary = true;
     }
     update(time, delta) {
+        console.log(this.isStationary); 
         if (!this.moveTimer) {
             this.moveTimer = time;
             this.sprite.anims.play("enemy-idle", true);
         }
         if (time - this.moveTimer > 3000) {
             this.moveTimer = time;
-            this.moveEnemy(this.sprite, delta);
+            //this.moveEnemy(this.sprite, delta);
+            this.testEnemy(this.sprite, delta);
         }
     }
+
+    testEnemy(sprite, delta) {
+        this.isStationary = (this.isStationary === true) ? false : true;
+        console.log(sprite);
+        console.log(delta);
+        console.log("Move enemy " + Math.random());
+    } 
+
+    // run function recursively
+    // function changes stationary and movement
+    // movement direction changes each time it activates
+    // physics activates on movement
+
+    /*
     moveEnemy(sprite, delta) {
         const moveDistance = 24;
         const moveSpeed = 100;
@@ -55,4 +72,7 @@ export default class Enemy {
         });
         sprite.anims.play("enemy-walk", true);
     }
+    */
+
+
 }
