@@ -28,26 +28,30 @@ export default class Enemy {
     update(time, delta) {
         if (!this.moveTimer) {
             this.moveTimer = time;
-            this.sprite.anims.play("enemy-idle", true);
         }
         if (time - this.moveTimer > 3000) {
             this.moveTimer = time;
-            //this.moveEnemy(this.sprite, delta);
-            this.testEnemy(this.sprite, delta);
+            this.changeEnemyActivity();
         }
+        this.handleEnemyActivity();
     }
 
-    testEnemy(sprite, delta) {
+    changeEnemyActivity() {
         if (this.isStationary === true) {
            this.isStationary = false;
            this.isForward = (this.isForward === true) ? false : true;
         } else {
            this.isStationary = true;
         }
-        console.log("Move enemy " + Math.random());
-        console.log("Stationary: " + this.isStationary);
-        console.log("Forward: " + this.isForward);
     } 
+
+    handleEnemyActivity() {
+        if (this.isStationary === true) {
+            this.sprite.anims.play("enemy-idle", true);
+        } else {
+            this.sprite.anims.play("enemy-walk", true);
+        }
+    }
 
     // run function recursively
     // function changes stationary and movement
