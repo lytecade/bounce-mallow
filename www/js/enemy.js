@@ -24,41 +24,35 @@ export default class Enemy {
         this.scene.physics.world.addCollider(this.sprite, scene.groundLayer);
     }
     update(time, delta) {
-        this.sprite.anims.play("enemy-idle", true);
         if (!this.moveTimer) {
             this.moveTimer = time;
+            this.sprite.anims.play("enemy-idle", true);
         }
         if (time - this.moveTimer > 3000) {
             this.moveTimer = time;
-            this.moveEnemy();
+            this.moveEnemy(this.sprite, delta);
         }
     }
-    moveEnemy() {
-        this.sprite.anims.play("enemy-walk", true);
-        const moveDistance = 32;
-        const moveSpeed = 1600;
-        console.log(this.sprite.body.position.x);
-        console.log(this.sprite.x);
-
-        const snapshotSprite = JSON.parse(JSON.stringify(this.sprite));
-        
+    moveEnemy(sprite, delta) {
+        const moveDistance = 24;
+        const moveSpeed = 100;
+        const moveDuration = (moveDistance / moveSpeed) * 1000;
         this.scene.tweens.add({
-            targets: this.sprite,
-            x: this.sprite.x + moveDistance,
-            duration: moveSpeed,
+            targets: sprite,
+            x: sprite.x + moveDistance,
+            duration: moveDuration * delta,
             onComplete: () => {
-                console.log("First done");
                 this.scene.tweens.add({
-                    targets: this.sprite,
-                    x: this.sprite.x - moveDistance,
-                    duration: moveSpeed,
+                    targets: sprite,
+                    x: sprite.x - moveDistance,
+                    duration: moveDuration * delta,
                     onComplete: () => {
-                        console.log("Second done");
-                        this.sprite.setPosition(snapshotSprite.x, snapshotSprite.y);
-                        this.sprite.anims.play("enemy-idle", true);
+                        sprite.setPosition(sprite.body.position.x, sprite.body.position.y);
+                        sprite.anims.play("enemy-idle", true);
                     }
                 });
             }
         });
+        sprite.anims.play("enemy-walk", true);
     }
 }
