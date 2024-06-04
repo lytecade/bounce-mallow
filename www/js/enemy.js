@@ -23,9 +23,9 @@ export default class Enemy {
         this.sprite = scene.physics.add.sprite(x, y, "sprite-enemy-spike", 0).setSize(8, 8);
         this.scene.physics.world.addCollider(this.sprite, scene.groundLayer);
         this.isStationary = true;
+        this.isForward = true;
     }
     update(time, delta) {
-        console.log(this.isStationary); 
         if (!this.moveTimer) {
             this.moveTimer = time;
             this.sprite.anims.play("enemy-idle", true);
@@ -38,10 +38,15 @@ export default class Enemy {
     }
 
     testEnemy(sprite, delta) {
-        this.isStationary = (this.isStationary === true) ? false : true;
-        console.log(sprite);
-        console.log(delta);
+        if (this.isStationary === true) {
+           this.isStationary = false;
+           this.isForward = (this.isForward === true) ? false : true;
+        } else {
+           this.isStationary = true;
+        }
         console.log("Move enemy " + Math.random());
+        console.log("Stationary: " + this.isStationary);
+        console.log("Forward: " + this.isForward);
     } 
 
     // run function recursively
