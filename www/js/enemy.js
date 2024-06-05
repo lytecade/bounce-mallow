@@ -51,6 +51,11 @@ export default class Enemy {
         } else {
             this.sprite.anims.play("enemy-walk", true);
         }
+        if (this.isForward === true) {
+	    this.sprite.setFlipX(false);
+        } else {
+	    this.sprite.setFlipX(true);
+        }
     }
 
     // run function recursively
