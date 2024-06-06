@@ -22,8 +22,8 @@ export default class Player {
             repeat: -1,
         });
         this.sprite = scene.physics.add.sprite(x, y, "sprite-player", 0)
-            .setDrag(100, 0)
-            .setMaxVelocity(150, 500)
+            .setDrag(1000, 10)
+            .setMaxVelocity(100, 500)
             .setSize(7, 8)
             .setOffset(1, 0);
         const { LEFT, RIGHT, UP, W, A, D } = Phaser.Input.Keyboard.KeyCodes;
@@ -45,15 +45,23 @@ export default class Player {
             const onGround = sprite.body.blocked.down;
             const acceleration = onGround ? 40 : 20;
             let canJump = true;
-            if (keys.left.isDown || keys.a.isDown) {
+            if ((keys.left.isDown || keys.a.isDown) && (keys.right.isDown || keys.d.isDown)) {
+                sprite.setAccelerationX(0);
+            } else if (keys.left.isDown || keys.a.isDown) {
+                if (sprite.body.velocity.x > 0) {
+                    sprite.setVelocityX(0);
+                } 
                 sprite.setAccelerationX(-acceleration);
                 sprite.setFlipX(true);
             } else if (keys.right.isDown || keys.d.isDown) {
+                if (sprite.body.velocity.x < 0) {
+                    sprite.setVelocityX(0);
+                } 
                 sprite.setAccelerationX(acceleration);
                 sprite.setFlipX(false);
             } else {
                 sprite.setAccelerationX(0);
-            }
+            }    
             if (onGround && (keys.up.isDown || keys.w.isDown)) {
                 if (this.canJump === true) {
                     sprite.setVelocityY(-235);
