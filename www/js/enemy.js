@@ -20,7 +20,9 @@ export default class Enemy {
             frameRate: 4,
             repeat: -1
         });
-        this.sprite = scene.physics.add.sprite(x, y, "sprite-enemy-spike", 0).setSize(8, 8);
+        this.sprite = scene.physics.add.sprite(x, y, "sprite-enemy-spike", 0)
+            .setDrag(100, 0)
+            .setSize(8, 8);
         this.scene.physics.world.addCollider(this.sprite, scene.groundLayer);
         this.isStationary = true;
         this.isForward = true;
@@ -29,7 +31,7 @@ export default class Enemy {
         if (!this.moveTimer) {
             this.moveTimer = time;
         }
-        if (time - this.moveTimer > 3000) {
+        if (time - this.moveTimer > 4000) {
             this.moveTimer = time;
             this.changeEnemyActivity();
         }
@@ -48,8 +50,14 @@ export default class Enemy {
     handleEnemyActivity() {
         if (this.isStationary === true) {
             this.sprite.anims.play("enemy-idle", true);
+            this.sprite.setAccelerationX(0);
         } else {
             this.sprite.anims.play("enemy-walk", true);
+            if (this.isForward === true) {
+                this.sprite.setAccelerationX(1);
+            } else {
+                this.sprite.setAccelerationX(-1);
+            }
         }
         if (this.isForward === true) {
 	    this.sprite.setFlipX(false);
@@ -57,11 +65,6 @@ export default class Enemy {
 	    this.sprite.setFlipX(true);
         }
     }
-
-    // run function recursively
-    // function changes stationary and movement
-    // movement direction changes each time it activates
-    // physics activates on movement
 
     /*
     moveEnemy(sprite, delta) {

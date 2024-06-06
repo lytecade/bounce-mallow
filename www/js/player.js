@@ -21,7 +21,8 @@ export default class Player {
             frameRate: 12,
             repeat: -1,
         });
-        this.sprite = scene.physics.add.sprite(x, y, "sprite-player", 0).setDrag(1000, 0)
+        this.sprite = scene.physics.add.sprite(x, y, "sprite-player", 0)
+            .setDrag(100, 0)
             .setMaxVelocity(150, 500)
             .setSize(7, 8)
             .setOffset(1, 0);
