@@ -43,7 +43,7 @@ export default class Player {
         const { keys, sprite } = this;
         if (sprite.body !== undefined) {
             const onGround = sprite.body.blocked.down;
-            const acceleration = onGround ? 40 : 20;
+            const acceleration = 40; 
             let canJump = true;
             if ((keys.left.isDown || keys.a.isDown) && (keys.right.isDown || keys.d.isDown)) {
                 sprite.setAccelerationX(0);
