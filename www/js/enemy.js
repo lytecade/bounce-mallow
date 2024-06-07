@@ -37,7 +37,6 @@ export default class Enemy {
         }
         this.handleEnemyActivity();
     }
-
     changeEnemyActivity() {
         if (this.isStationary === true) {
            this.isStationary = false;
@@ -46,7 +45,6 @@ export default class Enemy {
            this.isStationary = true;
         }
     } 
-
     handleEnemyActivity() {
         if (this.isStationary === true) {
             this.sprite.anims.play("enemy-idle", true);
@@ -65,31 +63,4 @@ export default class Enemy {
 	    this.sprite.setFlipX(true);
         }
     }
-
-    /*
-    moveEnemy(sprite, delta) {
-        const moveDistance = 24;
-        const moveSpeed = 100;
-        const moveDuration = (moveDistance / moveSpeed) * 1000;
-        this.scene.tweens.add({
-            targets: sprite,
-            x: sprite.x + moveDistance,
-            duration: moveDuration * delta,
-            onComplete: () => {
-                this.scene.tweens.add({
-                    targets: sprite,
-                    x: sprite.x - moveDistance,
-                    duration: moveDuration * delta,
-                    onComplete: () => {
-                        sprite.setPosition(sprite.body.position.x, sprite.body.position.y);
-                        sprite.anims.play("enemy-idle", true);
-                    }
-                });
-            }
-        });
-        sprite.anims.play("enemy-walk", true);
-    }
-    */
-
-
 }
