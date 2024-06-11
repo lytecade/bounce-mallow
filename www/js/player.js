@@ -24,8 +24,7 @@ export default class Player {
         this.sprite = scene.physics.add.sprite(x, y, "sprite-player", 0)
             .setDrag(1000, 10)
             .setMaxVelocity(100, 500)
-            .setSize(7, 8)
-            .setOffset(1, 0);
+            .setSize(5, 8);
         const { LEFT, RIGHT, UP, W, A, D } = Phaser.Input.Keyboard.KeyCodes;
         this.keys = scene.input.keyboard.addKeys({
             left: LEFT,
