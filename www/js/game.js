@@ -41,6 +41,9 @@ class PlatformScene extends Phaser.Scene {
         Utils.createSounds(this, BASE_RESOURCES);
         this.cameras.main.startFollow(this.player.sprite);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+
+        //this.debugGraphics = this.physics.world.createDebugGraphic();
+        //this.debugGraphics.setVisible(true);
     }
     update(time, delta) {
         this.player.update();
