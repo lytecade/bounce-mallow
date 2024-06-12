@@ -1,7 +1,6 @@
 export default class Player {
-    constructor(scene, x, y, sys) {
+    constructor(scene, x, y) {
         this.scene = scene;
-        this.sys = sys;
         const anims = scene.anims;
         anims.create({
             key: "player-idle",
@@ -41,37 +40,35 @@ export default class Player {
     update() {
         const { keys, sprite } = this;
         if (sprite.body !== undefined) {
-            const onGround = sprite.body.blocked.down;
-            const acceleration = 80; 
             let canJump = true;
             if ((keys.left.isDown || keys.a.isDown) && (keys.right.isDown || keys.d.isDown)) {
-                sprite.setAccelerationX(0);
+                sprite.body.setAccelerationX(0);
             } else if (keys.left.isDown || keys.a.isDown) {
                 if (sprite.body.velocity.x > 0) {
-                    sprite.setVelocityX(0);
+                    sprite.body.setVelocityX(0);
                 } 
-                sprite.setAccelerationX(-acceleration);
+                sprite.body.setAccelerationX(-80);
                 sprite.setFlipX(true);
             } else if (keys.right.isDown || keys.d.isDown) {
                 if (sprite.body.velocity.x < 0) {
-                    sprite.setVelocityX(0);
+                    sprite.body.setVelocityX(0);
                 } 
-                sprite.setAccelerationX(acceleration);
+                sprite.body.setAccelerationX(80);
                 sprite.setFlipX(false);
             } else {
                 sprite.setAccelerationX(0);
             }    
-            if (onGround && (keys.up.isDown || keys.w.isDown)) {
+            if (sprite.body.blocked.down && (keys.up.isDown || keys.w.isDown)) {
                 if (this.canJump === true) {
-                    sprite.setVelocityY(-240);
+                    sprite.body.setVelocityY(-240);
                     this.scene.jumpSound.play();
                     this.canJump = false;
                 }
             }
-            if (onGround && (keys.up.isUp && keys.w.isUp)) {
+            if (sprite.body.blocked.down && (keys.up.isUp && keys.w.isUp)) {
                 this.canJump = true;
             }
-            if (onGround) {
+            if (sprite.body.blocked.down) {
                 if (sprite.body.velocity.x !== 0) {
                     sprite.anims.play("player-run", true);
                 } else {
