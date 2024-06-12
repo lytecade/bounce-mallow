@@ -23,7 +23,7 @@ export default class Player {
         });
         this.sprite = scene.physics.add.sprite(x, y, "sprite-player", 0)
             .setDrag(1000, 10)
-            .setMaxVelocity(100, 500)
+            .setMaxVelocity(80, 240)
             .setSize(5, 8);
         const { LEFT, RIGHT, UP, W, A, D } = Phaser.Input.Keyboard.KeyCodes;
         this.keys = scene.input.keyboard.addKeys({
@@ -42,7 +42,7 @@ export default class Player {
         const { keys, sprite } = this;
         if (sprite.body !== undefined) {
             const onGround = sprite.body.blocked.down;
-            const acceleration = 40; 
+            const acceleration = 80; 
             let canJump = true;
             if ((keys.left.isDown || keys.a.isDown) && (keys.right.isDown || keys.d.isDown)) {
                 sprite.setAccelerationX(0);
@@ -63,7 +63,7 @@ export default class Player {
             }    
             if (onGround && (keys.up.isDown || keys.w.isDown)) {
                 if (this.canJump === true) {
-                    sprite.setVelocityY(-235);
+                    sprite.setVelocityY(-240);
                     this.scene.jumpSound.play();
                     this.canJump = false;
                 }
