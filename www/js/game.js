@@ -38,12 +38,20 @@ class PlatformScene extends Phaser.Scene {
             const enemy = new Enemy(this, enemyObject.x, enemyObject.y);
             this.enemies.push(enemy);
         });
+        this.playerEnemyCollider = this.physics.add.overlap(
+            this.player.sprite,
+            this.enemies.map(enemy => enemy.sprite),
+            () => {
+                if (this.player.sprite) {
+                    this.player.destroy();
+                }
+            },
+            null,
+            this
+        );
         Utils.createSounds(this, BASE_RESOURCES);
         this.cameras.main.startFollow(this.player.sprite);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-
-        //this.debugGraphics = this.physics.world.createDebugGraphic();
-        //this.debugGraphics.setVisible(true);
     }
     update(time, delta) {
         this.player.update();
