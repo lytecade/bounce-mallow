@@ -43,9 +43,6 @@ export default class Player {
             d: D,
         });
     }
-    freeze() {
-        this.sprite.body.moves = false;
-    }
     update() {
         const { keys, sprite } = this;
         if (sprite.body !== undefined) {
@@ -89,12 +86,9 @@ export default class Player {
             }
         }
     }
-    destroyByFall() {
+    destroy() {
         this.sprite.destroy();
         this.scene.loseSound.play();
         this.scene.resetSceneCall();
-    }
-    destroyByEnemy() {
-        console.log(Math.random());
     }
 }

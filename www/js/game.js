@@ -22,7 +22,7 @@ class PlatformScene extends Phaser.Scene {
             this.loseLayer,
             () => {
                 if (this.player.sprite) {
-                    this.player.destroyByFall();
+                    this.player.destroy();
                 }
             },
             (player, tile) => {
@@ -41,7 +41,7 @@ class PlatformScene extends Phaser.Scene {
             this.enemies.map(enemy => enemy.sprite),
             () => {
                 if (this.player.sprite) {
-                    this.player.destroyByEnemy();
+                    this.player.destroy();
                 }
             },
             null,
