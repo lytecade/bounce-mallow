@@ -17,16 +17,29 @@ class PlatformScene extends Phaser.Scene {
         this.groundLayer = map.createLayer("ground", tiles).setCollisionByProperty({ collides: true });
         this.loseLayer = map.createLayer("lose", tiles);
         this.physics.world.addCollider(this.player.sprite, this.groundLayer);
-        this.playerLoseCollider = this.physics.add.overlap(
+        this.playerLoseColliderCliff = this.physics.add.overlap(
             this.player.sprite,
             this.loseLayer,
             () => {
                 if (this.player.sprite) {
-                    this.player.destroy();
+                    this.runLoseSequence(0, 5, true);
                 }
             },
             (player, tile) => {
-                return (tile.index === 1 || tile.index === 20);
+                return (tile.index === 1);
+            },
+            this
+        );
+        this.playerLoseColliderSpikes = this.physics.add.overlap(
+            this.player.sprite,
+            this.loseLayer,
+            () => {
+                if (this.player.sprite) {
+                    this.runLoseSequence(0, 5, false);
+                }
+            },
+            (player, tile) => {
+                return (tile.index === 20);
             },
             this
         );
@@ -41,7 +54,7 @@ class PlatformScene extends Phaser.Scene {
             this.enemies.map(enemy => enemy.sprite),
             () => {
                 if (this.player.sprite) {
-                    this.player.destroy();
+                    this.runLoseSequence(0, 5, false);
                 }
             },
             null,
@@ -57,10 +70,14 @@ class PlatformScene extends Phaser.Scene {
             enemy.update(time, delta);
         });
     }
-    runLoseSequence(currentStage, time) {
+    runLoseSequence(currentStage, time, byFall) {
         this.time.delayedCall(time, () => {
             if (currentStage === 0) {
-                console.log("Check.......");
+                if (byFall === true) {
+                    console.log("Falling.....");
+                } else {
+                    console.log("Ouch.....");
+                }
                 this.runLoseSequence(1, time);
             } else if (currentStage === 1) {
                 this.player.sprite.destroy(); 

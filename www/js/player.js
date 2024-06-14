@@ -86,7 +86,4 @@ export default class Player {
             }
         }
     }
-    destroy() {
-        this.scene.runLoseSequence(0, 5);
-    }
 }
