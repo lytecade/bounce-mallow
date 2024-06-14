@@ -20,6 +20,15 @@ export default class Player {
             frameRate: 12,
             repeat: -1,
         });
+        anims.create({
+            key: "player-destroy",
+            frames: anims.generateFrameNumbers("sprite-player", {
+                start: 16,
+                end: 23
+            }),
+            frameRate: 6,
+            repeat: -1, 
+        });
         this.sprite = scene.physics.add.sprite(x, y, "sprite-player", 0)
             .setDrag(1000, 10)
             .setMaxVelocity(80, 240)
@@ -80,9 +89,12 @@ export default class Player {
             }
         }
     }
-    destroy() {
-        this.scene.loseSound.play();
+    destroyByFall() {
         this.sprite.destroy();
+        this.scene.loseSound.play();
         this.scene.resetSceneCall();
+    }
+    destroyByEnemy() {
+        console.log(Math.random());
     }
 }
