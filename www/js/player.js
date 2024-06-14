@@ -27,7 +27,7 @@ export default class Player {
                 end: 23
             }),
             frameRate: 6,
-            repeat: -1, 
+            repeat: 0, 
         });
         this.sprite = scene.physics.add.sprite(x, y, "sprite-player", 0)
             .setDrag(1000, 10)

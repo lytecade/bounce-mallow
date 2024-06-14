@@ -60,11 +60,14 @@ class PlatformScene extends Phaser.Scene {
     runLoseSequence(currentStage, time) {
         this.time.delayedCall(time, () => {
             if (currentStage === 0) {
-                this.player.sprite.destroy(); 
+                console.log("Check.......");
                 this.runLoseSequence(1, time);
             } else if (currentStage === 1) {
+                this.player.sprite.destroy(); 
+                this.runLoseSequence(2, time);
+            } else if (currentStage === 2) {
                 this.loseSound.play();
-                this.runLoseSequence(2, time * 400);
+                this.runLoseSequence(3, time * 400);
             } else {
                 this.scene.restart();
             }
