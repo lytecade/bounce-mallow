@@ -76,26 +76,40 @@ class PlatformScene extends Phaser.Scene {
         });
     }
     runLoseSequence(currentStage, time, byFall) {
-        console.log("launch stage " + currentStage);
         this.time.delayedCall(time, () => {
-            if (currentStage === 0) {
-                if (byFall === true) {
-                    this.runLoseSequence(1, time, byFall);
-                } else {
-                    if (this.player.sprite.anims) {
-                        this.player.sprite.anims.play("player-destroy", true); 
-                        console.log("animation played");
-                    } 
-                    this.runLoseSequence(1, time * 100, byFall);
+            currentStage++;
+            if (byFall === true) {
+                switch (currentStage) {
+                    case 1:
+                        this.player.sprite.destroy(); 
+                        this.runLoseSequence(currentStage, time, byFall);
+                        break;
+                    case 2:
+                        this.loseSound.play();
+                        this.runLoseSequence(currentStage, time * 400, byFall);
+                        break;
+                    default:
+                        this.scene.restart();
                 }
-            } else if (currentStage === 1) {
-                this.player.sprite.destroy(); 
-                this.runLoseSequence(2, time, byFall);
-            } else if (currentStage === 2) {
-                this.loseSound.play();
-                this.runLoseSequence(3, time * 400, byFall);
             } else {
-                this.scene.restart();
+                switch (currentStage) {
+                    case 1:
+                        if (this.player.sprite.anims) {
+                            this.player.sprite.anims.play("player-destroy", true); 
+                        } 
+                        this.runLoseSequence(currentStage, time * 100, byFall);
+                        break;
+                    case 2:
+                        this.player.sprite.destroy(); 
+                        this.runLoseSequence(currentStage, time, byFall);
+                        break;
+                    case 3:
+                        this.loseSound.play();
+                        this.runLoseSequence(currentStage, time * 400, byFall);
+                        break;
+                    default:
+                        this.scene.restart();
+                }
             }
         }, [], this);
     }
