@@ -57,9 +57,17 @@ class PlatformScene extends Phaser.Scene {
             enemy.update(time, delta);
         });
     }
-    resetSceneCall() {
-        this.time.delayedCall(2000, () => {
-            this.scene.restart();
+    runLoseSequence(currentStage, time) {
+        this.time.delayedCall(time, () => {
+            if (currentStage === 0) {
+                this.player.sprite.destroy(); 
+                this.runLoseSequence(1, time);
+            } else if (currentStage === 1) {
+                this.loseSound.play();
+                this.runLoseSequence(2, time * 400);
+            } else {
+                this.scene.restart();
+            }
         }, [], this);
     }
 }

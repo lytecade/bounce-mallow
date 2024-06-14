@@ -87,8 +87,6 @@ export default class Player {
         }
     }
     destroy() {
-        this.sprite.destroy();
-        this.scene.loseSound.play();
-        this.scene.resetSceneCall();
+        this.scene.runLoseSequence(0, 5);
     }
 }
