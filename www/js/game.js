@@ -17,6 +17,7 @@ class PlatformScene extends Phaser.Scene {
         this.groundLayer = map.createLayer("ground", tiles).setCollisionByProperty({ collides: true });
         this.loseLayer = map.createLayer("lose", tiles);
         this.physics.world.addCollider(this.player.sprite, this.groundLayer);
+        this.loseSequenceActive = false;
         this.playerLoseColliderCliff = this.physics.add.overlap(
             this.player.sprite,
             this.loseLayer,
@@ -35,6 +36,7 @@ class PlatformScene extends Phaser.Scene {
             this.loseLayer,
             () => {
                 if (this.player.sprite) {
+                    this.loseSequenceActive = true;
                     this.runLoseSequence(0, 5, false);
                 }
             },
@@ -54,6 +56,7 @@ class PlatformScene extends Phaser.Scene {
             this.enemies.map(enemy => enemy.sprite),
             () => {
                 if (this.player.sprite) {
+                    this.loseSequenceActive = true;
                     this.runLoseSequence(0, 5, false);
                 }
             },
@@ -65,26 +68,32 @@ class PlatformScene extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     }
     update(time, delta) {
-        this.player.update();
+        if (this.loseSequenceActive == false) {
+            this.player.update();
+        }
         this.enemies.forEach(enemy => {
             enemy.update(time, delta);
         });
     }
     runLoseSequence(currentStage, time, byFall) {
+        console.log("launch stage " + currentStage);
         this.time.delayedCall(time, () => {
             if (currentStage === 0) {
                 if (byFall === true) {
-                    console.log("Falling.....");
+                    this.runLoseSequence(1, time, byFall);
                 } else {
-                    console.log("Ouch.....");
+                    if (this.player.sprite.anims) {
+                        this.player.sprite.anims.play("player-destroy", true); 
+                        console.log("animation played");
+                    } 
+                    this.runLoseSequence(1, time * 100, byFall);
                 }
-                this.runLoseSequence(1, time);
             } else if (currentStage === 1) {
                 this.player.sprite.destroy(); 
-                this.runLoseSequence(2, time);
+                this.runLoseSequence(2, time, byFall);
             } else if (currentStage === 2) {
                 this.loseSound.play();
-                this.runLoseSequence(3, time * 400);
+                this.runLoseSequence(3, time * 400, byFall);
             } else {
                 this.scene.restart();
             }
