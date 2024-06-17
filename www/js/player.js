@@ -26,7 +26,7 @@ export default class Player {
                 start: 16,
                 end: 23
             }),
-            frameRate: 6,
+            frameRate: 8,
             repeat: 0, 
         });
         this.sprite = scene.physics.add.sprite(x, y, "sprite-player", 0)

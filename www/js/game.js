@@ -18,6 +18,7 @@ class PlatformScene extends Phaser.Scene {
         this.loseLayer = map.createLayer("lose", tiles);
         this.physics.world.addCollider(this.player.sprite, this.groundLayer);
         this.loseSequenceActive = false;
+        this.loseSequenceSound = false;
         this.playerLoseColliderCliff = this.physics.add.overlap(
             this.player.sprite,
             this.loseLayer,
@@ -81,13 +82,15 @@ class PlatformScene extends Phaser.Scene {
             if (byFall === true) {
                 switch (currentStage) {
                     case 1:
-                        //this.player.sprite.destroy(); 
-                        // refine here
                         this.player.sprite.setTexture("sprite-player", 4);
                         this.runLoseSequence(currentStage, time, byFall);
                         break;
                     case 2:
-                        this.loseSound.play();
+                        if (this.loseSequenceSound === false) {
+                            this.loseSound.play();
+                            this.loseSequenceSound = true;
+                        } 
+                        this.cameras.main.stopFollow();
                         this.runLoseSequence(currentStage, time * 400, byFall);
                         break;
                     default:
@@ -99,15 +102,15 @@ class PlatformScene extends Phaser.Scene {
                         if (this.player.sprite.anims) {
                             this.player.sprite.anims.play("player-destroy", true); 
                         } 
-                        this.runLoseSequence(currentStage, time * 100, byFall);
-                        break;
-                    case 2:
-                        this.player.sprite.destroy(); 
                         this.runLoseSequence(currentStage, time, byFall);
                         break;
-                    case 3:
-                        this.loseSound.play();
-                        this.runLoseSequence(currentStage, time * 400, byFall);
+                    case 2:
+                        if (this.loseSequenceSound === false) {
+                            this.loseSound.play();
+                            this.loseSequenceSound = true;
+                        } 
+                        this.cameras.main.stopFollow();
+                        this.runLoseSequence(currentStage, time * 200, byFall);
                         break;
                     default:
                         this.scene.restart();
