@@ -42,4 +42,9 @@ export default class Utils {
             }
         }
     }
+    static createSceneAttributes = (scene) => {
+        scene.enemies = [];
+        scene.loseSequenceActive = false;
+        scene.loseSequenceSound = false;
+    }
 }
