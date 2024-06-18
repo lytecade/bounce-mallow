@@ -18,50 +18,12 @@ class PlatformScene extends Phaser.Scene {
         this.groundLayer = map.createLayer("ground", tiles).setCollisionByProperty({ collides: true });
         this.loseLayer = map.createLayer("lose", tiles);
         this.physics.world.addCollider(this.player.sprite, this.groundLayer);
-        this.playerLoseColliderCliff = this.physics.add.overlap(
-            this.player.sprite,
-            this.loseLayer,
-            () => {
-                if (this.player.sprite) {
-                    this.runLoseSequence(0, 5, true);
-                }
-            },
-            (player, tile) => {
-                return (tile.index === 1);
-            },
-            this
-        );
-        this.playerLoseColliderSpikes = this.physics.add.overlap(
-            this.player.sprite,
-            this.loseLayer,
-            () => {
-                if (this.player.sprite) {
-                    this.loseSequenceActive = true;
-                    this.runLoseSequence(0, 5, false);
-                }
-            },
-            (player, tile) => {
-                return (tile.index === 20);
-            },
-            this
-        );
         this.enemyLayer = map.getObjectLayer("enemy");
         this.enemyLayer.objects.forEach(enemyObject => {
             const enemy = new Enemy(this, enemyObject.x, enemyObject.y);
             this.enemies.push(enemy);
         });
-        this.playerEnemyCollider = this.physics.add.overlap(
-            this.player.sprite,
-            this.enemies.map(enemy => enemy.sprite),
-            () => {
-                if (this.player.sprite) {
-                    this.loseSequenceActive = true;
-                    this.runLoseSequence(0, 5, false);
-                }
-            },
-            null,
-            this
-        );
+        Utils.createSceneColliders(this); 
         Utils.createSounds(this, BASE_RESOURCES);
         this.cameras.main.startFollow(this.player.sprite);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);

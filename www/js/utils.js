@@ -47,4 +47,37 @@ export default class Utils {
         scene.loseSequenceActive = false;
         scene.loseSequenceSound = false;
     }
+    static createSceneColliders = (scene) => {
+        scene.playerLoseColliderCliff = scene.physics.add.overlap(
+            scene.player.sprite,
+            scene.loseLayer,
+            () => this.createLoseSequence(scene, true),
+            (player, tile) => {
+                return (tile.index === 1);
+            },
+            this
+        );
+        scene.playerLoseColliderSpikes = scene.physics.add.overlap(
+            scene.player.sprite,
+            scene.loseLayer,
+            () => this.createLoseSequence(scene, false),
+            (player, tile) => {
+                return (tile.index === 20);
+            },
+            this
+        );
+        scene.playerEnemyCollider = scene.physics.add.overlap(
+            scene.player.sprite,
+            scene.enemies.map(enemy => enemy.sprite),
+            () => this.createLoseSequence(scene, false),
+            null,
+            this
+        );
+    }
+    static createLoseSequence = (scene, lossByFall) => {
+	if (scene.player.sprite) {
+	    scene.loseSequenceActive = true;
+	    scene.runLoseSequence(0, 5, lossByFall);
+	}
+    }
 }
