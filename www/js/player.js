@@ -1,5 +1,6 @@
 export default class Player {
     constructor(scene, x, y) {
+        this.movementState = false;
         this.scene = scene;
         const anims = scene.anims;
         anims.create({
@@ -43,12 +44,14 @@ export default class Player {
         const { keys, sprite } = this;
         if (sprite.body !== undefined) {
             let canJump = true;
-            if (keys.right.isDown) {
+            if (Phaser.Input.Keyboard.JustDown(keys.right)) {
+                this.movementState = !this.movementState;
+            }
+            if (this.movementState) {
                 if (sprite.body.velocity.x < 0) {
                     sprite.body.setVelocityX(0);
                 } 
                 sprite.body.setAccelerationX(80);
-                sprite.setFlipX(false);
             } else {
                 sprite.setAccelerationX(0);
             }    
