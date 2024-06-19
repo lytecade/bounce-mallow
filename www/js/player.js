@@ -33,10 +33,9 @@ export default class Player {
             .setDrag(1000, 10)
             .setMaxVelocity(80, 240)
             .setSize(5, 8);
-        const { LEFT, RIGHT, UP, W, A, D, SPACE } = Phaser.Input.Keyboard.KeyCodes;
+        const { RIGHT, SPACE } = Phaser.Input.Keyboard.KeyCodes;
         this.keys = scene.input.keyboard.addKeys({
             right: RIGHT,
-            d: D,
             space: SPACE,
         });
     }
@@ -44,7 +43,7 @@ export default class Player {
         const { keys, sprite } = this;
         if (sprite.body !== undefined) {
             let canJump = true;
-            if (keys.right.isDown || keys.d.isDown) {
+            if (keys.right.isDown) {
                 if (sprite.body.velocity.x < 0) {
                     sprite.body.setVelocityX(0);
                 } 
