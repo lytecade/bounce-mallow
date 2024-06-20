@@ -34,9 +34,9 @@ export default class Player {
             .setDrag(1000, 10)
             .setMaxVelocity(80, 240)
             .setSize(5, 8);
-        const { RIGHT, SPACE } = Phaser.Input.Keyboard.KeyCodes;
+        const { ENTER, SPACE } = Phaser.Input.Keyboard.KeyCodes;
         this.keys = scene.input.keyboard.addKeys({
-            right: RIGHT,
+            enter: ENTER,
             space: SPACE,
         });
     }
@@ -44,7 +44,7 @@ export default class Player {
         const { keys, sprite } = this;
         if (sprite.body !== undefined) {
             let canJump = true;
-            if (Phaser.Input.Keyboard.JustDown(keys.right)) {
+            if (Phaser.Input.Keyboard.JustDown(keys.enter)) {
                 this.movementState = !this.movementState;
             }
             if (this.movementState) {
