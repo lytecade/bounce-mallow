@@ -48,9 +48,6 @@ export default class Player {
                 this.movementState = !this.movementState;
             }
             if (this.movementState) {
-                if (sprite.body.velocity.x < 0) {
-                    sprite.body.setVelocityX(0);
-                } 
                 sprite.body.setAccelerationX(80);
             } else {
                 sprite.setAccelerationX(0);
