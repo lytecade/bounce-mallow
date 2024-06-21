@@ -23,6 +23,11 @@ class PlatformScene extends Phaser.Scene {
             const enemy = new Enemy(this, enemyObject.x, enemyObject.y);
             this.enemies.push(enemy);
         });
+        this.itemLayer = map.getObjectLayer("item");
+        this.itemLayer.objects.forEach(itemObject => {
+            console.log(itemObject);
+            console.log(itemObject.name);
+        });
         Utils.createSceneColliders(this); 
         Utils.createSounds(this, BASE_RESOURCES);
         this.cameras.main.startFollow(this.player.sprite);
