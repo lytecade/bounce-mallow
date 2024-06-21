@@ -1,6 +1,7 @@
 import Utils from "/js/utils.js";
 import Player from "/js/player.js";
 import Enemy from "/js/enemy.js";
+import Item from "/js/item.js";
 import { BASE_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
 
 class PlatformScene extends Phaser.Scene {
@@ -25,8 +26,8 @@ class PlatformScene extends Phaser.Scene {
         });
         this.itemLayer = map.getObjectLayer("item");
         this.itemLayer.objects.forEach(itemObject => {
-            console.log(itemObject);
-            console.log(itemObject.name);
+            const item = new Item(this, itemObject.x, itemObject.y, itemObject.name);
+            this.items.push(item);
         });
         Utils.createSceneColliders(this); 
         Utils.createSounds(this, BASE_RESOURCES);
@@ -39,6 +40,9 @@ class PlatformScene extends Phaser.Scene {
         }
         this.enemies.forEach(enemy => {
             enemy.update(time, delta);
+        });
+        this.items.forEach(item => {
+            item.update();
         });
     }
     runLoseSequence(currentStage, time, byFall) {
