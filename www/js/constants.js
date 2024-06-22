@@ -72,3 +72,8 @@ export const BACKGROUND_RESOURCES_HILLS = new Map([
         options: {}
     }]
 ]);
+
+export const ItemTypes = {
+    Coffee: 'COFFEE', 
+    Camomile: 'CAMOMILE'
+};

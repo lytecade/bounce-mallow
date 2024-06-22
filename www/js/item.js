@@ -1,7 +1,9 @@
+import { ItemTypes } from "/js/constants.js";
+
 export default class Item {
     constructor(scene, x, y, name) {
         this.scene = scene;
-        this.name = name;
+        this.type = this.assignType(name);
         const anims = scene.anims;
         anims.create({
             key: "coffee",
@@ -26,10 +28,19 @@ export default class Item {
         this.scene.physics.world.addCollider(this.sprite, scene.groundLayer);
     }
     update() {
-        if (this.name.includes("coffee")) {
+        if (this.type === ItemTypes.Coffee) {
             this.sprite.anims.play("coffee", true);
         } else {
             this.sprite.anims.play("camomile", true);
         }
     }
+    assignType(nameValue) {
+        if (nameValue.includes("coffee")) {
+            return ItemTypes.Coffee;
+        } else if (nameValue.includes("camomile")) {
+            return ItemTypes.Camomile
+        } else {
+            return '';
+        }
+    } 
 }
