@@ -45,6 +45,11 @@ class PlatformScene extends Phaser.Scene {
             item.update();
         });
     }
+    runItemSequence() {
+        console.log(this.itemSequenceActive);
+        console.log(Math.random());
+        this.itemSequenceActive = false;
+    }
     runLoseSequence(currentStage, time, byFall) {
         this.time.delayedCall(time, () => {
             currentStage++;

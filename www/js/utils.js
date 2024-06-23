@@ -47,6 +47,7 @@ export default class Utils {
         scene.items = [];
         scene.loseSequenceActive = false;
         scene.loseSequenceSound = false;
+        scene.itemSequenceActive = false;
     }
     static createSceneColliders = (scene) => {
         scene.playerLoseColliderCliff = scene.physics.add.overlap(
@@ -74,11 +75,24 @@ export default class Utils {
             null,
             this
         );
+        scene.playerItemCollider = scene.physics.add.overlap(
+            scene.player.sprite,
+            scene.items.map(item => item.sprite),
+            () => this.createItemSequence(scene),
+            null,
+            this
+        );
     }
     static createLoseSequence = (scene, lossByFall) => {
 	if (scene.player.sprite) {
 	    scene.loseSequenceActive = true;
 	    scene.runLoseSequence(0, 5, lossByFall);
 	}
+    }
+    static createItemSequence = (scene) => {
+        if (scene.player.sprite) {
+            scene.itemSequenceActive = true;
+            scene.runItemSequence();
+        }
     }
 }
