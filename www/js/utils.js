@@ -88,7 +88,12 @@ export default class Utils {
 	    scene.runLoseSequence(0, 5, lossByFall);
 	}
     }
-    static createItemSequence = (player, item) => {
-        console.log(item);
+    static createItemSequence = (player, itemSprite) => {
+        const scene = player.scene;
+        const item = scene.items.find(i => i.sprite === itemSprite);
+        if (item && item.activated === false) {
+            console.log(`Item activated: ${item.activated}`);
+            item.activated = true;
+        }
     }
 }
