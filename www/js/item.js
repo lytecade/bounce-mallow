@@ -4,6 +4,7 @@ export default class Item {
     constructor(scene, x, y, name) {
         this.scene = scene;
         this.type = this.assignType(name);
+        this.activated = false;
         const anims = scene.anims;
         anims.create({
             key: "coffee",
