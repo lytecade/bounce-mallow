@@ -88,15 +88,16 @@ export default class Utils {
 	    scene.runLoseSequence(0, 5, lossByFall);
 	}
     }
-    static createItemSequence = (player, itemSprite) => {
-        const scene = player.scene;
+    static createItemSequence = (playerReference, itemSprite) => {
+        const scene = playerReference.scene;
         const item = scene.items.find(i => i.sprite === itemSprite);
         if (item && item.activated === false) {
-            
-
-
             item.activated = true;
             itemSprite.setVisible(false);
+            playerReference.fastSequenceActive = true;
+            scene.time.delayedCall(1000, () => {
+                console.log("1 second has passed");
+            });
         }
     }
 }

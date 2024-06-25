@@ -77,3 +77,9 @@ export const ItemTypes = {
     Coffee: 'COFFEE', 
     Camomile: 'CAMOMILE'
 };
+
+export const SpeedTypes = {
+    Normal: 80,
+    Slow: 60,
+    Fast: 100
+};

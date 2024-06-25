@@ -1,7 +1,12 @@
+import { SpeedTypes } from "/js/constants.js";
+
 export default class Player {
     constructor(scene, x, y) {
         this.movementState = false;
         this.scene = scene;
+        this.baseSpeed = SpeedTypes.Normal;
+        this.fastSequenceActive = false;
+        this.slowSequenceActive = false;
         const anims = scene.anims;
         anims.create({
             key: "player-idle",
@@ -32,7 +37,7 @@ export default class Player {
         });
         this.sprite = scene.physics.add.sprite(x, y, "sprite-player", 0)
             .setDrag(1000, 10)
-            .setMaxVelocity(80, 240)
+            .setMaxVelocity(this.baseSpeed, 240)
             .setSize(5, 8);
         const { ENTER, SPACE } = Phaser.Input.Keyboard.KeyCodes;
         this.keys = scene.input.keyboard.addKeys({
@@ -48,7 +53,7 @@ export default class Player {
                 this.movementState = !this.movementState;
             }
             if (this.movementState) {
-                sprite.body.setAccelerationX(80);
+                sprite.body.setAccelerationX(this.baseSpeed);
             } else {
                 sprite.setAccelerationX(0);
             }    
