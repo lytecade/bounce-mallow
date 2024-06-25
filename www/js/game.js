@@ -51,7 +51,7 @@ class PlatformScene extends Phaser.Scene {
             if (byFall === true) {
                 switch (currentStage) {
                     case 1:
-                        this.player.sprite.setTexture("sprite-player", 4);
+                        this.player.sprite.setVisible(false);
                         this.runLoseSequence(currentStage, time, byFall);
                         break;
                     case 2:

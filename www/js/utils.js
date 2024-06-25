@@ -92,8 +92,11 @@ export default class Utils {
         const scene = player.scene;
         const item = scene.items.find(i => i.sprite === itemSprite);
         if (item && item.activated === false) {
-            console.log(`Item activated: ${item.activated}`);
+            
+
+
             item.activated = true;
+            itemSprite.setVisible(false);
         }
     }
 }
