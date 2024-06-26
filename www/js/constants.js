@@ -92,6 +92,6 @@ export const ItemTypes = {
 
 export const SpeedTypes = {
     Normal: 80,
-    Slow: 60,
-    Fast: 100
+    Slow: 40,
+    Fast: 120
 };

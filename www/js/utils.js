@@ -102,22 +102,18 @@ export default class Utils {
         if (item && item.activated === false) {
             item.activated = true;
             itemSprite.setVisible(false);
-            playerReference.fastSequenceActive = false;
-            playerReference.slowSequenceActive = false;
+            scene.player.fastSequenceActive = false;
+            scene.player.slowSequenceActive = false;
             if (item.type == ItemTypes.Coffee) {
-                playerReference.fastSequenceActive = true;
+                scene.player.fastSequenceActive = true;
                 scene.fastSound.play();
             } else {
-                playerReference.slowSequenceActive = true;
+                scene.player.slowSequenceActive = true;
                 scene.slowSound.play();
             }
-            console.log(playerReference.fastSequenceActive);
-            console.log(playerReference.slowSequenceActive);
-            scene.time.delayedCall(1000, () => {
-                playerReference.fastSequenceActive = false;
-                playerReference.slowSequenceActive = false;
-                console.log(playerReference.fastSequenceActive);
-                console.log(playerReference.slowSequenceActive);
+            scene.time.delayedCall(2500, () => {
+                scene.player.fastSequenceActive = false;
+                scene.player.slowSequenceActive = false;
             });
         }
     }

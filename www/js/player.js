@@ -49,6 +49,14 @@ export default class Player {
         const { keys, sprite } = this;
         if (sprite.body !== undefined) {
             let canJump = true;
+            if (this.fastSequenceActive === true) {
+                this.baseSpeed = SpeedTypes.Fast;
+            } else if (this.slowSequenceActive === true) {
+                this.baseSpeed = SpeedTypes.Slow;
+            } else {
+                this.baseSpeed = SpeedTypes.Normal;
+            }
+            sprite.body.setMaxVelocity(this.baseSpeed, 240);
             if (Phaser.Input.Keyboard.JustDown(keys.enter)) {
                 this.movementState = !this.movementState;
             }
