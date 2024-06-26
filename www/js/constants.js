@@ -1,4 +1,16 @@
 export const BASE_RESOURCES = new Map([
+    ["sfx-fast", {
+        type: "audio",
+        name: "sfx-fast",
+        ext: "wav",
+        options: {}
+    }],
+    ["sfx-slow", {
+        type: "audio",
+        name: "sfx-slow",
+        ext: "wav",
+        options: {}
+    }],
     ["sfx-jump", {
         type: "audio",
         name: "sfx-jump",

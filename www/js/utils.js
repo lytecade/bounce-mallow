@@ -41,6 +41,12 @@ export default class Utils {
                 if (value.name.includes("lose")) {
                     scene.loseSound = scene.sound.add(value.name);
                 }
+                if (value.name.includes("fast")) {
+                    scene.fastSound = scene.sound.add(value.name);
+                }
+                if (value.name.includes("slow")) {
+                    scene.slowSound = scene.sound.add(value.name);
+                }
             }
         }
     }
@@ -100,8 +106,10 @@ export default class Utils {
             playerReference.slowSequenceActive = false;
             if (item.type == ItemTypes.Coffee) {
                 playerReference.fastSequenceActive = true;
+                scene.fastSound.play();
             } else {
                 playerReference.slowSequenceActive = true;
+                scene.slowSound.play();
             }
             console.log(playerReference.fastSequenceActive);
             console.log(playerReference.slowSequenceActive);
