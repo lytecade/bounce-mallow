@@ -1,3 +1,5 @@
+import { ItemTypes, SpeedTypes } from "/js/constants.js";
+
 export default class Utils {
     static loadResources = (scene, resourceCollection) => {
         for (const [key, value] of resourceCollection) {
@@ -94,9 +96,20 @@ export default class Utils {
         if (item && item.activated === false) {
             item.activated = true;
             itemSprite.setVisible(false);
-            playerReference.fastSequenceActive = true;
+            playerReference.fastSequenceActive = false;
+            playerReference.slowSequenceActive = false;
+            if (item.type == ItemTypes.Coffee) {
+                playerReference.fastSequenceActive = true;
+            } else {
+                playerReference.slowSequenceActive = true;
+            }
+            console.log(playerReference.fastSequenceActive);
+            console.log(playerReference.slowSequenceActive);
             scene.time.delayedCall(1000, () => {
-                console.log("1 second has passed");
+                playerReference.fastSequenceActive = false;
+                playerReference.slowSequenceActive = false;
+                console.log(playerReference.fastSequenceActive);
+                console.log(playerReference.slowSequenceActive);
             });
         }
     }
