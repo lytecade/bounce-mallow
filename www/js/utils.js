@@ -3,10 +3,19 @@ import { ItemTypes, SpeedTypes } from "/js/constants.js";
 export default class Utils {
     static loadResources = (scene, resourceCollection) => {
         for (const [key, value] of resourceCollection) {
-            let resourcePath = "/assets/" + value.type + "/" + value.name + "." + value.ext;
+            let resourcePath = (value.type != "music") ? "/assets/" + value.type + "/" + value.name + "." + value.ext : "";
             switch (value.type) {
-                case "audio": // Create seperate switch for bgm and sfx
+                case "sounds": 
                     scene.load.audio(value.name, resourcePath);
+                    break;
+                case "music":
+                    const extensions = value.ext;
+                    let resourcePaths = [];
+                    for (let i = 0; i < extensions.length; i++) {
+                        let newExtension = "/assets/music/" + value.name + "." + extensions[i];
+                        resourcePaths.push(newExtension);
+                    }
+                    scene.load.audio(value.name, resourcePaths);
                     break;
                 case "images":
                 case "tilesets":
@@ -34,28 +43,26 @@ export default class Utils {
     }
     static createSounds = (scene, resourceCollection) => {
         for (const [key, value] of resourceCollection) {
-            if (value.type === "audio") { // Create seperate type for audio sfx and bgm
-                if (value.name.includes("sfx")) {
-                    if (value.name.includes("jump")) {
-                        scene.jumpSound = scene.sound.add(value.name);
-                    }
-                    if (value.name.includes("lose")) {
-                        scene.loseSound = scene.sound.add(value.name);
-                    }
-                    if (value.name.includes("fast")) {
-                        scene.fastSound = scene.sound.add(value.name);
-                    }
-                    if (value.name.includes("slow")) {
-                        scene.slowSound = scene.sound.add(value.name);
-                    }
-                } 
-                if (value.name.includes("bgm")) {
-                    if (value.name.includes("level")) {
-                        scene.backgroundMusic = scene.sound.add(value.name, {
-                            loop: true,
-                            volume: 0.5
-                        });
-                    }
+            if (value.type === "sounds") { 
+	        if (value.name.includes("jump")) {
+	            scene.jumpSound = scene.sound.add(value.name);
+	        }
+	        if (value.name.includes("lose")) {
+	            scene.loseSound = scene.sound.add(value.name);
+	        }
+	        if (value.name.includes("fast")) {
+	            scene.fastSound = scene.sound.add(value.name);
+	        }
+	        if (value.name.includes("slow")) {
+	            scene.slowSound = scene.sound.add(value.name);
+	        }
+            }
+            if (value.type === "music") {
+                if (value.name.includes("level")) {
+                    scene.backgroundMusic = scene.sound.add(value.name, {
+                        loop: true,
+                        volume: 0.5
+                    });
                 }
             }
         }

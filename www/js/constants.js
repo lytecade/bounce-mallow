@@ -1,32 +1,32 @@
 export const BASE_RESOURCES = new Map([
     ["sfx-fast", {
-        type: "audio",
+        type: "sounds",
         name: "sfx-fast",
         ext: "wav",
         options: {}
     }],
     ["sfx-slow", {
-        type: "audio",
+        type: "sounds",
         name: "sfx-slow",
         ext: "wav",
         options: {}
     }],
     ["sfx-jump", {
-        type: "audio",
+        type: "sounds",
         name: "sfx-jump",
         ext: "wav",
         options: {}
     }],
     ["sfx-lose", {
-        type: "audio",
+        type: "sounds",
         name: "sfx-lose",
         ext: "wav",
         options: {}
     }],
     ["bgm-level", {
-        type: "audio",
+        type: "music",
         name: "bgm-level",
-        ext: "wav",
+        ext: ["wav"],
         options: {}
     }],
     ["sprite-player", {
