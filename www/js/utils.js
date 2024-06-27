@@ -111,7 +111,7 @@ export default class Utils {
                 scene.player.slowSequenceActive = true;
                 scene.slowSound.play();
             }
-            scene.time.delayedCall(2500, () => {
+            scene.time.delayedCall(2000, () => {
                 scene.player.fastSequenceActive = false;
                 scene.player.slowSequenceActive = false;
             });
