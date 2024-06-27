@@ -44,6 +44,13 @@ class PlatformScene extends Phaser.Scene {
         this.items.forEach(item => {
             item.update();
         });
+        if (this.sound.context.state === 'suspended') {
+            this.sound.context.resume().then(() => {
+                if (!this.backgroundMusic.isPlaying) {
+                    this.backgroundMusic.play();
+                }
+            });
+        }
     }
     runLoseSequence(currentStage, time, byFall) {
         this.time.delayedCall(time, () => {

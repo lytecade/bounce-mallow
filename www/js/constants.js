@@ -23,6 +23,12 @@ export const BASE_RESOURCES = new Map([
         ext: "wav",
         options: {}
     }],
+    ["bgm-level", {
+        type: "audio",
+        name: "bgm-level",
+        ext: "wav",
+        options: {}
+    }],
     ["sprite-player", {
         type: "spritesheets",
         name: "sprite-player",
