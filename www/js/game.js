@@ -52,48 +52,6 @@ class PlatformScene extends Phaser.Scene {
             });
         }
     }
-    runLoseSequence(currentStage, time, byFall) {
-        this.time.delayedCall(time, () => {
-            currentStage++;
-            if (byFall === true) {
-                switch (currentStage) {
-                    case 1:
-                        this.player.sprite.setVisible(false);
-                        this.runLoseSequence(currentStage, time, byFall);
-                        break;
-                    case 2:
-                        if (this.loseSequenceSound === false) {
-                            this.loseSound.play();
-                            this.loseSequenceSound = true;
-                        } 
-                        this.cameras.main.stopFollow();
-                        this.runLoseSequence(currentStage, time * 400, byFall);
-                        break;
-                    default:
-                        this.scene.restart();
-                }
-            } else {
-                switch (currentStage) {
-                    case 1:
-                        if (this.player.sprite.anims) {
-                            this.player.sprite.anims.play("player-destroy", true); 
-                        } 
-                        this.runLoseSequence(currentStage, time, byFall);
-                        break;
-                    case 2:
-                        if (this.loseSequenceSound === false) {
-                            this.loseSound.play();
-                            this.loseSequenceSound = true;
-                        } 
-                        this.cameras.main.stopFollow();
-                        this.runLoseSequence(currentStage, time * 200, byFall);
-                        break;
-                    default:
-                        this.scene.restart();
-                }
-            }
-        }, [], this);
-    }
 }
 
 const game = new Phaser.Game({

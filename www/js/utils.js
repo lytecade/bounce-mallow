@@ -110,8 +110,50 @@ export default class Utils {
     static createLoseSequence = (scene, lossByFall) => {
 	if (scene.player.sprite) {
 	    scene.loseSequenceActive = true;
-	    scene.runLoseSequence(0, 5, lossByFall);
+	    this.runLoseSequence(scene, 0, 5, lossByFall);
 	}
+    }
+    static runLoseSequence(scene, currentStage, time, byFall) {
+        scene.time.delayedCall(time, () => {
+            currentStage++;
+            if (byFall === true) {
+                switch (currentStage) {
+                    case 1:
+                        scene.player.sprite.setVisible(false);
+                        this.runLoseSequence(scene, currentStage, time, byFall);
+                        break;
+                    case 2:
+                        if (scene.loseSequenceSound === false) {
+                            scene.loseSound.play();
+                            scene.loseSequenceSound = true;
+                        } 
+                        scene.cameras.main.stopFollow();
+                        this.runLoseSequence(scene, currentStage, time * 400, byFall);
+                        break;
+                    default:
+                        scene.scene.restart();
+                }
+            } else {
+                switch (currentStage) {
+                    case 1:
+                        if (scene.player.sprite.anims) {
+                            scene.player.sprite.anims.play("player-destroy", true); 
+                        } 
+                        this.runLoseSequence(scene, currentStage, time, byFall);
+                        break;
+                    case 2:
+                        if (scene.loseSequenceSound === false) {
+                            scene.loseSound.play();
+                            scene.loseSequenceSound = true;
+                        } 
+                        scene.cameras.main.stopFollow();
+                        this.runLoseSequence(scene, currentStage, time * 200, byFall);
+                        break;
+                    default:
+                        scene.scene.restart();
+                }
+            }
+        }, [], this);
     }
     static createItemSequence = (playerReference, itemSprite) => {
         const scene = playerReference.scene;
