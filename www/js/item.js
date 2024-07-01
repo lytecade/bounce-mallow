@@ -24,6 +24,15 @@ export default class Item {
             frameRate: 4,
             repeat: -1
         });
+        anims.create({
+            key: "chocolate",
+            frames: anims.generateFrameNumbers("sprite-items", {
+                start: 8,
+                end: 11
+            }),
+            frameRate: 4,
+            repeat: -1
+        });
         this.sprite = scene.physics.add.sprite(x, y, "sprite-items", 0)
             .setSize(8, 8);
         this.scene.physics.world.addCollider(this.sprite, scene.groundLayer);
@@ -31,8 +40,10 @@ export default class Item {
     update() {
         if (this.type === ItemTypes.Coffee) {
             this.sprite.anims.play("coffee", true);
-        } else {
+        } else if (this.type === ItemTypes.Camomile) {
             this.sprite.anims.play("camomile", true);
+        } else {
+            this.sprite.anims.play("chocolate", true);
         }
     }
     assignType(nameValue) {
@@ -40,6 +51,8 @@ export default class Item {
             return ItemTypes.Coffee;
         } else if (nameValue.includes("camomile")) {
             return ItemTypes.Camomile
+        } else if (nameValue.includes("chocolate")) {
+            return ItemTypes.Chocolate
         } else {
             return '';
         }

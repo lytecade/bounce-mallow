@@ -166,10 +166,11 @@ export default class Utils {
             if (item.type == ItemTypes.Coffee) {
                 scene.player.fastSequenceActive = true;
                 scene.fastSound.play();
-            } else {
+            }
+            if (item.type == ItemTypes.Camomile) {
                 scene.player.slowSequenceActive = true;
                 scene.slowSound.play();
-            }
+            }             
             scene.time.delayedCall(2000, () => {
                 scene.player.fastSequenceActive = false;
                 scene.player.slowSequenceActive = false;

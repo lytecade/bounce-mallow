@@ -93,7 +93,8 @@ export const BACKGROUND_RESOURCES_HILLS = new Map([
 
 export const ItemTypes = {
     Coffee: 'COFFEE', 
-    Camomile: 'CAMOMILE'
+    Camomile: 'CAMOMILE',
+    Chocolate: 'CHOCOLATE'
 };
 
 export const SpeedTypes = {
