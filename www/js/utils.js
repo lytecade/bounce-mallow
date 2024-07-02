@@ -172,7 +172,7 @@ export default class Utils {
                 scene.slowSound.play();
             }             
             if (item.type == ItemTypes.Chocolate) {
-                scene.slowSound.play();
+                scene.fastSound.play();
             }
             scene.time.delayedCall(2000, () => {
                 scene.player.fastSequenceActive = false;
