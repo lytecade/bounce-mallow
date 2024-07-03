@@ -4,7 +4,7 @@ import Enemy from "/js/enemy.js";
 import Item from "/js/item.js";
 import { BASE_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
 
-export default class PlatformScene extends Phaser.Scene {
+export default class StaticPlatformScene extends Phaser.Scene {
     preload() {
         Utils.loadResources(this, BASE_RESOURCES);
         Utils.loadResources(this, BACKGROUND_RESOURCES_HILLS);
