@@ -1,4 +1,4 @@
-import StaticPlatformScene from "/js/scenes/static-platform-scene.js";
+import StaticPlatformScene from "/js/static-platform-scene.js";
 
 const game = new Phaser.Game({
     parent: "game",
