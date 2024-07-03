@@ -102,3 +102,9 @@ export const SpeedTypes = {
     Slow: 40,
     Fast: 120
 };
+
+export const TileSettings = {
+    TileSize: 8,
+    TileRows: 11,
+    TileGroundLevel: 3
+}
