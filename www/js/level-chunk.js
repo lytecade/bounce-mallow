@@ -9,6 +9,7 @@ export default class LevelChunk {
         this.height = height;
         this.tileSize = TileSettings.TileSize; 
         this.tileRows = TileSettings.TileRows;
+        this.tileGroundLevel = TileSettings.TileGroundLevel;
         this.generate();
     }
     generate() {
