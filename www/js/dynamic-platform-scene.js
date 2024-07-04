@@ -19,6 +19,21 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.chunks.push(chunk);
     }
     update() {
-        //
+        this.manageChunks();
+    }
+    manageChunks() {
+        const playerX = this.player.sprite.x;
+        const lastChunk = this.chunks[this.chunks.length - 1];
+
+        // Create new chunk if player is close to the end
+        if (playerX > lastChunk.x - this.chunkWidth) {
+            this.createChunk(lastChunk.x + this.chunkWidth, 0);
+        }
+
+        // Remove far away chunks
+        if (this.chunks.length > this.activeChunks) {
+            const oldChunk = this.chunks.shift();
+            oldChunk.destroy();
+        }
     }
 }
