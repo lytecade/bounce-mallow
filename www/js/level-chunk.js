@@ -14,8 +14,8 @@ export default class LevelChunk {
         this.generate();
     }
     generate() {
-        const widthInTiles = Math.min(Math.floor(this.width / this.tileSize);
-        const heightInTiles = this.maxHeight;
+        const widthInTiles = Math.min(Math.floor(this.width / this.tileSize));
+        const heightInTiles = this.tileRows;
         for (let x = 0; x < widthInTiles; x++) {
             this.tiles[x] = [];
             for (let y = 0; y < heightInTiles; y++) {
@@ -27,7 +27,7 @@ export default class LevelChunk {
             currentHeight += Phaser.Math.Between(-1, 1);
             currentHeight = Phaser.Math.Clamp(currentHeight, 3, heightInTiles - 3);
             for (let y = currentHeight; y < heightInTiles; y++) {
-                if (y < currentHeight + this.groundDepth) {
+                if (y < currentHeight + this.tileGroundLevel) {
                     this.tiles[x][y] = 9; // Use tile index 2 for ground
                 } else {
                     this.tiles[x][y] = 3; // Use tile index 3 for underground (optional)
@@ -43,8 +43,7 @@ export default class LevelChunk {
         });
         const tiles = map.addTilesetImage("tileset-platform", "tileset-platform");
         this.groundLayer = map.createLayer(0, tiles, this.x, 0);
-        this.groundLayer.setCollisionByExclusion([-1, 0]); 
-        return this.groundLayer;
+        //this.groundLayer.setCollisionByExclusion([-1, 0]); 
     }
     destroy() {
         if (this.groundLayer) {
