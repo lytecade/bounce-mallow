@@ -22,7 +22,7 @@ export default class LevelChunk {
                 this.tiles[x][y] = 0; // 0 represents empty space
             }
         }
-        let currentHeight = Math.floor(heightInTiles / 2); // Start at middle height
+        let currentHeight = 3;//Math.floor(heightInTiles / 2); // Start at middle height
         for (let x = 0; x < widthInTiles; x++) {
             currentHeight += Phaser.Math.Between(-1, 1);
             currentHeight = Phaser.Math.Clamp(currentHeight, 3, heightInTiles - 3);
@@ -34,6 +34,7 @@ export default class LevelChunk {
                 }
             }
         }
+        console.log(this.tiles);
     }
     create() {
         const map = this.scene.make.tilemap({
