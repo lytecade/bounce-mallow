@@ -1,3 +1,5 @@
+import Utils from "/js/level-chunk.js";
+
 export default class DynamicPlatformScene extends Phaser.Scene {
     constructor() {
         super('DynamicPlatformScene');
@@ -15,8 +17,9 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     }
     createChunk(x, y) {
         const chunk = new LevelChunk(this, x, y, this.chunkWidth, this.game.config.height);
-        chunk.create();
+        const groundLayer = chunk.create();
         this.chunks.push(chunk);
+        this.physics.add.collider(this.player.sprite, groundLayer);
     }
     update() {
         this.manageChunks();
@@ -24,13 +27,9 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     manageChunks() {
         const playerX = this.player.sprite.x;
         const lastChunk = this.chunks[this.chunks.length - 1];
-
-        // Create new chunk if player is close to the end
         if (playerX > lastChunk.x - this.chunkWidth) {
             this.createChunk(lastChunk.x + this.chunkWidth, 0);
         }
-
-        // Remove far away chunks
         if (this.chunks.length > this.activeChunks) {
             const oldChunk = this.chunks.shift();
             oldChunk.destroy();
