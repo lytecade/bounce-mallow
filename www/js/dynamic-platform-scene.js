@@ -9,8 +9,8 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     }
     create() {
         this.chunks = [];
-        this.chunkWidth = 100;
-        this.activeChunks = 3; 
+        this.chunkWidth = 88;
+        this.activeChunks = 5; 
         Utils.createBackgrounds(this, 1, "background-hills", 0);
         Utils.createSceneAttributes(this);
         this.generateInitialChunks();
@@ -21,7 +21,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         }
     }
     createChunk(x, y) {
-        const chunk = new LevelChunk(this, x, y, this.chunkWidth, this.game.config.height);
+        const chunk = new LevelChunk(this, x, y, this.chunkWidth);
         const groundLayer = chunk.create();
         this.chunks.push(chunk);
         //this.physics.add.collider(this.player.sprite, groundLayer);

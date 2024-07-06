@@ -1,12 +1,11 @@
 import { TileSettings } from "/js/constants.js";
 
 export default class LevelChunk {
-    constructor(scene, x, y, width, height) {
+    constructor(scene, x, y, chunkSize) {
         this.scene = scene;
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
+        this.chunkSize = chunkSize;
         this.tileSize = TileSettings.TileSize; 
         this.tileRows = TileSettings.TileRows;
         this.tileGroundLevel = TileSettings.TileGroundLevel;
@@ -14,7 +13,7 @@ export default class LevelChunk {
         this.generate();
     }
     generate() {
-        const widthInTiles = Math.min(Math.floor(this.width / this.tileSize));
+        const widthInTiles = Math.min(Math.floor(this.chunkSize / this.tileSize));
         const heightInTiles = this.tileRows;
         for (let x = 0; x < widthInTiles; x++) {
             this.tiles[x] = [];
@@ -22,6 +21,16 @@ export default class LevelChunk {
                 this.tiles[x][y] = 0; // 0 represents empty space
             }
         }
+
+        for (let x = 0; x < widthInTiles; x++) {
+            for (let y = 0; y < heightInTiles; y++) {
+                if (y < this.tileGroundLevel) {
+                    this.tiles[x][y] = 2;
+                }
+            }
+        }
+        console.log(this.tiles);
+        /*
         let currentHeight = 3;//Math.floor(heightInTiles / 2); // Start at middle height
         for (let x = 0; x < widthInTiles; x++) {
             currentHeight += Phaser.Math.Between(-1, 1);
@@ -30,11 +39,11 @@ export default class LevelChunk {
                 if (y < currentHeight + this.tileGroundLevel) {
                     this.tiles[x][y] = 9; // Use tile index 2 for ground
                 } else {
-                    this.tiles[x][y] = 3; // Use tile index 3 for underground (optional)
+                    this.tiles[x][y] = 2; // Use tile index 3 for underground (optional)
                 }
             }
         }
-        console.log(this.tiles);
+        */
     }
     create() {
         const map = this.scene.make.tilemap({
