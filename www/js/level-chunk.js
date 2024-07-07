@@ -14,36 +14,23 @@ export default class LevelChunk {
     }
     generate() {
         const widthInTiles = Math.min(Math.floor(this.chunkSize / this.tileSize));
-        const heightInTiles = this.tileRows;
         for (let x = 0; x < widthInTiles; x++) {
             this.tiles[x] = [];
-            for (let y = 0; y < heightInTiles; y++) {
-                this.tiles[x][y] = 0; // 0 represents empty space
+            for (let y = 0; y < this.tileRows; y++) {
+                this.tiles[x][y] = 0; 
             }
         }
-
-        for (let x = 0; x < widthInTiles; x++) {
-            for (let y = 0; y < heightInTiles; y++) {
-                if (y < this.tileGroundLevel) {
-                    this.tiles[x][y] = 2;
+        const maxFloor = (this.tileRows - this.tileGroundLevel) - 1;
+        for (let y = 0; y < this.tileRows; y++) {
+            for (let x = 0; x < widthInTiles; x++) {
+                if ((y + 1) > maxFloor) {
+                    this.tiles[y][x] = 2;
+                } else if ((y + 1) == maxFloor) {
+                    this.tiles[y][x] = 9;
                 }
             }
         }
         console.log(this.tiles);
-        /*
-        let currentHeight = 3;//Math.floor(heightInTiles / 2); // Start at middle height
-        for (let x = 0; x < widthInTiles; x++) {
-            currentHeight += Phaser.Math.Between(-1, 1);
-            currentHeight = Phaser.Math.Clamp(currentHeight, 3, heightInTiles - 3);
-            for (let y = currentHeight; y < heightInTiles; y++) {
-                if (y < currentHeight + this.tileGroundLevel) {
-                    this.tiles[x][y] = 9; // Use tile index 2 for ground
-                } else {
-                    this.tiles[x][y] = 2; // Use tile index 3 for underground (optional)
-                }
-            }
-        }
-        */
     }
     create() {
         const map = this.scene.make.tilemap({
