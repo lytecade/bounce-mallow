@@ -1,19 +1,22 @@
 import LevelChunk from "/js/level-chunk.js";
 import Utils from "/js/utils.js";
-import { DYN_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
+import Player from "/js/player.js";
+import { BASE_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
 
 export default class DynamicPlatformScene extends Phaser.Scene {
     preload() {
-        Utils.loadResources(this, DYN_RESOURCES);
+        Utils.loadResources(this, BASE_RESOURCES);
         Utils.loadResources(this, BACKGROUND_RESOURCES_HILLS);
     }
     create() {
         this.chunks = [];
         this.chunkWidth = 88;
-        this.activeChunks = 1; 
+        this.activeChunks = 3; 
         Utils.createBackgrounds(this, 1, "background-hills", 0);
-        Utils.createSceneAttributes(this);
+        Utils.createSceneAttributes(this, BASE_RESOURCES);
+        this.player = new Player(this, 10, 10);
         this.generateInitialChunks();
+        Utils.createSounds(this, BASE_RESOURCES);
     }
     generateInitialChunks() {
         for (let i = 0; i < this.activeChunks; i++) {
@@ -24,10 +27,13 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         const chunk = new LevelChunk(this, x, y, this.chunkWidth);
         const groundLayer = chunk.create();
         this.chunks.push(chunk);
-        //this.physics.add.collider(this.player.sprite, groundLayer);
+        this.physics.add.collider(this.player.sprite, chunk.groundLayer);
     }
     update() {
         //this.manageChunks();
+        if (this.loseSequenceActive == false) {
+            this.player.update();
+        }
     }
     manageChunks() {
         /*

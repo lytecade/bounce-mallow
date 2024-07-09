@@ -38,8 +38,7 @@ export default class LevelChunk {
             tileHeight: this.tileSize
         });
         const tiles = map.addTilesetImage("tileset-platform", "tileset-platform");
-        this.groundLayer = map.createLayer(0, tiles, this.x, 0);
-        //this.groundLayer.setCollisionByExclusion([-1, 0]); 
+        this.groundLayer = map.createLayer(0, tiles, this.x, 0).setCollisionByExclusion([-1, 0]);
     }
     destroy() {
         if (this.groundLayer) {
