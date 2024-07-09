@@ -10,7 +10,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     create() {
         this.chunks = [];
         this.chunkWidth = 88;
-        this.activeChunks = 5; 
+        this.activeChunks = 1; 
         Utils.createBackgrounds(this, 1, "background-hills", 0);
         Utils.createSceneAttributes(this);
         this.generateInitialChunks();

@@ -14,23 +14,22 @@ export default class LevelChunk {
     }
     generate() {
         const widthInTiles = Math.min(Math.floor(this.chunkSize / this.tileSize));
-        for (let x = 0; x < widthInTiles; x++) {
-            this.tiles[x] = [];
-            for (let y = 0; y < this.tileRows; y++) {
-                this.tiles[x][y] = 0; 
+        for (let row = 0; row < widthInTiles; row++) {
+            this.tiles[row] = [];
+            for (let column = 0; column < this.tileRows; column++) {
+                this.tiles[row][column] = 0; 
             }
         }
         const maxFloor = (this.tileRows - this.tileGroundLevel) - 1;
-        for (let y = 0; y < this.tileRows; y++) {
-            for (let x = 0; x < widthInTiles; x++) {
-                if ((y + 1) > maxFloor) {
-                    this.tiles[y][x] = 2;
-                } else if ((y + 1) == maxFloor) {
-                    this.tiles[y][x] = 9;
+        for (let row = 0; row < widthInTiles; row++) {
+            for (let column = 0; column < this.tileRows; column++) {
+                if ((row + 1) > maxFloor) {
+                    this.tiles[row][column] = 2;
+                } else if ((row + 1) == maxFloor) {
+                    this.tiles[row][column] = 9;
                 }
             }
         }
-        console.log(this.tiles);
     }
     create() {
         const map = this.scene.make.tilemap({
