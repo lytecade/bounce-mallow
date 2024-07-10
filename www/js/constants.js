@@ -115,5 +115,7 @@ export const SpeedTypes = {
 export const TileSettings = {
     TileSize: 8,
     TileRows: 11,
-    TileGroundLevel: 3
+    TileGroundLevel: 3,
+    TileChunkDefaultSize: 88,
+    TileChunkDefaultActive: 5,
 }

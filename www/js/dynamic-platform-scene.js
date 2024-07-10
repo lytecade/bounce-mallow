@@ -1,7 +1,7 @@
 import LevelChunk from "/js/level-chunk.js";
 import Utils from "/js/utils.js";
 import Player from "/js/player.js";
-import { BASE_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
+import { TileSettings, BASE_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
 
 export default class DynamicPlatformScene extends Phaser.Scene {
     preload() {
@@ -10,13 +10,14 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     }
     create() {
         this.chunks = [];
-        this.chunkWidth = 88;
-        this.activeChunks = 3; 
+        this.chunkWidth = TileSettings.TileChunkDefaultSize;
+        this.activeChunks = TileSettings.TileChunkDefaultActive; 
         Utils.createBackgrounds(this, 1, "background-hills", 0);
         Utils.createSceneAttributes(this, BASE_RESOURCES);
-        this.player = new Player(this, 10, 10);
+        this.player = new Player(this, this.chunkWidth, 10);
         this.generateInitialChunks();
         Utils.createSounds(this, BASE_RESOURCES);
+        this.cameras.main.startFollow(this.player.sprite);
     }
     generateInitialChunks() {
         for (let i = 0; i < this.activeChunks; i++) {
