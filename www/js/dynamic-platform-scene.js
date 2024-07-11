@@ -31,22 +31,15 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.physics.add.collider(this.player.sprite, chunk.groundLayer);
     }
     update() {
-        //this.manageChunks();
+        this.manageChunks();
         if (this.loseSequenceActive == false) {
             this.player.update();
         }
     }
     manageChunks() {
-        /*
-        const playerX = this.player.sprite.x;
         const lastChunk = this.chunks[this.chunks.length - 1];
-        if (playerX > lastChunk.x - this.chunkWidth) {
+        if (this.player.sprite.x > lastChunk.x - this.chunkWidth) {
             this.createChunk(lastChunk.x + this.chunkWidth, 0);
         }
-        if (this.chunks.length > this.activeChunks) {
-            const oldChunk = this.chunks.shift();
-            oldChunk.destroy();
-        }
-        */
     }
 }
