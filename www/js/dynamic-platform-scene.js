@@ -10,6 +10,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     }
     create() {
         this.chunks = [];
+        this.chunkColliders = [];
         this.chunkWidth = TileSettings.TileChunkDefaultSize;
         this.activeChunks = TileSettings.TileChunkDefaultActive; 
         Utils.createBackgrounds(this, 1, "background-hills", 0);
@@ -28,7 +29,8 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         const chunk = new LevelChunk(this, x, y, this.chunkWidth);
         const groundLayer = chunk.create();
         this.chunks.push(chunk);
-        this.physics.add.collider(this.player.sprite, chunk.groundLayer);
+        const collider = this.physics.add.collider(this.player.sprite, chunk.groundLayer);
+        this.chunkColliders.push(collider);
     }
     update() {
         this.manageChunks();
@@ -36,10 +38,19 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this.player.update();
         }
     }
+    removeOldestChunk() {
+        if (this.chunks.length > this.activeChunks) {
+            const oldestChunk = this.chunks.shift();
+            oldestChunk.destroy();
+            const oldestCollider = this.chunkColliders.shift();
+            this.physics.world.removeCollider(oldestCollider);
+        }
+    }
     manageChunks() {
         const lastChunk = this.chunks[this.chunks.length - 1];
         if (this.player.sprite.x > lastChunk.x - this.chunkWidth) {
             this.createChunk(lastChunk.x + this.chunkWidth, 0);
+            this.removeOldestChunk();
         }
     }
 }
