@@ -19,6 +19,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.generateInitialChunks();
         Utils.createSounds(this, BASE_RESOURCES);
         this.cameras.main.startFollow(this.player.sprite);
+        this.updateCameraBounds();
     }
     generateInitialChunks() {
         for (let i = 0; i < this.activeChunks; i++) {
@@ -31,6 +32,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.chunks.push(chunk);
         const collider = this.physics.add.collider(this.player.sprite, chunk.groundLayer);
         this.chunkColliders.push(collider);
+        this.updateCameraBounds();
     }
     update() {
         this.manageChunks();
@@ -44,6 +46,17 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             oldestChunk.destroy();
             const oldestCollider = this.chunkColliders.shift();
             this.physics.world.removeCollider(oldestCollider);
+            this.updateCameraBounds();
+        }
+    }
+    updateCameraBounds() {
+        if (this.chunks.length > 0) {
+            const firstChunk = this.chunks[0];
+            const lastChunk = this.chunks[this.chunks.length - 1];
+            const worldWidth = lastChunk.x + this.chunkWidth;
+            const worldHeight = this.sys.game.config.height;
+    
+            this.cameras.main.setBounds(0, 0, worldWidth, worldHeight);
         }
     }
     manageChunks() {
