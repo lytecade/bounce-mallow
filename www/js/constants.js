@@ -117,5 +117,5 @@ export const TileSettings = {
     TileRows: 11,
     TileGroundLevel: 3,
     TileChunkDefaultSize: 88,
-    TileChunkDefaultActive: 5,
+    TileChunkDefaultActive: 4,
 }
