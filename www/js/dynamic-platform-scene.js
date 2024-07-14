@@ -13,8 +13,8 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.chunkColliders = [];
         this.chunkWidth = TileSettings.TileChunkDefaultSize;
         this.activeChunks = TileSettings.TileChunkDefaultActive; 
-        Utils.createBackgrounds(this, 1, "background-hills", 0);
-        Utils.createBackgrounds(this, 3, "background-hills-front", 0.25);
+        this.backgroundImages = Utils.createBackgrounds(this, 1, "background-hills", 0);
+        this.foregroundImages = Utils.createBackgrounds(this, 3, "background-hills-front", 0.25);
         Utils.createSceneAttributes(this, BASE_RESOURCES);
         this.player = new Player(this, this.chunkWidth, 10);
         this.generateInitialChunks();

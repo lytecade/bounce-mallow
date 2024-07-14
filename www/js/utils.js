@@ -34,12 +34,15 @@ export default class Utils {
     }
     static createBackgrounds = (scene, count, texture, scrollFactor) => {
         let trackingXValue = 0;
+        let images = [];
         for (let i = 0; i < count; ++i) {
             const currentImage = scene.add.image(trackingXValue, 0, texture)
                 .setOrigin(0, 0)
                 .setScrollFactor(scrollFactor);
             trackingXValue += currentImage.width;
+            images.push(currentImage);
         }
+        return images;
     }
     static createSounds = (scene, resourceCollection) => {
         for (const [key, value] of resourceCollection) {
