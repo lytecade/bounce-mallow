@@ -56,7 +56,6 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             const lastChunk = this.chunks[this.chunks.length - 1];
             const worldWidth = lastChunk.x + this.chunkWidth;
             const worldHeight = this.sys.game.config.height;
-    
             this.cameras.main.setBounds(0, 0, worldWidth, worldHeight);
         }
     }

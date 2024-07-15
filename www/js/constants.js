@@ -1,12 +1,3 @@
-export const DYN_RESOURCES = new Map([
-    ["tileset-platform", {
-        type: "tilesets",
-        name: "tileset-platform",
-        ext: "png",
-        options: {}
-    }]
-]);
-
 export const BASE_RESOURCES = new Map([
     ["sfx-fast", {
         type: "sounds",
