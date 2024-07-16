@@ -11,7 +11,6 @@ export default class StaticPlatformScene extends Phaser.Scene {
     }
     create() {
         this.backgroundImages = Utils.createBackgrounds(this, 1, "background-hills", 0);
-        this.foregroundImages = Utils.createBackgrounds(this, 3, "background-hills-front", 0.25);
         Utils.createSceneAttributes(this, BASE_RESOURCES);
         const map = this.make.tilemap({ key: "tilemap-platform" });
         const tiles = map.addTilesetImage("tileset-platform", "tileset-platform");
