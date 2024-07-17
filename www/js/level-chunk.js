@@ -10,8 +10,11 @@ export default class LevelChunk {
         this.tileRows = TileSettings.TileRows;
         this.tileGroundLevel = TileSettings.TileGroundLevel;
         this.tiles = [];
+        this.cliffProbability = 0.1;
+        this.minCliffDistance = 5;
         this.generate();
     }
+
     generate() {
         const widthInTiles = Math.min(Math.floor(this.chunkSize / this.tileSize));
         for (let row = 0; row < widthInTiles; row++) {
@@ -21,8 +24,16 @@ export default class LevelChunk {
             }
         }
         const maxFloor = (this.tileRows - this.tileGroundLevel) - 1;
+        let lastCliffEnd = -this.minCliffDistance;
         for (let row = 0; row < widthInTiles; row++) {
             for (let column = 0; column < this.tileRows; column++) {
+                if ((row == 0) && column - lastCliffEnd >= this.minCliffDistance && Math.random() < this.cliffProbability) {
+                    console.log("start cliff");
+                    console.log(this.x);
+                    console.log(row);
+                    console.log(column);
+                    lastCliffEnd = column;
+                }
                 if ((row + 1) > maxFloor) {
                     this.tiles[row][column] = 2;
                 } else if ((row + 1) == maxFloor) {
@@ -31,6 +42,23 @@ export default class LevelChunk {
             }
         }
     }
+
+    generateCliff(startRow, maxFloor) {
+        const cliffWidth = 2; // Width of the cliff
+        for (let row = startRow; row < startRow + cliffWidth && row < this.tiles.length; row++) {
+            for (let column = 0; column < this.tileRows; column++) {
+                if (column > maxFloor) {
+                    // Add some visual cue for the cliff (e.g., a different tile type)
+                    this.tiles[row][column] = 3; // Assuming 3 is a cliff tile
+                } else {
+                    this.tiles[row][column] = 0; // Empty space for the cliff
+                }
+            }
+        }
+        return startRow + cliffWidth - 1; // Return the last row of the cliff
+    }
+
+
     create() {
         const map = this.scene.make.tilemap({
             data: this.tiles,
