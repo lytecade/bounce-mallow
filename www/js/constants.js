@@ -82,12 +82,6 @@ export const BACKGROUND_RESOURCES_HILLS = new Map([
         name: "background-hills",
         ext: "png",
         options: {}
-    }],
-    ["background-hills-front", {
-        type: "images",
-        name: "background-hills-front",
-        ext: "png",
-        options: {}
     }]
 ]);
 
