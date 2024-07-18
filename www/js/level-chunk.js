@@ -35,9 +35,9 @@ export default class LevelChunk {
                     lastCliffEnd = column;
                 }
                 if ((row + 1) > maxFloor) {
-                    this.tiles[row][column] = 2;
+                    this.tiles[row][column] = (column == lastCliffEnd) ? 0 : 2;
                 } else if ((row + 1) == maxFloor) {
-                    this.tiles[row][column] = 9;
+                    this.tiles[row][column] = (column == lastCliffEnd) ? 0 : 9;
                 }
             }
         }
