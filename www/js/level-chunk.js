@@ -28,37 +28,16 @@ export default class LevelChunk {
         for (let row = 0; row < widthInTiles; row++) {
             for (let column = 0; column < this.tileRows; column++) {
                 if ((row == 0) && column - lastCliffEnd >= this.minCliffDistance && Math.random() < this.cliffProbability) {
-                    console.log("start cliff");
-                    console.log(this.x);
-                    console.log(row);
-                    console.log(column);
                     lastCliffEnd = column;
                 }
                 if ((row + 1) > maxFloor) {
-                    this.tiles[row][column] = (column == lastCliffEnd) ? 0 : 2;
+                    this.tiles[row][column] = (column == lastCliffEnd || column == (lastCliffEnd - 1)) ? 0 : 2;
                 } else if ((row + 1) == maxFloor) {
-                    this.tiles[row][column] = (column == lastCliffEnd) ? 0 : 9;
+                    this.tiles[row][column] = (column == lastCliffEnd || column == (lastCliffEnd - 1)) ? 0 : 9;
                 }
             }
         }
     }
-
-    generateCliff(startRow, maxFloor) {
-        const cliffWidth = 2; // Width of the cliff
-        for (let row = startRow; row < startRow + cliffWidth && row < this.tiles.length; row++) {
-            for (let column = 0; column < this.tileRows; column++) {
-                if (column > maxFloor) {
-                    // Add some visual cue for the cliff (e.g., a different tile type)
-                    this.tiles[row][column] = 3; // Assuming 3 is a cliff tile
-                } else {
-                    this.tiles[row][column] = 0; // Empty space for the cliff
-                }
-            }
-        }
-        return startRow + cliffWidth - 1; // Return the last row of the cliff
-    }
-
-
     create() {
         const map = this.scene.make.tilemap({
             data: this.tiles,
