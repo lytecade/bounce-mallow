@@ -14,7 +14,6 @@ export default class LevelChunk {
         this.minCliffDistance = 5;
         this.generate();
     }
-
     generate() {
         const widthInTiles = Math.min(Math.floor(this.chunkSize / this.tileSize));
         for (let row = 0; row < widthInTiles; row++) {
