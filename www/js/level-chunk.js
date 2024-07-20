@@ -1,7 +1,7 @@
 import { TileSettings } from "/js/constants.js";
 
 export default class LevelChunk {
-    constructor(scene, x, y, chunkSize) {
+    constructor(scene, x, y, chunkSize, chunkCliffs) {
         this.scene = scene;
         this.x = x;
         this.y = y;
@@ -11,6 +11,7 @@ export default class LevelChunk {
         this.tileGroundLevel = TileSettings.TileGroundLevel;
         this.tiles = [];
         this.cliffProbability = 0.1;
+        this.cliffShow = chunkCliffs;
         this.minCliffDistance = 5;
         this.generate();
     }
@@ -30,9 +31,9 @@ export default class LevelChunk {
                     lastCliffEnd = column;
                 }
                 if ((row + 1) > maxFloor) {
-                    this.tiles[row][column] = (column == lastCliffEnd || column == (lastCliffEnd - 1)) ? 0 : 2;
+                    this.tiles[row][column] = (this.cliffShow && (column == lastCliffEnd || column == (lastCliffEnd - 1))) ? 0 : 2;
                 } else if ((row + 1) == maxFloor) {
-                    this.tiles[row][column] = (column == lastCliffEnd || column == (lastCliffEnd - 1)) ? 0 : 9;
+                    this.tiles[row][column] = (this.cliffShow && (column == lastCliffEnd || column == (lastCliffEnd - 1))) ? 0 : 9;
                 }
             }
         }

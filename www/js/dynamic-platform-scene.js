@@ -23,11 +23,11 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     }
     generateInitialChunks() {
         for (let i = 0; i < this.activeChunks; i++) {
-            this.createChunk(i * this.chunkWidth, 0);
+            this.createChunk(i * this.chunkWidth, 0, false);
         }
     }
-    createChunk(x, y) {
-        const chunk = new LevelChunk(this, x, y, this.chunkWidth);
+    createChunk(x, y, showCliff) {
+        const chunk = new LevelChunk(this, x, y, this.chunkWidth, showCliff);
         const groundLayer = chunk.create();
         this.chunks.push(chunk);
         const collider = this.physics.add.collider(this.player.sprite, chunk.groundLayer);
@@ -61,7 +61,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     manageChunks() {
         const lastChunk = this.chunks[this.chunks.length - 1];
         if (this.player.sprite.x > lastChunk.x - this.chunkWidth) {
-            this.createChunk(lastChunk.x + this.chunkWidth, 0);
+            this.createChunk(lastChunk.x + this.chunkWidth, 0, true);
             this.removeOldestChunk();
         }
     }
