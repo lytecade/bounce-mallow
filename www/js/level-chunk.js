@@ -13,14 +13,17 @@ export default class LevelChunk {
         this.cliffProbability = 0.1;
         this.cliffShow = chunkCliffs;
         this.minCliffDistance = 5;
+        this.loseLayer = null;
         this.generate();
     }
     generate() {
         const widthInTiles = Math.min(Math.floor(this.chunkSize / this.tileSize));
+        this.loseTiles = [];
         for (let row = 0; row < widthInTiles; row++) {
             this.tiles[row] = [];
             for (let column = 0; column < this.tileRows; column++) {
                 this.tiles[row][column] = 0; 
+                this.loseTiles[row][column] = 0; 
             }
         }
         const maxFloor = (this.tileRows - this.tileGroundLevel) - 1;
@@ -31,9 +34,18 @@ export default class LevelChunk {
                     lastCliffEnd = column;
                 }
                 if ((row + 1) > maxFloor) {
-                    this.tiles[row][column] = (this.cliffShow && (column == lastCliffEnd || column == (lastCliffEnd - 1))) ? 0 : 2;
+                    if (this.cliffShow && (column == lastCliffEnd || column == (lastCliffEnd - 1))) {
+                        this.tiles[row][column] = 0;
+                    } else {
+                        this.tiles[row][column] = 2;
+                    }
                 } else if ((row + 1) == maxFloor) {
-                    this.tiles[row][column] = (this.cliffShow && (column == lastCliffEnd || column == (lastCliffEnd - 1))) ? 0 : 9;
+                    if (this.cliffShow && (column == lastCliffEnd || column == (lastCliffEnd - 1))) {
+                        this.tiles[row][column] = 0;
+                        this.loseTiles[row][column] = 1;
+                    } else {
+                        this.tiles[row][column] = 9;
+                    }
                 }
             }
         }
@@ -44,12 +56,22 @@ export default class LevelChunk {
             tileWidth: this.tileSize,
             tileHeight: this.tileSize
         });
+        const loseMap = this.scene.make.tilemap({
+            data: this.loseTiles,
+            tileWidth: this.tileSize,
+            tileHeight: this.tileSize
+        });
+        const mapLoseTiles = loseMap.addTilesetImage("tileset-platform", "tileset-platform");
         const tiles = map.addTilesetImage("tileset-platform", "tileset-platform");
+        this.loseLayer = loseMap.createLayer(0, mapLoseTiles, this.x, 0).setVisible(false);
         this.groundLayer = map.createLayer(0, tiles, this.x, 0).setCollisionByExclusion([-1, 0]);
     }
     destroy() {
         if (this.groundLayer) {
             this.groundLayer.destroy();
+        }
+        if (this.loseLayer) {
+            this.loseLayer.destroy();
         }
     }
 }
