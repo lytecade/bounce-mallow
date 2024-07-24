@@ -65,4 +65,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this.removeOldestChunk();
         }
     }
+    getChunkLoseLayers() {
+        return this.chunks.map(chunk => chunk.loseLayer);
+    }
 }
