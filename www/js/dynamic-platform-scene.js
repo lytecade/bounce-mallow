@@ -35,9 +35,11 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.updateCameraBounds();
     }
     update() {
-        this.manageChunks();
         if (this.loseSequenceActive == false) {
+            this.manageChunks();
             this.player.update();
+        } else {
+            console.log("Game lose");
         }
     }
     removeOldestChunk() {
@@ -67,5 +69,8 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     }
     getChunkLoseLayers() {
         return this.chunks.map(chunk => chunk.loseLayer);
+    }
+    setChunkLoseSequence() {
+        this.loseSequenceActive = true;
     }
 }
