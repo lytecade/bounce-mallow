@@ -10,6 +10,7 @@ export default class LevelChunk {
         this.tileRows = TileSettings.TileRows;
         this.tileGroundLevel = TileSettings.TileGroundLevel;
         this.tiles = [];
+        this.loseTiles = [];
         this.cliffProbability = 0.1;
         this.cliffShow = chunkCliffs;
         this.minCliffDistance = 5;
@@ -18,9 +19,9 @@ export default class LevelChunk {
     }
     generate() {
         const widthInTiles = Math.min(Math.floor(this.chunkSize / this.tileSize));
-        this.loseTiles = [];
         for (let row = 0; row < widthInTiles; row++) {
             this.tiles[row] = [];
+            this.loseTiles[row] = [];
             for (let column = 0; column < this.tileRows; column++) {
                 this.tiles[row][column] = 0; 
                 this.loseTiles[row][column] = 0; 
@@ -63,7 +64,8 @@ export default class LevelChunk {
         });
         const mapLoseTiles = loseMap.addTilesetImage("tileset-platform", "tileset-platform");
         const tiles = map.addTilesetImage("tileset-platform", "tileset-platform");
-        this.loseLayer = loseMap.createLayer(0, mapLoseTiles, this.x, 0).setVisible(false);
+        this.loseLayer = loseMap.createLayer(0, mapLoseTiles, this.x, 0);
+        this.loseLayer.setVisible(false);
         this.groundLayer = map.createLayer(0, tiles, this.x, 0).setCollisionByExclusion([-1, 0]);
     }
     destroy() {
