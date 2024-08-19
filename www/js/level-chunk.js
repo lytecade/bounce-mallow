@@ -64,9 +64,9 @@ export default class LevelChunk {
         });
         const mapLoseTiles = loseMap.addTilesetImage("tileset-platform", "tileset-platform");
         const tiles = map.addTilesetImage("tileset-platform", "tileset-platform");
+        this.groundLayer = map.createLayer(0, tiles, this.x, 0).setCollisionByExclusion([-1, 0]);
         this.loseLayer = loseMap.createLayer(0, mapLoseTiles, this.x, 0);
         this.loseLayer.setVisible(false);
-        this.groundLayer = map.createLayer(0, tiles, this.x, 0).setCollisionByExclusion([-1, 0]);
     }
     destroy() {
         if (this.groundLayer) {

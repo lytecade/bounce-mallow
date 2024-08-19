@@ -11,6 +11,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     create() {
         this.chunks = [];
         this.chunkColliders = [];
+        this.chunkCliffColliders = [];
         this.chunkWidth = TileSettings.TileChunkDefaultSize;
         this.activeChunks = TileSettings.TileChunkDefaultActive; 
         this.backgroundImages = Utils.createBackgrounds(this, 1, "background-hills", 0);
@@ -32,6 +33,16 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.chunks.push(chunk);
         const collider = this.physics.add.collider(this.player.sprite, chunk.groundLayer);
         this.chunkColliders.push(collider);
+        const loseCliffCollider = this.physics.add.overlap(
+            this.player.sprite,
+            chunk.loseLayer,
+            () => this.setChunkLoseSequence(),
+            (player, tile) => {
+                return (tile.index === 1);
+            },
+            this
+        );
+        this.chunkCliffColliders.push(loseCliffCollider);
         this.updateCameraBounds();
     }
     update() {
@@ -40,6 +51,8 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this.player.update();
         } else {
             console.log("Game lose");
+            console.log(this.lostSequenceActive);
+            this.player.sprite.setAccelerationX(0);
         }
     }
     removeOldestChunk() {
@@ -48,6 +61,8 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             oldestChunk.destroy();
             const oldestCollider = this.chunkColliders.shift();
             this.physics.world.removeCollider(oldestCollider);
+            const oldestLoseCollider = this.chunkCliffColliders.shift();
+            this.physics.world.removeCollider(oldestLoseCollider);
             this.updateCameraBounds();
         }
     }
@@ -66,9 +81,6 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this.createChunk(lastChunk.x + this.chunkWidth, 0, true);
             this.removeOldestChunk();
         }
-    }
-    getChunkLoseLayers() {
-        return this.chunks.map(chunk => chunk.loseLayer);
     }
     setChunkLoseSequence() {
         this.loseSequenceActive = true;
