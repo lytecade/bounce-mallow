@@ -122,7 +122,7 @@ export default class Utils {
             if (byFall === true) {
                 switch (currentStage) {
                     case 1:
-                        scene.player.sprite.setVisible(false);
+                        //scene.player.sprite.setVisible(false);
                         this.runLoseSequence(scene, currentStage, time, byFall);
                         break;
                     case 2:

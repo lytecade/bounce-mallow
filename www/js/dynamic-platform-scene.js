@@ -50,9 +50,8 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this.manageChunks();
             this.player.update();
         } else {
-            console.log("Game lose");
-            console.log(this.lostSequenceActive);
             this.player.sprite.setAccelerationX(0);
+            Utils.runLoseSequence(this, 0, 5, true); 
         }
     }
     removeOldestChunk() {
