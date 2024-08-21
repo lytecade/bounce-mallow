@@ -122,21 +122,17 @@ export default class Utils {
             if (byFall === true) {
                 switch (currentStage) {
                     case 1:
-                        console.log('Run');
-                        this.runLoseSequence(scene, currentStage, time, byFall);
-                        break;
-                    case 2:
                         if (scene.loseSequenceSound === false) {
                             scene.loseSound.play();
                             scene.loseSequenceSound = true;
                         } 
                         scene.cameras.main.stopFollow();
-                        this.runLoseSequence(scene, currentStage, time * 400, byFall);
+                        this.runLoseSequenceDynamic(scene, currentStage, time * 400, byFall);
                         break;
                     default:
                         scene.scene.restart();
                 }
-            } 
+            }
         }, [], this);
     }
     static runLoseSequence(scene, currentStage, time, byFall) {
