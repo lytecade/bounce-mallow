@@ -120,18 +120,18 @@ export default class Utils {
         scene.time.delayedCall(time, () => {
             currentStage++;
             if (byFall === true) {
-                switch (currentStage) {
-                    case 1:
-                        if (scene.loseSequenceSound === false) {
-                            scene.loseSound.play();
-                            scene.loseSequenceSound = true;
-                        } 
-                        scene.cameras.main.stopFollow();
-                        this.runLoseSequenceDynamic(scene, currentStage, time * 400, byFall);
-                        break;
-                    default:
-                        scene.scene.restart();
+                if (currentStage === 1) {
+		    if (scene.loseSequenceSound === false) {
+		        scene.loseSound.play();
+		        scene.loseSequenceSound = true;
+		    } 
+		    scene.cameras.main.stopFollow();
+		    this.runLoseSequenceDynamic(scene, currentStage, time * 400, byFall);
+                } else {
+                    scene.scene.restart();
                 }
+            } else {
+                console.log("Alt sequence");
             }
         }, [], this);
     }
