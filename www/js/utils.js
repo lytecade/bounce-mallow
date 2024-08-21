@@ -116,13 +116,36 @@ export default class Utils {
 	    this.runLoseSequence(scene, 0, 5, lossByFall);
 	}
     }
+    static runLoseSequenceDynamic(scene, currentStage, time, byFall) {
+        scene.time.delayedCall(time, () => {
+            currentStage++;
+            if (byFall === true) {
+                switch (currentStage) {
+                    case 1:
+                        console.log('Run');
+                        this.runLoseSequence(scene, currentStage, time, byFall);
+                        break;
+                    case 2:
+                        if (scene.loseSequenceSound === false) {
+                            scene.loseSound.play();
+                            scene.loseSequenceSound = true;
+                        } 
+                        scene.cameras.main.stopFollow();
+                        this.runLoseSequence(scene, currentStage, time * 400, byFall);
+                        break;
+                    default:
+                        scene.scene.restart();
+                }
+            } 
+        }, [], this);
+    }
     static runLoseSequence(scene, currentStage, time, byFall) {
         scene.time.delayedCall(time, () => {
             currentStage++;
             if (byFall === true) {
                 switch (currentStage) {
                     case 1:
-                        //scene.player.sprite.setVisible(false);
+                        scene.player.sprite.setVisible(false);
                         this.runLoseSequence(scene, currentStage, time, byFall);
                         break;
                     case 2:
