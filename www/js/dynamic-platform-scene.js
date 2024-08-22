@@ -1,5 +1,6 @@
 import LevelChunk from "/js/level-chunk.js";
 import Utils from "/js/utils.js";
+import Enemy from "/js/enemy.js";
 import Player from "/js/player.js";
 import { TileSettings, BASE_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
 
@@ -12,6 +13,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.chunks = [];
         this.chunkColliders = [];
         this.chunkCliffColliders = [];
+        this.enemies = [];
         this.chunkWidth = TileSettings.TileChunkDefaultSize;
         this.activeChunks = TileSettings.TileChunkDefaultActive; 
         this.backgroundImages = Utils.createBackgrounds(this, 1, "background-hills", 0);
