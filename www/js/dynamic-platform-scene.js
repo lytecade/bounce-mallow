@@ -56,6 +56,10 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             Utils.runLoseSequenceDynamic(this, 0, 5, true); 
         }
     }
+    createEnemy(x, y) {
+        const enemy = new Enemy(this, x, y);
+        this.enemies.push(enemy);
+    }
     removeOldestChunk() {
         if (this.chunks.length > this.activeChunks) {
             const oldestChunk = this.chunks.shift();
