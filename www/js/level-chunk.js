@@ -51,6 +51,25 @@ export default class LevelChunk {
             }
         }
     }
+    findEnemySpawnPoint(tileWidth) {
+        const groundLevel = this.tileRows - this.tileGroundLevel;
+        let validSpawnPoints = [];
+        for (let column = 1; column < tileWidth - 1; column++) {
+            if (this.tiles[groundLevel][column] === 9 &&
+                this.tiles[groundLevel][column - 1] === 9 &&
+                this.tiles[groundLevel][column + 1] === 9) {
+                validSpawnPoints.push(column);
+            }
+        }
+        if (validSpawnPoints.length > 0) {
+            const randomIndex = Math.floor(Math.random() * validSpawnPoints.length);
+            const spawnColumn = validSpawnPoints[randomIndex];
+            this.enemySpawnPoint = {
+                x: this.x + spawnColumn * this.tileSize,
+                y: (groundLevel - 1) * this.tileSize
+            };
+        }
+    }
     create() {
         const map = this.scene.make.tilemap({
             data: this.tiles,
