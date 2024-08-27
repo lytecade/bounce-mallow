@@ -15,6 +15,7 @@ export default class LevelChunk {
         this.cliffShow = chunkCliffs;
         this.minCliffDistance = 5;
         this.loseLayer = null;
+        this.enemySpawnPoint = null;
         this.generate();
     }
     generate() {
