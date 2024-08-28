@@ -51,6 +51,7 @@ export default class LevelChunk {
                 }
             }
         }
+        this.findEnemySpawnPoint(widthInTiles);
     }
     findEnemySpawnPoint(tileWidth) {
         const groundLevel = this.tileRows - this.tileGroundLevel;
