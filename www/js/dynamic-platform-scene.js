@@ -46,6 +46,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         );
         if (chunk.enemySpawnPoint) {
             console.log(chunk.enemySpawnPoint);
+            console.log('--');
         }
         this.chunkCliffColliders.push(loseCliffCollider);
         this.updateCameraBounds();
