@@ -54,11 +54,13 @@ export default class LevelChunk {
         this.findEnemySpawnPoint(widthInTiles);
     }
     findEnemySpawnPoint(tileWidth) {
-        console.log('run spawn');
+        console.log('-----------');
         const groundLevel = this.tileRows - this.tileGroundLevel;
         let validSpawnPoints = [];
         for (let column = 1; column < tileWidth - 1; column++) {
             console.log(this.tiles[groundLevel][column]);
+            console.log(this.tiles[groundLevel][column - 1]);
+            console.log(this.tiles[groundLevel][column + 1]);
             if (this.tiles[groundLevel][column] === 9 &&
                 this.tiles[groundLevel][column - 1] === 9 &&
                 this.tiles[groundLevel][column + 1] === 9) {
