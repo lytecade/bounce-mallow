@@ -14,6 +14,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.chunkColliders = [];
         this.chunkCliffColliders = [];
         this.enemies = [];
+        
         this.chunkWidth = TileSettings.TileChunkDefaultSize;
         this.activeChunks = TileSettings.TileChunkDefaultActive; 
         this.backgroundImages = Utils.createBackgrounds(this, 1, "background-hills", 0);
@@ -45,8 +46,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this
         );
         if (chunk.enemySpawnPoint) {
-            console.log(chunk.enemySpawnPoint);
-            console.log('--');
+            this.createEnemy(chunk.enemySpawnPoint.x, chunk.enemySpawnPoint.y);
         }
         this.chunkCliffColliders.push(loseCliffCollider);
         this.updateCameraBounds();
@@ -63,6 +63,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     createEnemy(x, y) {
         const enemy = new Enemy(this, x, y);
         this.enemies.push(enemy);
+        console.log(this.enemies);
     }
     removeOldestChunk() {
         if (this.chunks.length > this.activeChunks) {
