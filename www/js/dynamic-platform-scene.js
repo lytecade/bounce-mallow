@@ -73,11 +73,16 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     removeOldestChunk() {
         if (this.chunks.length > this.activeChunks) {
             const oldestChunk = this.chunks.shift();
+            console.log(oldestChunk);
+            console.log(this.enemies);
             oldestChunk.destroy();
             const oldestCollider = this.chunkColliders.shift();
             this.physics.world.removeCollider(oldestCollider);
             const oldestLoseCollider = this.chunkCliffColliders.shift();
             this.physics.world.removeCollider(oldestLoseCollider);
+            // compare x of deleted chunk with each enemy.sprite.x
+            // if enemy.sprite.x is less than deleted chunk, then remove x
+            // use recursive function to revisit enemy list
             const enemyGroundCollider = this.enemyTileCollider.shift();
             this.physics.world.removeCollider(enemyGroundCollider);
             this.updateCameraBounds();
