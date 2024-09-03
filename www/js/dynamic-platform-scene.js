@@ -14,7 +14,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.chunkColliders = [];
         this.chunkCliffColliders = [];
         this.enemies = [];
-        
+        this.enemyTileCollider = [];        
         this.chunkWidth = TileSettings.TileChunkDefaultSize;
         this.activeChunks = TileSettings.TileChunkDefaultActive; 
         this.backgroundImages = Utils.createBackgrounds(this, 1, "background-hills", 0);
@@ -46,7 +46,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this
         );
         if (chunk.enemySpawnPoint) {
-            this.createEnemy(chunk.enemySpawnPoint.x, chunk.enemySpawnPoint.y);
+            this.createEnemy(this, chunk, chunk.enemySpawnPoint.x, chunk.enemySpawnPoint.y);
         }
         this.chunkCliffColliders.push(loseCliffCollider);
         this.updateCameraBounds();
@@ -60,10 +60,15 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             Utils.runLoseSequenceDynamic(this, 0, 5, true); 
         }
     }
-    createEnemy(x, y) {
-        const enemy = new Enemy(this, x, y);
+    createEnemy(scene, chunk, x, y) {
+        console.log(scene);
+        console.log(chunk);
+        console.log(x);
+        console.log(y);
+        const enemy = new Enemy(scene, x, y);
+        const enemyGroundCollider = this.physics.add.collider(enemy.sprite, chunk.groundLayer);
+        this.enemyTileCollider.push(enemyGroundCollider);
         this.enemies.push(enemy);
-        console.log(this.enemies);
     }
     removeOldestChunk() {
         if (this.chunks.length > this.activeChunks) {
@@ -73,6 +78,8 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this.physics.world.removeCollider(oldestCollider);
             const oldestLoseCollider = this.chunkCliffColliders.shift();
             this.physics.world.removeCollider(oldestLoseCollider);
+            const enemyGroundCollider = this.enemyTileCollider.shift();
+            this.physics.world.removeCollider(enemyGroundCollider);
             this.updateCameraBounds();
         }
     }

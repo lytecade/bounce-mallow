@@ -23,7 +23,7 @@ export default class Enemy {
         this.sprite = scene.physics.add.sprite(x, y, "sprite-enemy-spike", 0)
             .setDrag(100, 0)
             .setSize(8, 8);
-        this.scene.physics.world.addCollider(this.sprite, scene.groundLayer);
+        //this.scene.physics.world.addCollider(this.sprite, scene.groundLayer);
         this.isStationary = true;
         this.isForward = true;
     }
