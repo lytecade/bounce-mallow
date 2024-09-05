@@ -79,20 +79,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this.physics.world.removeCollider(oldestCollider);
             const oldestLoseCollider = this.chunkCliffColliders.shift();
             this.physics.world.removeCollider(oldestLoseCollider);
-            
-
-
-            // compare x of deleted chunk with each enemy.sprite.x
-            // if enemy.sprite.x is less than deleted chunk, then remove x
-            // use recursive function to revisit enemy list
-            const latestEnemy = this.enemies.shift();
-            const enemyGroundCollider = this.enemyTileCollider.shift();
-            this.physics.world.removeCollider(enemyGroundCollider);
-            console.log(oldestChunkValueX);
-            console.log(this.enemies);
-            console.log(this.enemyTileCollider);
-
-
+            this.manageOldEnemyData(this, oldestChunkValueX);
             this.updateCameraBounds();
         }
     }
@@ -114,5 +101,16 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     }
     setChunkLoseSequence() {
         this.loseSequenceActive = true;
+    }
+    manageOldEnemyData(chunkScene, oldChunkX) {
+        // compare x of deleted chunk with each enemy.sprite.x
+        // if enemy.sprite.x is less than deleted chunk, then remove x
+        // use recursive function to revisit enemy list
+        const latestEnemy = chunkScene.enemies.shift();
+        const enemyGroundCollider = chunkScene.enemyTileCollider.shift();
+        chunkScene.physics.world.removeCollider(enemyGroundCollider);
+        console.log(oldChunkX);
+        console.log(chunkScene.enemies);
+        console.log(chunkScene.enemyTileCollider);
     }
 }
