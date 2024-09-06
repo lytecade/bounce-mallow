@@ -61,10 +61,6 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         }
     }
     createEnemy(scene, chunk, x, y) {
-        console.log(scene);
-        console.log(chunk);
-        console.log(x);
-        console.log(y);
         const enemy = new Enemy(scene, x, y);
         const enemyGroundCollider = this.physics.add.collider(enemy.sprite, chunk.groundLayer);
         this.enemyTileCollider.push(enemyGroundCollider);
@@ -106,6 +102,9 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         // compare x of deleted chunk with each enemy.sprite.x
         // if enemy.sprite.x is less than deleted chunk, then remove x
         // use recursive function to revisit enemy list
+        
+        let indexOfEnemies = [];
+
         const latestEnemy = chunkScene.enemies.shift();
         const enemyGroundCollider = chunkScene.enemyTileCollider.shift();
         chunkScene.physics.world.removeCollider(enemyGroundCollider);
