@@ -104,6 +104,10 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         // use recursive function to revisit enemy list
         
         let indexOfEnemies = [];
+        for (let i = 0; i < chunkScene.enemies.length; i++) {
+            console.log(chunkScene.enemies[i].sprite.x);
+	    console.log(oldChunkX);
+        }
 
         const latestEnemy = chunkScene.enemies.shift();
         const enemyGroundCollider = chunkScene.enemyTileCollider.shift();
