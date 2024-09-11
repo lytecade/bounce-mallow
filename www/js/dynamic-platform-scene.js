@@ -107,6 +107,9 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         for (let i = 0; i < chunkScene.enemies.length; i++) {
             console.log(chunkScene.enemies[i].sprite.x);
 	    console.log(oldChunkX);
+            if (chunkScene.enemies[i].sprite.x < oldChunkX) {
+                console.log('delete');
+            }
         }
 
         const latestEnemy = chunkScene.enemies.shift();
