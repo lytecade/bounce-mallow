@@ -105,18 +105,17 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         
         let indexOfEnemies = [];
         for (let i = 0; i < chunkScene.enemies.length; i++) {
+            console.log('-----');
             console.log(chunkScene.enemies[i].sprite.x);
 	    console.log(oldChunkX);
-            if (chunkScene.enemies[i].sprite.x < oldChunkX) {
+            if (chunkScene.enemies[i].sprite.x < (oldChunkX + TileSettings.TileChunkDefaultSize)) {
                 console.log('delete');
             }
+            console.log('-----');
         }
 
         const latestEnemy = chunkScene.enemies.shift();
         const enemyGroundCollider = chunkScene.enemyTileCollider.shift();
         chunkScene.physics.world.removeCollider(enemyGroundCollider);
-        console.log(oldChunkX);
-        console.log(chunkScene.enemies);
-        console.log(chunkScene.enemyTileCollider);
     }
 }
