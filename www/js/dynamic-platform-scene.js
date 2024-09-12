@@ -99,23 +99,19 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.loseSequenceActive = true;
     }
     manageOldEnemyData(chunkScene, oldChunkX) {
-        // compare x of deleted chunk with each enemy.sprite.x
-        // if enemy.sprite.x is less than deleted chunk, then remove x
-        // use recursive function to revisit enemy list
-        
-        let indexOfEnemies = [];
+        console.log(chunkScene.enemies);
+        let indexOfEnemies = 0;
         for (let i = 0; i < chunkScene.enemies.length; i++) {
-            console.log('-----');
-            console.log(chunkScene.enemies[i].sprite.x);
-	    console.log(oldChunkX);
             if (chunkScene.enemies[i].sprite.x < (oldChunkX + TileSettings.TileChunkDefaultSize)) {
                 console.log('delete');
+                indexOfEnemies++;
             }
-            console.log('-----');
         }
-
-        const latestEnemy = chunkScene.enemies.shift();
-        const enemyGroundCollider = chunkScene.enemyTileCollider.shift();
-        chunkScene.physics.world.removeCollider(enemyGroundCollider);
+        for (let r = 0; r < indexOfEnemies; r++) {
+            const latestEnemy = chunkScene.enemies.shift();
+            const enemyGroundCollider = chunkScene.enemyTileCollider.shift();
+            chunkScene.physics.world.removeCollider(enemyGroundCollider);
+        }
+        console.log(chunkScene.enemies);
     }
 }
