@@ -99,11 +99,9 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.loseSequenceActive = true;
     }
     manageOldEnemyData(chunkScene, oldChunkX) {
-        console.log(chunkScene.enemies);
         let indexOfEnemies = 0;
         for (let i = 0; i < chunkScene.enemies.length; i++) {
             if (chunkScene.enemies[i].sprite.x < (oldChunkX + TileSettings.TileChunkDefaultSize)) {
-                console.log('delete');
                 indexOfEnemies++;
             }
         }
@@ -112,6 +110,5 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             const enemyGroundCollider = chunkScene.enemyTileCollider.shift();
             chunkScene.physics.world.removeCollider(enemyGroundCollider);
         }
-        console.log(chunkScene.enemies);
     }
 }
