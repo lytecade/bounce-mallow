@@ -59,7 +59,9 @@ export default class LevelChunk {
         for (let column = 1; column < tileWidth - 1; column++) {
             if (this.tiles[groundLevel][column] === 2 &&
                 this.tiles[groundLevel][column - 1] === 2 &&
-                this.tiles[groundLevel][column + 1] === 2) {
+                this.tiles[groundLevel][column + 1] === 2 &&
+                this.tiles[groundLevel][column - 2] === 2 &&
+                this.tiles[groundLevel][column + 2] === 2) {
                 validSpawnPoints.push(column);
             }
         }
