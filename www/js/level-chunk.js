@@ -13,7 +13,7 @@ export default class LevelChunk {
         this.loseTiles = [];
         this.cliffProbability = 0.1;
         this.cliffShow = chunkCliffs;
-        this.minCliffDistance = 5;
+        this.minCliffDistance = 7;
         this.loseLayer = null;
         this.enemySpawnPoint = null;
         this.generate();
