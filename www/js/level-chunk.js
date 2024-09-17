@@ -61,12 +61,14 @@ export default class LevelChunk {
                 this.tiles[groundLevel][column - 1] === 2 &&
                 this.tiles[groundLevel][column + 1] === 2 &&
                 this.tiles[groundLevel][column - 2] === 2 &&
-                this.tiles[groundLevel][column + 2] === 2) {
+                this.tiles[groundLevel][column + 2] === 2 &&
+                this.tiles[groundLevel][column - 3] === 2 &&
+                this.tiles[groundLevel][column + 3] === 2) {
                 validSpawnPoints.push(column);
             }
         }
         if (validSpawnPoints.length > 0) {
-            const randomIndex = Math.floor(Math.random() * 7);
+            const randomIndex = Math.floor(Math.random() * 6);
             console.log('Index: ' + randomIndex);
             console.log(validSpawnPoints);
             console.log('------');
