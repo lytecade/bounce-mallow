@@ -27,12 +27,15 @@ export default class Enemy {
         this.spriteCollider = scene.physics.world.addCollider(this.sprite, chunk.groundLayer);
         this.isStationary = true;
         this.isForward = true;
+        this.activityFactor = Math.random()
     }
     update(time, delta) {
         if (!this.moveTimer) {
             this.moveTimer = time;
         }
-        if (time - this.moveTimer > 4000) {
+        if (time - this.moveTimer > 4000 || (this.activityFactor > 0 && this.activityFactor < 0.5)) {
+            console.log(this.activityFactor);
+            this.activityFactor = -1;
             this.moveTimer = time;
             this.changeEnemyActivity();
         }
