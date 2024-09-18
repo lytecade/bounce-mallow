@@ -21,10 +21,10 @@ export default class Enemy {
             frameRate: 4,
             repeat: -1
         });
-        this.sprite = chunk.physics.add.sprite(x, y, "sprite-enemy-spike", 0)
+        this.sprite = scene.physics.add.sprite(x, y, "sprite-enemy-spike", 0)
             .setDrag(100, 0)
             .setSize(8, 8);
-        this.spriteCollider = this.chunk.physics.world.addCollider(this.sprite, chunk.groundLayer);
+        this.spriteCollider = scene.physics.world.addCollider(this.sprite, chunk.groundLayer);
         this.isStationary = true;
         this.isForward = true;
     }

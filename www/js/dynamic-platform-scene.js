@@ -1,6 +1,6 @@
 import LevelChunk from "/js/level-chunk.js";
 import Utils from "/js/utils.js";
-import Enemy from "/js/enemy.js";
+import Enemy from "/js/dynamic-enemy.js";
 import Player from "/js/player.js";
 import { TileSettings, BASE_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
 
@@ -51,7 +51,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.chunkCliffColliders.push(loseCliffCollider);
         this.updateCameraBounds();
     }
-    update() {
+    update(time, delta) {
         if (this.loseSequenceActive == false) {
             this.manageChunks();
             this.player.update();
@@ -59,11 +59,13 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this.player.sprite.setAccelerationX(0);
             Utils.runLoseSequenceDynamic(this, 0, 5, true); 
         }
+        this.enemies.forEach(enemy => {
+            enemy.update(time, delta);
+        });
     }
     createEnemy(scene, chunk, x, y) {
-        const enemy = new Enemy(scene, x, y);
-        const enemyGroundCollider = this.physics.add.collider(enemy.sprite, chunk.groundLayer);
-        this.enemyTileCollider.push(enemyGroundCollider);
+        const enemy = new Enemy(chunk, scene, x, y);
+        this.enemyTileCollider.push(enemy.spriteCollider);
         this.enemies.push(enemy);
     }
     removeOldestChunk() {
