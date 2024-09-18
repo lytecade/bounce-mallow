@@ -34,7 +34,6 @@ export default class Enemy {
             this.moveTimer = time;
         }
         if (time - this.moveTimer > 4000 || (this.activityFactor > 0 && this.activityFactor < 0.5)) {
-            console.log(this.activityFactor);
             this.activityFactor = -1;
             this.moveTimer = time;
             this.changeEnemyActivity();
