@@ -70,7 +70,6 @@ export default class Player {
                 if (this.canJump === true) {
                     sprite.body.setVelocityY(-240);
                     this.scene.jumpSound.play();
-                    //this.canJump = false;
                 }
             }
             if (sprite.body.blocked.down && keys.space.isUp) {
