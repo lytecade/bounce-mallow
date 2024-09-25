@@ -56,12 +56,12 @@ export default class LevelChunk {
         this.findEnemySpawnPoint(widthInTiles);
     }
     generatePlatforms(widthInTiles, maxFloor) {
-        const platformLevel = maxFloor - 3; // Two tiles above the main ground level
+        const platformLevel = maxFloor - 3; 
         for (let column = 0; column < widthInTiles; column++) {
-            if (Math.random() < 0.1) { // Adjust probability as needed
-                const platformLength = Math.floor(Math.random() * 4) + 2; // Length between 1 and 4
+            if (Math.random() < 0.1) { 
+                const platformLength = Math.floor(Math.random() * 4) + 2; 
                 for (let offset = 0; offset < platformLength; offset++) {
-                    if (column + offset < widthInTiles) {
+                    if (this.cliffShow && column + offset < widthInTiles) {
                         this.tiles[platformLevel][column + offset] = 9;
                     }
                 }
