@@ -40,6 +40,7 @@ export default class LevelChunk {
                         this.tiles[row][column] = 0;
                     } else {
                         this.tiles[row][column] = 2;
+                        console.log(this.tiles[row][column]);
                     }
                 } else if ((row + 1) == maxFloor) {
                     if (this.cliffShow && (column == lastCliffEnd || column == (lastCliffEnd - 1))) {
@@ -51,7 +52,21 @@ export default class LevelChunk {
                 }
             }
         }
+        this.generatePlatforms(widthInTiles, maxFloor);
         this.findEnemySpawnPoint(widthInTiles);
+    }
+    generatePlatforms(widthInTiles, maxFloor) {
+        const platformLevel = maxFloor - 2; // Two tiles above the main ground level
+        for (let column = 0; column < widthInTiles; column++) {
+            if (Math.random() < 0.5) { // Adjust probability as needed
+                const platformLength = Math.floor(Math.random() * 4) + 1; // Length between 1 and 4
+                for (let offset = 0; offset < platformLength; offset++) {
+                    if (column + offset < widthInTiles) {
+                        this.tiles[platformLevel][column + offset] = 9;
+                    }
+                }
+            }
+        }
     }
     findEnemySpawnPoint(tileWidth) {
         const groundLevel = this.tileRows - this.tileGroundLevel;
