@@ -80,6 +80,7 @@ export default class LevelChunk {
                 this.tiles[groundLevel][column - 3] === 2 &&
                 this.tiles[groundLevel][column + 3] === 2) {
                 validSpawnPoints.push(column);
+                console.log(this.tiles[groundLevel + 2][column]);
             }
         }
         if (validSpawnPoints.length > 0) {
