@@ -40,7 +40,6 @@ export default class LevelChunk {
                         this.tiles[row][column] = 0;
                     } else {
                         this.tiles[row][column] = 2;
-                        console.log(this.tiles[row][column]);
                     }
                 } else if ((row + 1) == maxFloor) {
                     if (this.cliffShow && (column == lastCliffEnd || column == (lastCliffEnd - 1))) {
@@ -72,15 +71,28 @@ export default class LevelChunk {
         const groundLevel = this.tileRows - this.tileGroundLevel;
         let validSpawnPoints = [];
         for (let column = 1; column < tileWidth - 1; column++) {
-            if (this.tiles[groundLevel][column] === 2 &&
+            if ((this.tiles[groundLevel][column] === 2 &&
                 this.tiles[groundLevel][column - 1] === 2 &&
                 this.tiles[groundLevel][column + 1] === 2 &&
                 this.tiles[groundLevel][column - 2] === 2 &&
                 this.tiles[groundLevel][column + 2] === 2 &&
                 this.tiles[groundLevel][column - 3] === 2 &&
-                this.tiles[groundLevel][column + 3] === 2) {
+                this.tiles[groundLevel][column + 3] === 2 &&
+                this.tiles[groundLevel - 4][column] === 0 &&
+                this.tiles[groundLevel - 4][column - 1] === 0 &&
+                this.tiles[groundLevel - 4][column + 1] === 0)
+                || (this.tiles[groundLevel - 4][column] === 9 &&
+                this.tiles[groundLevel - 4][column - 1] === 9 &&
+                this.tiles[groundLevel - 4][column + 1] === 9)) {
                 validSpawnPoints.push(column);
-                console.log(this.tiles[groundLevel + 2][column]);
+
+                console.log('-----');
+                console.log(this.tiles[groundLevel - 4][column - 2]);
+                console.log(this.tiles[groundLevel - 4][column - 1]);
+                console.log(this.tiles[groundLevel - 4][column]);
+                console.log(this.tiles[groundLevel - 4][column + 1]);
+                console.log(this.tiles[groundLevel - 4][column + 2]);
+                console.log('-----');
             }
         }
         if (validSpawnPoints.length > 0) {
