@@ -71,28 +71,20 @@ export default class LevelChunk {
         const groundLevel = this.tileRows - this.tileGroundLevel;
         let validSpawnPoints = [];
         for (let column = 1; column < tileWidth - 1; column++) {
-            if ((this.tiles[groundLevel][column] === 2 &&
+            if (this.tiles[groundLevel - 4][column] === 9 &&
+                this.tiles[groundLevel - 4][column - 1] === 9 &&
+                this.tiles[groundLevel - 4][column + 1] === 9 &&
+                this.tiles[groundLevel - 4][column - 2] === 9 &&
+                this.tiles[groundLevel - 4][column + 2] === 9) {
+                validSpawnPoints.push({ row: (groundLevel - 4), col: column });
+            } else if (this.tiles[groundLevel][column] === 2 &&
                 this.tiles[groundLevel][column - 1] === 2 &&
                 this.tiles[groundLevel][column + 1] === 2 &&
                 this.tiles[groundLevel][column - 2] === 2 &&
                 this.tiles[groundLevel][column + 2] === 2 &&
                 this.tiles[groundLevel][column - 3] === 2 &&
-                this.tiles[groundLevel][column + 3] === 2 &&
-                this.tiles[groundLevel - 4][column] === 0 &&
-                this.tiles[groundLevel - 4][column - 1] === 0 &&
-                this.tiles[groundLevel - 4][column + 1] === 0)
-                || (this.tiles[groundLevel - 4][column] === 9 &&
-                this.tiles[groundLevel - 4][column - 1] === 9 &&
-                this.tiles[groundLevel - 4][column + 1] === 9)) {
-                validSpawnPoints.push(column);
-
-                console.log('-----');
-                console.log(this.tiles[groundLevel - 4][column - 2]);
-                console.log(this.tiles[groundLevel - 4][column - 1]);
-                console.log(this.tiles[groundLevel - 4][column]);
-                console.log(this.tiles[groundLevel - 4][column + 1]);
-                console.log(this.tiles[groundLevel - 4][column + 2]);
-                console.log('-----');
+                this.tiles[groundLevel][column + 3] === 2) {
+                validSpawnPoints.push({ row: groundLevel, col: column });
             }
         }
         if (validSpawnPoints.length > 0) {
@@ -100,8 +92,8 @@ export default class LevelChunk {
             if (this.cliffShow && randomIndex >= 0 && randomIndex < validSpawnPoints.length) {
 	        const spawnColumn = validSpawnPoints[randomIndex];
 	        this.enemySpawnPoint = {
-	            x: this.x + spawnColumn * this.tileSize,
-	            y: (groundLevel - 1) * this.tileSize
+	            x: this.x + spawnColumn.col * this.tileSize,
+	            y: (spawnColumn.row - 1) * this.tileSize
 	        };
             }
         }
