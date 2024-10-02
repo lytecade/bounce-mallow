@@ -61,7 +61,11 @@ export default class LevelChunk {
                 const platformLength = Math.floor(Math.random() * 4) + 2; 
                 for (let offset = 0; offset < platformLength; offset++) {
                     if (this.cliffShow && column + offset < widthInTiles) {
-                        this.tiles[platformLevel][column + offset] = 9;
+                        if (this.tiles[platformLevel][(column + offset) - 1] == 0) {
+                            this.tiles[platformLevel][column + offset] = 4;
+                        } else {
+                            this.tiles[platformLevel][column + offset] = 5;
+                        }
                     }
                 }
             }
@@ -71,11 +75,9 @@ export default class LevelChunk {
         const groundLevel = this.tileRows - this.tileGroundLevel;
         let validSpawnPoints = [];
         for (let column = 1; column < tileWidth - 1; column++) {
-            if (this.tiles[groundLevel - 4][column] === 9 &&
-                this.tiles[groundLevel - 4][column - 1] === 9 &&
-                this.tiles[groundLevel - 4][column + 1] === 9 &&
-                this.tiles[groundLevel - 4][column - 2] === 9 &&
-                this.tiles[groundLevel - 4][column + 2] === 9) {
+            if (this.tiles[groundLevel - 4][column] === 5 &&
+                this.tiles[groundLevel - 4][column - 1] === 5 &&
+                this.tiles[groundLevel - 4][column + 1] === 5) {
                 validSpawnPoints.push({ row: (groundLevel - 4), col: column });
             } else if (this.tiles[groundLevel][column] === 2 &&
                 this.tiles[groundLevel][column - 1] === 2 &&
