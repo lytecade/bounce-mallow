@@ -61,14 +61,26 @@ export default class LevelChunk {
                 const platformLength = Math.floor(Math.random() * 4) + 2; 
                 for (let offset = 0; offset < platformLength; offset++) {
                     if (this.cliffShow && column + offset < widthInTiles) {
-                        if (this.tiles[platformLevel][(column + offset) - 1] == 0) {
-                            this.tiles[platformLevel][column + offset] = 4;
-                        } else {
-                            this.tiles[platformLevel][column + offset] = 5;
-                        }
+                        this.tiles[platformLevel][column + offset] = 5;
+                    } else {
+                        this.tiles[platformLevel][column + offset] = 0;
                     }
                 }
             }
+        }
+        for (let column = 0; column < widthInTiles; column++) {
+            console.log(this.tiles[platformLevel][column - 2] + " " 
+                + this.tiles[platformLevel][column - 1] + " " 
+                + this.tiles[platformLevel][column] + " " 
+                + this.tiles[platformLevel][column + 1] + " " 
+                + this.tiles[platformLevel][column + 1]);
+            if (this.tiles[platformLevel][column] == 5) {
+	        if ((this.tiles[platformLevel][column - 1] == 0 || this.tiles[platformLevel][column - 1] == undefined) && (this.tiles[platformLevel][column + 1] == 0 || this.tiles[platformLevel][column + 1] == undefined)) {
+	            this.tiles[platformLevel][column] = 1;
+	        }
+            } 
+            // create utils function for checking empty values
+            // seperate filtering into another function
         }
     }
     findEnemySpawnPoint(tileWidth) {
