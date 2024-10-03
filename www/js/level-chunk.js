@@ -1,4 +1,5 @@
 import { TileSettings } from "/js/constants.js";
+import Utils from "/js/utils.js";
 
 export default class LevelChunk {
     constructor(scene, x, y, chunkSize, chunkCliffs) {
@@ -75,7 +76,7 @@ export default class LevelChunk {
                 + this.tiles[platformLevel][column + 1] + " " 
                 + this.tiles[platformLevel][column + 1]);
             if (this.tiles[platformLevel][column] == 5) {
-	        if ((this.tiles[platformLevel][column - 1] == 0 || this.tiles[platformLevel][column - 1] == undefined) && (this.tiles[platformLevel][column + 1] == 0 || this.tiles[platformLevel][column + 1] == undefined)) {
+	        if (Utils.isValueEmpty(this.tiles[platformLevel][column - 1]) && Utils.isValueEmpty(this.tiles[platformLevel][column + 1])) {
 	            this.tiles[platformLevel][column] = 1;
 	        }
             } 

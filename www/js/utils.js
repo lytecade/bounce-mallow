@@ -1,6 +1,12 @@
 import { ItemTypes, SpeedTypes } from "/js/constants.js";
 
 export default class Utils {
+    static isValueEmpty = (resourceValue) => {
+       if (resourceValue == 0 || resourceValue == undefined || resourceValue == "") {
+           return true;
+       }
+       return false;
+    }
     static loadResources = (scene, resourceCollection) => {
         for (const [key, value] of resourceCollection) {
             let resourcePath = (value.type != "music") ? "/assets/" + value.type + "/" + value.name + "." + value.ext : "";
