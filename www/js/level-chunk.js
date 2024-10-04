@@ -46,8 +46,14 @@ export default class LevelChunk {
                     if (this.cliffShow && (column == lastCliffEnd || column == (lastCliffEnd - 1))) {
                         this.tiles[row][column] = 0;
                         this.loseTiles[row][column] = 1;
+                        if (this.tiles[row][column - 1] == 9) {
+                            this.tiles[row][column - 1] = 10;
+                        }
                     } else {
                         this.tiles[row][column] = 9;
+                        if (this.tiles[row][column - 1] == 0) {
+                            this.tiles[row][column - 1] = 8;
+                        }
                     }
                 }
             }
