@@ -52,7 +52,7 @@ export default class LevelChunk {
                     } else {
                         this.tiles[row][column] = 9;
                         if (this.tiles[row][column - 1] == 0) {
-                            this.tiles[row][column - 1] = 8;
+                            this.tiles[row][column] = 8;
                         }
                     }
                 }
