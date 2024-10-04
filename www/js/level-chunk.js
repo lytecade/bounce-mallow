@@ -70,11 +70,6 @@ export default class LevelChunk {
             }
         }
         for (let column = 0; column < widthInTiles; column++) {
-            console.log(this.tiles[platformLevel][column - 2] + " " 
-                + this.tiles[platformLevel][column - 1] + " " 
-                + this.tiles[platformLevel][column] + " " 
-                + this.tiles[platformLevel][column + 1] + " " 
-                + this.tiles[platformLevel][column + 1]);
             if (this.tiles[platformLevel][column] == 5) {
 	        if (Utils.isValueEmpty(this.tiles[platformLevel][column - 1]) && Utils.isValueEmpty(this.tiles[platformLevel][column + 1])) {
 	            this.tiles[platformLevel][column] = 1;
