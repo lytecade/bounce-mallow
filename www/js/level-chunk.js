@@ -80,10 +80,10 @@ export default class LevelChunk {
 	            this.tiles[platformLevel][column] = 1;
 	        } else if (Utils.isValueEmpty(this.tiles[platformLevel][column - 1]) && !Utils.isValueEmpty(this.tiles[platformLevel][column + 1])) {
 	            this.tiles[platformLevel][column] = 4;
+	        } else if (!Utils.isValueEmpty(this.tiles[platformLevel][column - 1]) && Utils.isValueEmpty(this.tiles[platformLevel][column + 1])) {
+	            this.tiles[platformLevel][column] = 6;
                 }
             } 
-            // create utils function for checking empty values
-            // seperate filtering into another function
         }
     }
     findEnemySpawnPoint(tileWidth) {
