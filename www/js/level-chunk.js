@@ -37,13 +37,13 @@ export default class LevelChunk {
                     lastCliffEnd = column;
                 }
                 if ((row + 1) > maxFloor) {
-                    if (this.cliffShow && (column == lastCliffEnd || column == (lastCliffEnd - 1))) {
+                    if (column != 0 && (column < this.tileRows - 1) && this.cliffShow && (column == lastCliffEnd || column == (lastCliffEnd - 1))) {
                         this.tiles[row][column] = 0;
                     } else {
                         this.tiles[row][column] = 2;
                     }
                 } else if ((row + 1) == maxFloor) {
-                    if (this.cliffShow && (column == lastCliffEnd || column == (lastCliffEnd - 1))) {
+                    if (column != 0 && (column < this.tileRows - 1) && this.cliffShow && (column == lastCliffEnd || column == (lastCliffEnd - 1))) {
                         this.tiles[row][column] = 0;
                         this.loseTiles[row][column] = 1;
                         if (this.tiles[row][column - 1] == 9) {
