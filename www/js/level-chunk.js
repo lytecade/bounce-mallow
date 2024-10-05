@@ -64,7 +64,7 @@ export default class LevelChunk {
     generatePlatforms(widthInTiles, maxFloor) {
         const platformLevel = maxFloor - 3; 
         for (let column = 0; column < widthInTiles; column++) {
-            if (Math.random() < 0.1) { 
+            if (Math.random() < 0.1 && column != 0 && (column < widthInTiles - 1)) { 
                 const platformLength = Math.floor(Math.random() * 4) + 2; 
                 for (let offset = 0; offset < platformLength; offset++) {
                     if (this.cliffShow && column + offset < widthInTiles) {
