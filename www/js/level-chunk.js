@@ -64,8 +64,9 @@ export default class LevelChunk {
     generatePlatforms(widthInTiles, maxFloor) {
         const platformLevel = maxFloor - 3; 
         for (let column = 0; column < widthInTiles; column++) {
-            if (Math.random() < 0.1 && column != 0 && (column < widthInTiles - 1)) { 
-                const platformLength = Math.floor(Math.random() * 4) + 2; 
+            let randomIndex = Math.random();
+            if (randomIndex < 0.05 && column != 0 && (column < widthInTiles - 1)) { 
+                const platformLength = Math.floor(Math.random() * 5) + 2; 
                 for (let offset = 0; offset < platformLength; offset++) {
                     if (this.cliffShow && column + offset < widthInTiles) {
                         this.tiles[platformLevel][column + offset] = 5;
@@ -88,27 +89,29 @@ export default class LevelChunk {
         }
     }
     findEnemySpawnPoint(tileWidth) {
-        const groundLevel = this.tileRows - this.tileGroundLevel;
+        const groundLevel = (this.tileRows - this.tileGroundLevel) - 2;
         let validSpawnPoints = [];
-        let platformLevels = [4, 5, 6];
+        let platformLevels = [5, 6];
+        let groundLevels = [2, 8, 9, 10];
         for (let column = 1; column < tileWidth - 1; column++) {
-            if (platformLevels.includes(this.tiles[groundLevel - 4][column]) &&
-                platformLevels.includes(this.tiles[groundLevel - 4][column - 1]) &&
-                platformLevels.includes(this.tiles[groundLevel - 4][column + 1])
+            if (platformLevels.includes(this.tiles[groundLevel - 2][column]) &&
+                platformLevels.includes(this.tiles[groundLevel - 2][column - 1]) &&
+                platformLevels.includes(this.tiles[groundLevel - 2][column + 1])
             ) {
                 validSpawnPoints.push({ row: (groundLevel - 4), col: column });
-            } else if (this.tiles[groundLevel][column] === 2 &&
-                this.tiles[groundLevel][column - 1] === 2 &&
-                this.tiles[groundLevel][column + 1] === 2 &&
-                this.tiles[groundLevel][column - 2] === 2 &&
-                this.tiles[groundLevel][column + 2] === 2 &&
-                this.tiles[groundLevel][column - 3] === 2 &&
-                this.tiles[groundLevel][column + 3] === 2) {
+            } else if (groundLevels.includes(this.tiles[groundLevel][column]) &&
+                groundLevels.includes(this.tiles[groundLevel][column - 1]) &&
+                groundLevels.includes(this.tiles[groundLevel][column + 1]) &&
+                groundLevels.includes(this.tiles[groundLevel][column - 2]) &&
+                groundLevels.includes(this.tiles[groundLevel][column + 2]) &&
+                groundLevels.includes(this.tiles[groundLevel][column - 3]) &&
+                groundLevels.includes(this.tiles[groundLevel][column + 3])
+            ) {
                 validSpawnPoints.push({ row: groundLevel, col: column });
             }
         }
         if (validSpawnPoints.length > 0) {
-            const randomIndex = Math.floor(Math.random() * 6);
+            const randomIndex = Math.floor(Math.random() * 7);
             if (this.cliffShow && randomIndex >= 0 && randomIndex < validSpawnPoints.length) {
 	        const spawnColumn = validSpawnPoints[randomIndex];
 	        this.enemySpawnPoint = {
