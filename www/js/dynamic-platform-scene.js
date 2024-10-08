@@ -26,8 +26,12 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.updateCameraBounds();
     }
     generateInitialChunks() {
-        for (let i = 0; i < this.activeChunks; i++) {
-            this.createChunk(i * this.chunkWidth, 0, false);
+        for (let i = 0; i < (this.activeChunks * 3); i++) {
+            if (i < this.activeChunks) {
+                this.createChunk(i * this.chunkWidth, 0, false);
+            } else {
+                this.createChunk(i * this.chunkWidth, 0, true);
+            }
         }
     }
     createChunk(x, y, showCliff) {
@@ -69,7 +73,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.enemies.push(enemy);
     }
     removeOldestChunk() {
-        if (this.chunks.length > this.activeChunks) {
+        if (this.chunks.length > (this.activeChunks * 2)) {
             const oldestChunk = this.chunks.shift();
             const oldestChunkValueX = oldestChunk.x;
             oldestChunk.destroy();

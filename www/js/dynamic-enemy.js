@@ -25,6 +25,15 @@ export default class Enemy {
             .setDrag(100, 0)
             .setSize(8, 8);
         this.spriteCollider = scene.physics.world.addCollider(this.sprite, chunk.groundLayer);
+        scene.physics.add.overlap(
+            this.sprite,
+            scene.player.sprite,
+            () => {
+                console.log("COLLIDE " + Math.random());
+            },
+            null,
+            this
+        );
         this.isStationary = true;
         this.isForward = true;
         this.activityFactor = Math.random()
