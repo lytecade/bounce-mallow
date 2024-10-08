@@ -29,7 +29,7 @@ export default class Enemy {
             this.sprite,
             scene.player.sprite,
             () => {
-                console.log("COLLIDE " + Math.random());
+                console.log("COLL " + Math.random());
             },
             null,
             this
@@ -45,19 +45,13 @@ export default class Enemy {
         if (time - this.moveTimer > 4000 || (this.activityFactor > 0 && this.activityFactor < 0.5)) {
             this.activityFactor = -1;
             this.moveTimer = time;
-            this.changeEnemyActivity();
+            if (this.isStationary === true) {
+               this.isStationary = false;
+               this.isForward = (this.isForward === true) ? false : true;
+            } else {
+               this.isStationary = true;
+            }
         }
-        this.handleEnemyActivity();
-    }
-    changeEnemyActivity() {
-        if (this.isStationary === true) {
-           this.isStationary = false;
-           this.isForward = (this.isForward === true) ? false : true;
-        } else {
-           this.isStationary = true;
-        }
-    } 
-    handleEnemyActivity() {
         if (this.isStationary === true) {
             this.sprite.anims.play("enemy-idle", true);
             this.sprite.setAccelerationX(0);
