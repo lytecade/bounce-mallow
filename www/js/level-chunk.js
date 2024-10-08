@@ -41,6 +41,9 @@ export default class LevelChunk {
                         this.tiles[row][column] = 0;
                     } else {
                         this.tiles[row][column] = 2;
+                        if (this.tiles[row][column - 1] == 0 && this.tiles[row][column - 2] == 2) {
+                            this.tiles[row][column - 1] = 2;
+                        }
                     }
                 } else if ((row + 1) == maxFloor) {
                     if (column != 0 && (column < this.tileRows - 1) && this.cliffShow && (column == lastCliffEnd || column == (lastCliffEnd - 1))) {
@@ -52,7 +55,12 @@ export default class LevelChunk {
                     } else {
                         this.tiles[row][column] = 9;
                         if (this.tiles[row][column - 1] == 0) {
-                            this.tiles[row][column] = 8;
+                            if (this.tiles[row][column - 2] == 10) {
+                                this.tiles[row][column - 1] = 9;
+                                this.tiles[row][column - 2] = 9;
+                            } else {
+                                this.tiles[row][column] = 8;
+                            }
                         }
                     }
                 }
@@ -65,7 +73,7 @@ export default class LevelChunk {
         const platformLevel = maxFloor - 3; 
         for (let column = 0; column < widthInTiles; column++) {
             let randomIndex = Math.random();
-            if (randomIndex < 0.05 && column != 0 && (column < widthInTiles - 1)) { 
+            if (randomIndex < 0.07 && column != 0 && (column < widthInTiles - 1)) { 
                 const platformLength = Math.floor(Math.random() * 5) + 2; 
                 for (let offset = 0; offset < platformLength; offset++) {
                     if (this.cliffShow && column + offset < widthInTiles) {
