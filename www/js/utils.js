@@ -80,6 +80,7 @@ export default class Utils {
         scene.enemies = [];
         scene.items = [];
         scene.loseSequenceActive = false;
+        scene.loseSequenceFromEnemy = false;
         scene.loseSequenceSound = false;
     }
     static createSceneColliders = (scene) => {
@@ -138,6 +139,7 @@ export default class Utils {
                 }
             } else {
                 console.log("Alt sequence");
+                console.log("Running");
             }
         }, [], this);
     }

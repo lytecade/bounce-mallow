@@ -29,7 +29,8 @@ export default class Enemy {
             this.sprite,
             scene.player.sprite,
             () => {
-                console.log("COLL " + Math.random());
+	        scene.loseSequenceActive = true;
+	        scene.loseSequenceFromEnemy = true;
             },
             null,
             this
