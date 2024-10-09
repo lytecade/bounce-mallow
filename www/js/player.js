@@ -8,7 +8,7 @@ export default class Player {
         this.fastSequenceActive = false;
         this.slowSequenceActive = false;
         this.sprite = scene.physics.add.sprite(x, y, "sprite-player", 0)
-            .setDrag(1000, 10)
+            //.setDrag(1000, 10)
             .setMaxVelocity(this.baseSpeed, 240)
             .setSize(6, 8)
             .setOffset(2, 0);
@@ -34,9 +34,9 @@ export default class Player {
                 this.movementState = !this.movementState;
             }
             if (this.movementState) {
-                sprite.body.setAccelerationX(this.baseSpeed);
+                sprite.body.setVelocityX(this.baseSpeed);
             } else {
-                sprite.setAccelerationX(0);
+                sprite.body.setVelocityX(0);
             }    
             if (sprite.body.blocked.down && keys.space.isDown) {
                 if (this.canJump === true) {

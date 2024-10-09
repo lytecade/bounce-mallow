@@ -36,13 +36,13 @@ export default class Enemy {
         }
         if (this.isStationary === true) {
             this.sprite.anims.play("enemy-idle", true);
-            this.sprite.setAccelerationX(0);
+            this.sprite.setVelocityX(0);
         } else {
             this.sprite.anims.play("enemy-walk", true);
             if (this.isForward === true) {
-                this.sprite.setAccelerationX(1);
+                this.sprite.setVelocityX(5);
             } else {
-                this.sprite.setAccelerationX(-1);
+                this.sprite.setVelocityX(-5);
             }
         }
         if (this.isForward === true) {

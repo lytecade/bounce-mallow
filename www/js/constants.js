@@ -92,9 +92,9 @@ export const ItemTypes = {
 };
 
 export const SpeedTypes = {
-    Normal: 80,
-    Slow: 40,
-    Fast: 120
+    Normal: 60,
+    Slow: 30,
+    Fast: 90
 };
 
 export const TileSettings = {
