@@ -8,51 +8,34 @@ export default class Player {
         this.fastSequenceActive = false;
         this.slowSequenceActive = false;
         this.sprite = scene.physics.add.sprite(x, y, "sprite-player", 0)
-            //.setDrag(1000, 10)
-            .setMaxVelocity(this.baseSpeed, 240)
+            .setMaxVelocity(this.baseSpeed, SpeedTypes.Jump)
             .setSize(6, 8)
             .setOffset(2, 0);
         const { ENTER, SPACE } = Phaser.Input.Keyboard.KeyCodes;
-        this.keys = scene.input.keyboard.addKeys({
-            enter: ENTER,
-            space: SPACE,
-        });
+        this.keys = scene.input.keyboard.addKeys({ enter: ENTER, space: SPACE });
+        this.canJump = true;
     }
+
     update() {
         const { keys, sprite } = this;
-        if (sprite.body !== undefined) {
-            let canJump = true;
-            if (this.fastSequenceActive === true) {
-                this.baseSpeed = SpeedTypes.Fast;
-            } else if (this.slowSequenceActive === true) {
-                this.baseSpeed = SpeedTypes.Slow;
-            } else {
-                this.baseSpeed = SpeedTypes.Normal;
-            }
-            sprite.body.setMaxVelocity(this.baseSpeed, 240);
-            if (Phaser.Input.Keyboard.JustDown(keys.enter)) {
-                this.movementState = !this.movementState;
-            }
-            if (this.movementState) {
-                sprite.body.setVelocityX(this.baseSpeed);
-            } else {
-                sprite.body.setVelocityX(0);
-            }    
-            if (sprite.body.blocked.down && keys.space.isDown) {
-                if (this.canJump === true) {
-                    sprite.body.setVelocityY(-240);
-                    this.scene.jumpSound.play();
-                }
-            }
-            if (sprite.body.blocked.down && keys.space.isUp) {
-                this.canJump = true;
-            }
+        if (sprite.body) {
+            this.baseSpeed = this.fastSequenceActive ? SpeedTypes.Fast :
+                             this.slowSequenceActive ? SpeedTypes.Slow : 
+                             SpeedTypes.Normal;
+
+            sprite.body.setMaxVelocity(this.baseSpeed, SpeedTypes.Jump);
+            if (Phaser.Input.Keyboard.JustDown(keys.enter)) this.movementState = !this.movementState;
+            sprite.body.setVelocityX(this.movementState ? this.baseSpeed : 0);
+            
             if (sprite.body.blocked.down) {
-                if (sprite.body.velocity.x !== 0) {
-                    sprite.anims.play("player-run", true);
-                } else {
-                    sprite.anims.play("player-idle", true);
+                if (keys.space.isDown && this.canJump) {
+                    sprite.body.setVelocityY(-SpeedTypes.Jump);
+                    this.scene.jumpSound.play();
+                    this.canJump = false; 
                 }
+                if (keys.space.isUp) this.canJump = true;
+
+                sprite.anims.play(sprite.body.velocity.x ? "player-run" : "player-idle", true);
             } else {
                 sprite.anims.stop();
                 sprite.setTexture("sprite-player", 9);
