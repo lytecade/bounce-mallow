@@ -21,6 +21,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         Utils.createSceneAttributes(this, BASE_RESOURCES);
         this.player = new Player(this, this.chunkWidth, 10);
         this.generateInitialChunks();
+        Utils.createAnimations(this);
         Utils.createSounds(this, BASE_RESOURCES);
         this.cameras.main.startFollow(this.player.sprite);
         this.updateCameraBounds();

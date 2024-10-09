@@ -7,34 +7,6 @@ export default class Player {
         this.baseSpeed = SpeedTypes.Normal;
         this.fastSequenceActive = false;
         this.slowSequenceActive = false;
-        const anims = scene.anims;
-        anims.create({
-            key: "player-idle",
-            frames: anims.generateFrameNumbers("sprite-player", {
-                start: 0,
-                end: 3
-            }),
-            frameRate: 3,
-            repeat: -1,
-        });
-        anims.create({
-            key: "player-run",
-            frames: anims.generateFrameNumbers("sprite-player", {
-                start: 8,
-                end: 15
-            }),
-            frameRate: 12,
-            repeat: -1,
-        });
-        anims.create({
-            key: "player-destroy",
-            frames: anims.generateFrameNumbers("sprite-player", {
-                start: 16,
-                end: 23
-            }),
-            frameRate: 8,
-            repeat: 0, 
-        });
         this.sprite = scene.physics.add.sprite(x, y, "sprite-player", 0)
             .setDrag(1000, 10)
             .setMaxVelocity(this.baseSpeed, 240)

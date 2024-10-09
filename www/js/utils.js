@@ -38,6 +38,56 @@ export default class Utils {
             }
         }
     }
+    static createAnimations = (scene) => {
+        const anims = scene.anims;
+        if (anims.anims.size == 0) {
+            anims.create({
+                key: "player-idle",
+                frames: anims.generateFrameNumbers("sprite-player", {
+                    start: 0,
+                    end: 3
+                }),
+                frameRate: 3,
+                repeat: -1,
+            });
+            anims.create({
+                key: "player-run",
+                frames: anims.generateFrameNumbers("sprite-player", {
+                    start: 8,
+                    end: 15
+                }),
+                frameRate: 12,
+                repeat: -1,
+            });
+            anims.create({
+                key: "player-destroy",
+                frames: anims.generateFrameNumbers("sprite-player", {
+                    start: 16,
+                    end: 23
+                }),
+                frameRate: 8,
+                repeat: 0, 
+            });
+            anims.create({
+                key: "enemy-idle",
+                frames: anims.generateFrameNumbers("sprite-enemy-spike", {
+                    start: 0,
+                    end: 3
+                }),
+                frameRate: 4,
+                repeat: -1,
+            });
+            anims.create({
+                key: "enemy-walk",
+                frames: anims.generateFrameNumbers("sprite-enemy-spike", {
+                    start: 4,
+                    end: 7
+                }),
+                frameRate: 4,
+                repeat: -1
+            });
+        }
+    }
     static createBackgrounds = (scene, count, texture, scrollFactor) => {
         let trackingXValue = 0;
         let images = [];

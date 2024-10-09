@@ -2,25 +2,6 @@ export default class Enemy {
     constructor(chunk, scene, x, y) {
         this.scene = scene;
         this.chunk = chunk;
-        const anims = scene.anims;
-        anims.create({
-            key: "enemy-idle",
-            frames: anims.generateFrameNumbers("sprite-enemy-spike", {
-                start: 0,
-                end: 3
-            }),
-            frameRate: 4,
-            repeat: -1,
-        });
-        anims.create({
-            key: "enemy-walk",
-            frames: anims.generateFrameNumbers("sprite-enemy-spike", {
-                start: 4,
-                end: 7
-            }),
-            frameRate: 4,
-            repeat: -1
-        });
         this.sprite = scene.physics.add.sprite(x, y, "sprite-enemy-spike", 0)
             .setDrag(100, 0)
             .setSize(8, 8);
