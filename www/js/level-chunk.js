@@ -73,8 +73,8 @@ export default class LevelChunk {
         const platformLevel = maxFloor - 3; 
         for (let column = 0; column < widthInTiles; column++) {
             let randomIndex = Math.random();
-            if (randomIndex < 0.07 && column != 0 && (column < widthInTiles - 1)) { 
-                const platformLength = Math.floor(Math.random() * 5) + 2; 
+            if (randomIndex < 0.1 && column != 0 && (column < widthInTiles - 1)) { 
+                const platformLength = Math.floor(Math.random() * 4) + 1; 
                 for (let offset = 0; offset < platformLength; offset++) {
                     if (this.cliffShow && column + offset < widthInTiles) {
                         this.tiles[platformLevel][column + offset] = 5;
