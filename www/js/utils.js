@@ -188,8 +188,24 @@ export default class Utils {
                     scene.scene.restart();
                 }
             } else {
-                console.log("Alt sequence");
-                console.log("Running");
+                switch (currentStage) {
+                    case 1:
+                        if (scene.player.sprite.anims) {
+                            scene.player.sprite.anims.play("player-destroy", true); 
+                        } 
+                        this.runLoseSequenceDynamic(scene, currentStage, time, byFall);
+                        break;
+                    case 2:
+                        if (scene.loseSequenceSound === false) {
+                            scene.loseSound.play();
+                            scene.loseSequenceSound = true;
+                        } 
+                        scene.cameras.main.stopFollow();
+                        this.runLoseSequenceDynamic(scene, currentStage, time * 200, byFall);
+                        break;
+                    default:
+                        scene.scene.restart();
+                }
             }
         }, [], this);
     }

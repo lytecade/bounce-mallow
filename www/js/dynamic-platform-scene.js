@@ -62,8 +62,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this.player.update();
         } else {
             this.player.sprite.setVelocityX(0);
-            //Utils.runLoseSequenceDynamic(this, 0, 5, !this.loseSequenceFromEnemy); 
-            Utils.runLoseSequenceDynamic(this, 0, 5, true); 
+            Utils.runLoseSequenceDynamic(this, 0, 5, !this.loseSequenceFromEnemy); 
         }
         this.enemies.forEach(enemy => {
             enemy.update(time, delta);
