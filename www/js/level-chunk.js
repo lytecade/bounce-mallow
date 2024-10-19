@@ -132,9 +132,7 @@ export default class LevelChunk {
                 groundLevels.includes(this.tiles[groundLevel][column - 1]) &&
                 groundLevels.includes(this.tiles[groundLevel][column + 1]) &&
                 groundLevels.includes(this.tiles[groundLevel][column - 2]) &&
-                groundLevels.includes(this.tiles[groundLevel][column + 2]) &&
-                groundLevels.includes(this.tiles[groundLevel][column - 3]) &&
-                groundLevels.includes(this.tiles[groundLevel][column + 3])
+                groundLevels.includes(this.tiles[groundLevel][column + 2]) 
             ) {
                 validSpawnPoints.push({ row: groundLevel, col: column });
             }
