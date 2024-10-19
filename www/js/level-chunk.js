@@ -31,6 +31,7 @@ export default class LevelChunk {
         }
         const maxFloor = (this.tileRows - this.tileGroundLevel) - 1;
         let lastCliffEnd = -this.minCliffDistance;
+        let baseRow = -1;
         for (let row = 0; row < widthInTiles; row++) {
             for (let column = 0; column < this.tileRows; column++) {
                 if ((row == 0) && column - lastCliffEnd >= this.minCliffDistance && Math.random() < this.cliffProbability) {
@@ -53,6 +54,7 @@ export default class LevelChunk {
                             this.tiles[row][column - 1] = 10;
                         }
                     } else {
+                        baseRow = baseRow == -1 ? row : baseRow;
                         this.tiles[row][column] = 9;
                         if (this.tiles[row][column - 1] == 0) {
                             if (this.tiles[row][column - 2] == 10) {
@@ -62,6 +64,25 @@ export default class LevelChunk {
                                 this.tiles[row][column] = 8;
                             }
                         }
+                    }
+                }
+            }
+            if (baseRow != -1) {
+                for (let column = 0; column < this.tileRows; column++) {
+                    if (this.tiles[baseRow][column] == 9 &&
+                        this.tiles[baseRow][column - 1] == 9 &&
+                        this.tiles[baseRow][column + 1] == 9 &&
+                        this.tiles[baseRow][column - 1] == 9 &&
+                        this.tiles[baseRow][column + 1] == 9 &&
+                        this.tiles[baseRow][column - 2] == 9 &&
+                        this.tiles[baseRow][column + 2] == 9 &&
+                        Math.random() < this.cliffProbability &&
+                        this.cliffShow
+                    ) {
+                        this.tiles[baseRow][column - 1] = 10;
+                        this.tiles[baseRow][column] = 19;
+                        this.tiles[baseRow][column + 1] = 19;
+                        this.tiles[baseRow][column + 2] = 8;
                     }
                 }
             }
@@ -142,7 +163,7 @@ export default class LevelChunk {
         });
         const mapLoseTiles = loseMap.addTilesetImage("tileset-platform", "tileset-platform");
         const tiles = map.addTilesetImage("tileset-platform", "tileset-platform");
-        this.groundLayer = map.createLayer(0, tiles, this.x, 0).setCollisionByExclusion([-1, 0]);
+        this.groundLayer = map.createLayer(0, tiles, this.x, 0).setCollisionByExclusion([-1, 0, 19]);
         this.loseLayer = loseMap.createLayer(0, mapLoseTiles, this.x, 0);
         this.loseLayer.setVisible(false);
     }
