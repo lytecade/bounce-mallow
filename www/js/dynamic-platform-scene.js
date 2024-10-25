@@ -39,9 +39,14 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         const chunk = new LevelChunk(this, x, y, this.chunkWidth, showCliff);
         const groundLayer = chunk.create();
         this.chunks.push(chunk);
-        const collider = this.physics.add.collider(this.player.sprite, chunk.groundLayer);
-        this.chunkColliders.push(collider);
-        const loseCliffCollider = this.physics.add.overlap(
+        this.chunkColliders.push(this.physics.add.collider(
+            this.player.sprite, 
+            chunk.groundLayer
+        ));
+        if (chunk.enemySpawnPoint) {
+            this.createEnemy(this, chunk, chunk.enemySpawnPoint.x, chunk.enemySpawnPoint.y);
+        }
+        this.chunkCliffColliders.push(this.physics.add.overlap(
             this.player.sprite,
             chunk.loseLayer,
             (player, tile) => {
@@ -54,11 +59,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
                 return ([LoseTileTypes.Cliff, LoseTileTypes.Spikes].includes(tile.index));
             },
             this
-        );
-        if (chunk.enemySpawnPoint) {
-            this.createEnemy(this, chunk, chunk.enemySpawnPoint.x, chunk.enemySpawnPoint.y);
-        }
-        this.chunkCliffColliders.push(loseCliffCollider);
+        ));
         this.updateCameraBounds();
     }
     update(time, delta) {
