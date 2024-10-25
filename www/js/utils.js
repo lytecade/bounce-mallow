@@ -122,7 +122,7 @@ export default class Utils {
         scene.enemies = [];
         scene.items = [];
         scene.loseSequenceActive = false;
-        scene.loseSequenceFromEnemy = false;
+        scene.loseSequenceShatter = false;
         scene.loseSequenceSound = false;
     }
     static createSceneColliders = (scene) => {

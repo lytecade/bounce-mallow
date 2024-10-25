@@ -18,7 +18,7 @@ export default class Enemy {
             scene.player.sprite,
             () => {
                 scene.loseSequenceActive = true;
-                scene.loseSequenceFromEnemy = true;
+                scene.loseSequenceShatter = true;
             },
             null,
             this

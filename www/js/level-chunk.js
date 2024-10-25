@@ -1,4 +1,4 @@
-import { TileSettings } from "/js/constants.js";
+import { LoseTileTypes, TileSettings } from "/js/constants.js";
 import Utils from "/js/utils.js";
 
 export default class LevelChunk {
@@ -49,7 +49,7 @@ export default class LevelChunk {
                 } else if ((row + 1) == maxFloor) {
                     if (column != 0 && (column < this.tileRows - 1) && this.cliffShow && (column == lastCliffEnd || column == (lastCliffEnd - 1))) {
                         this.tiles[row][column] = 0;
-                        this.loseTiles[row][column] = 1;
+                        this.loseTiles[row][column] = LoseTileTypes.Cliff;
                         if (this.tiles[row][column - 1] == 9) {
                             this.tiles[row][column - 1] = 10;
                         }
@@ -83,6 +83,8 @@ export default class LevelChunk {
                         this.tiles[baseRow][column] = 19;
                         this.tiles[baseRow][column + 1] = 19;
                         this.tiles[baseRow][column + 2] = 8;
+                        this.loseTiles[baseRow][column] = LoseTileTypes.Spikes;
+                        this.loseTiles[baseRow][column + 1] = LoseTileTypes.Spikes;
                     }
                 }
             }

@@ -98,6 +98,11 @@ export const SpeedTypes = {
     Jump: 240
 };
 
+export const LoseTileTypes = {
+    Cliff: 1,
+    Spikes: 2
+}
+
 export const TileSettings = {
     TileSize: 8,
     TileRows: 11,

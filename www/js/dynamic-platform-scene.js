@@ -2,7 +2,7 @@ import LevelChunk from "/js/level-chunk.js";
 import Utils from "/js/utils.js";
 import Enemy from "/js/dynamic-enemy.js";
 import Player from "/js/player.js";
-import { TileSettings, BASE_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
+import { LoseTileTypes, TileSettings, BASE_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
 
 export default class DynamicPlatformScene extends Phaser.Scene {
     preload() {
@@ -44,9 +44,14 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         const loseCliffCollider = this.physics.add.overlap(
             this.player.sprite,
             chunk.loseLayer,
-            () => this.setChunkLoseSequence(),
             (player, tile) => {
-                return (tile.index === 1);
+                this.loseSequenceActive = true;
+                if (tile.index === LoseTileTypes.Spikes) {
+                    this.loseSequenceShatter = true;
+                }
+            },
+            (player, tile) => {
+                return ([LoseTileTypes.Cliff, LoseTileTypes.Spikes].includes(tile.index));
             },
             this
         );
@@ -62,7 +67,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this.player.update();
         } else {
             this.player.sprite.setVelocityX(0);
-            Utils.runLoseSequenceDynamic(this, 0, 5, !this.loseSequenceFromEnemy); 
+            Utils.runLoseSequenceDynamic(this, 0, 5, !this.loseSequenceShatter); 
         }
         this.enemies.forEach(enemy => {
             enemy.update(time, delta);
@@ -101,9 +106,6 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this.createChunk(lastChunk.x + this.chunkWidth, 0, true);
             this.removeOldestChunk();
         }
-    }
-    setChunkLoseSequence() {
-        this.loseSequenceActive = true;
     }
     manageOldEnemyData(chunkScene, oldChunkX) {
         let indexOfEnemies = 0;
