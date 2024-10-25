@@ -28,11 +28,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     }
     generateInitialChunks() {
         for (let i = 0; i < (this.activeChunks * 3); i++) {
-            if (i < this.activeChunks) {
-                this.createChunk(i * this.chunkWidth, 0, false);
-            } else {
-                this.createChunk(i * this.chunkWidth, 0, true);
-            }
+            this.createChunk(i * this.chunkWidth, 0, !(i < this.activeChunks));
         }
     }
     createChunk(x, y, showCliff) {
@@ -54,9 +50,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             chunk.loseLayer,
             (player, tile) => {
                 this.loseSequenceActive = true;
-                if (tile.index === LoseTileTypes.Spikes) {
-                    this.loseSequenceShatter = true;
-                }
+                this.loseSequenceShatter = (tile.index === LoseTileTypes.Spikes);
             },
             (player, tile) => {
                 return ([LoseTileTypes.Cliff, LoseTileTypes.Spikes].includes(tile.index));
@@ -87,10 +81,8 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             const oldestChunk = this.chunks.shift();
             const oldestChunkValueX = oldestChunk.x;
             oldestChunk.destroy();
-            const oldestCollider = this.chunkColliders.shift();
-            this.physics.world.removeCollider(oldestCollider);
-            const oldestLoseCollider = this.chunkCliffColliders.shift();
-            this.physics.world.removeCollider(oldestLoseCollider);
+            this.physics.world.removeCollider(this.chunkColliders.shift());
+            this.physics.world.removeCollider(this.chunkCliffColliders.shift());
             this.manageOldEnemyData(this, oldestChunkValueX);
             this.updateCameraBounds();
         }

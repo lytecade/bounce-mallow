@@ -168,11 +168,8 @@ export default class LevelChunk {
             tileWidth: this.tileSize,
             tileHeight: this.tileSize
         });
-        const mapLoseTiles = loseMap.addTilesetImage("tileset-platform", "tileset-platform");
-        const tiles = map.addTilesetImage("tileset-platform", "tileset-platform");
-        this.groundLayer = map.createLayer(0, tiles, this.x, 0).setCollisionByExclusion([-1, 0, 19]);
-        this.loseLayer = loseMap.createLayer(0, mapLoseTiles, this.x, 0);
-        this.loseLayer.setVisible(false);
+        this.groundLayer = map.createLayer(0, map.addTilesetImage("tileset-platform", "tileset-platform"), this.x, 0).setCollisionByExclusion([-1, 0, 19]);
+        this.loseLayer = loseMap.createLayer(0, loseMap.addTilesetImage("tileset-platform", "tileset-platform"), this.x, 0).setVisible(false);
     }
     destroy() {
         if (this.groundLayer) {
