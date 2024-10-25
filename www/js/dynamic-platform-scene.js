@@ -89,17 +89,12 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     }
     updateCameraBounds() {
         if (this.chunks.length > 0) {
-            const firstChunk = this.chunks[0];
-            const lastChunk = this.chunks[this.chunks.length - 1];
-            const worldWidth = lastChunk.x + this.chunkWidth;
-            const worldHeight = this.sys.game.config.height;
-            this.cameras.main.setBounds(0, 0, worldWidth, worldHeight);
+            this.cameras.main.setBounds(0, 0, (this.chunks[this.chunks.length - 1].x + this.chunkWidth), (this.sys.game.config.height));
         }
     }
     manageChunks() {
-        const lastChunk = this.chunks[this.chunks.length - 1];
-        if (this.player.sprite.x > lastChunk.x - this.chunkWidth) {
-            this.createChunk(lastChunk.x + this.chunkWidth, 0, true);
+        if (this.player.sprite.x > this.chunks[this.chunks.length - 1].x - this.chunkWidth) {
+            this.createChunk(this.chunks[this.chunks.length - 1].x + this.chunkWidth, 0, true);
             this.removeOldestChunk();
         }
     }
@@ -112,8 +107,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         }
         for (let r = 0; r < indexOfEnemies; r++) {
             const latestEnemy = chunkScene.enemies.shift();
-            const enemyGroundCollider = chunkScene.enemyTileCollider.shift();
-            chunkScene.physics.world.removeCollider(enemyGroundCollider);
+            chunkScene.physics.world.removeCollider(chunkScene.enemyTileCollider.shift());
         }
     }
 }
