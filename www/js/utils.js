@@ -9,7 +9,7 @@ export default class Utils {
     }
     static loadResources = (scene, resourceCollection) => {
         for (const [key, value] of resourceCollection) {
-            let resourcePath = (value.type != "music") ? "/assets/" + value.type + "/" + value.name + "." + value.ext : "";
+            let resourcePath = "/assets/" + value.type + "/" + value.name + "." + value.ext;
             switch (value.type) {
                 case "music":
                 case "sounds": 
