@@ -26,7 +26,7 @@ export const BASE_RESOURCES = new Map([
     ["bgm-level", {
         type: "music",
         name: "bgm-level",
-        ext: ["wav", "ogg"],
+        ext: "wav",
         options: {}
     }],
     ["sprite-player", {

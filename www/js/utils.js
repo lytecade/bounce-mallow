@@ -11,17 +11,9 @@ export default class Utils {
         for (const [key, value] of resourceCollection) {
             let resourcePath = (value.type != "music") ? "/assets/" + value.type + "/" + value.name + "." + value.ext : "";
             switch (value.type) {
+                case "music":
                 case "sounds": 
                     scene.load.audio(value.name, resourcePath);
-                    break;
-                case "music":
-                    const extensions = value.ext;
-                    let resourcePaths = [];
-                    for (let i = 0; i < extensions.length; i++) {
-                        let newExtension = "/assets/music/" + value.name + "." + extensions[i];
-                        resourcePaths.push(newExtension);
-                    }
-                    scene.load.audio(value.name, resourcePaths);
                     break;
                 case "images":
                 case "tilesets":
