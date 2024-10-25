@@ -46,6 +46,9 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         if (chunk.enemySpawnPoint) {
             this.createEnemy(this, chunk, chunk.enemySpawnPoint.x, chunk.enemySpawnPoint.y);
         }
+        if (chunk.itemSpawnPoint) {
+            console.log("Generate item here:" + chunk.itemSpawnPoint.x + " " + chunk.itemSpawnPoint.y);
+        }
         this.chunkCliffColliders.push(this.physics.add.overlap(
             this.player.sprite,
             chunk.loseLayer,

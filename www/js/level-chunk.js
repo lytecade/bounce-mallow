@@ -17,6 +17,7 @@ export default class LevelChunk {
         this.minCliffDistance = 7;
         this.loseLayer = null;
         this.enemySpawnPoint = null;
+        this.itemSpawnPoint = null;
         this.generate();
     }
     generate() {
@@ -90,7 +91,7 @@ export default class LevelChunk {
             }
         }
         this.generatePlatforms(widthInTiles, maxFloor);
-        this.findEnemySpawnPoint(widthInTiles);
+        this.findObjectSpawnPoint(widthInTiles);
     }
     generatePlatforms(widthInTiles, maxFloor) {
         const platformLevel = maxFloor - 3; 
@@ -119,7 +120,7 @@ export default class LevelChunk {
             } 
         }
     }
-    findEnemySpawnPoint(tileWidth) {
+    findObjectSpawnPoint(tileWidth) {
         const groundLevel = (this.tileRows - this.tileGroundLevel) - 2;
         let validSpawnPoints = [];
         let platformLevels = [5, 6];
@@ -140,12 +141,18 @@ export default class LevelChunk {
             }
         }
         if (validSpawnPoints.length > 0) {
-            const randomIndex = Math.floor(Math.random() * 7);
-            if (this.cliffShow && randomIndex >= 0 && randomIndex < validSpawnPoints.length) {
-	        const spawnColumn = validSpawnPoints[randomIndex];
+            const randomEnemyIndex = Math.floor(Math.random() * 7);
+            const randomItemIndex = Math.floor(Math.random() * 10);
+            if (this.cliffShow && randomEnemyIndex >= 0 && randomEnemyIndex < validSpawnPoints.length) {
 	        this.enemySpawnPoint = {
-	            x: this.x + spawnColumn.col * this.tileSize,
-	            y: (spawnColumn.row - 1) * this.tileSize
+	            x: this.x + validSpawnPoints[randomEnemyIndex].col * this.tileSize,
+	            y: (validSpawnPoints[randomEnemyIndex].row - 1) * this.tileSize
+	        };
+            }
+            if (this.cliffShow && randomItemIndex >= 0 && randomItemIndex < validSpawnPoints.length) {
+	        this.itemSpawnPoint = {
+	            x: this.x + validSpawnPoints[randomItemIndex].col * this.tileSize,
+	            y: (validSpawnPoints[randomItemIndex].row - 1) * this.tileSize
 	        };
             }
         }
