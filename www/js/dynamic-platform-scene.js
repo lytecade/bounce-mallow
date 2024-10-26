@@ -1,6 +1,7 @@
 import LevelChunk from "/js/level-chunk.js";
 import Utils from "/js/utils.js";
 import Enemy from "/js/dynamic-enemy.js";
+import Item from "/js/dynamic-item.js";
 import Player from "/js/player.js";
 import { LoseTileTypes, TileSettings, BASE_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
 
