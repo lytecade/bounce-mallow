@@ -44,7 +44,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this.createEnemy(this, chunk, chunk.enemySpawnPoint.x, chunk.enemySpawnPoint.y);
         }
         if (chunk.itemSpawnPoint) {
-            console.log("Generate item here:" + chunk.itemSpawnPoint.x + " " + chunk.itemSpawnPoint.y);
+            this.createItem(this, chunk, chunk.itemSpawnPoint.x, chunk.itemSpawnPoint.y);
         }
         this.chunkCliffColliders.push(this.physics.add.overlap(
             this.player.sprite,
@@ -76,6 +76,10 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         const enemy = new Enemy(chunk, scene, x, y);
         this.enemyTileCollider.push(enemy.spriteCollider);
         this.enemies.push(enemy);
+    }
+    createItem(scene, chunk, x, y) {
+        //const item = new Item(chunk, scene, x, y);
+        console.log("Generate item here:" + x + " " + y);
     }
     removeOldestChunk() {
         if (this.chunks.length > (this.activeChunks * 2)) {

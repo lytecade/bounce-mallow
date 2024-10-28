@@ -78,6 +78,33 @@ export default class Utils {
                 frameRate: 4,
                 repeat: -1
             });
+            anims.create({
+                key: "coffee",
+                frames: anims.generateFrameNumbers("sprite-items", {
+                    start: 0,
+                    end: 3
+                }),
+                frameRate: 4,
+                repeat: -1
+            });
+            anims.create({
+                key: "camomile",
+                frames: anims.generateFrameNumbers("sprite-items", {
+                    start: 4,
+                    end: 7
+                }),
+                frameRate: 4,
+                repeat: -1
+            });
+            anims.create({
+                key: "chocolate",
+                frames: anims.generateFrameNumbers("sprite-items", {
+                    start: 8,
+                    end: 11
+                }),
+                frameRate: 4,
+                repeat: -1
+            });
         }
     }
     static createBackgrounds = (scene, count, texture, scrollFactor) => {
