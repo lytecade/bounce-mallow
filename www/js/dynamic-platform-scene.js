@@ -70,7 +70,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this.player.sprite.setVelocityX(0);
             Utils.runLoseSequenceDynamic(this, 0, 5, !this.loseSequenceShatter); 
         }
-        this.items.forEach(items => {
+        this.items.forEach(item => {
             item.update();
         });
         this.enemies.forEach(enemy => {
@@ -83,9 +83,11 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.enemies.push(enemy);
     }
     createItem(scene, chunk, x, y) {
-        const item = new Item(chunk, scene, x, y);
+        const item = new Item(chunk, scene, x, y, "COFFEE");
         this.itemTileCollider.push(item.spriteCollider);
         this.items.push(item);
+        console.log(this.items);
+        console.log(this.itemTileCollider);
     }
     removeOldestChunk() {
         if (this.chunks.length > (this.activeChunks * 2)) {
@@ -111,10 +113,20 @@ export default class DynamicPlatformScene extends Phaser.Scene {
     }
     manageOldObjectData(chunkScene, oldChunkX) {
         let indexOfEnemies = 0;
+        let indexOfItems = 0;
         for (let i = 0; i < chunkScene.enemies.length; i++) {
             if (chunkScene.enemies[i].sprite.x < (oldChunkX + TileSettings.TileChunkDefaultSize)) {
                 indexOfEnemies++;
             }
+        }
+        for (let i = 0; i < chunkScene.items.length; i++) {
+            if (chunkScene.items[i].sprite.x < (oldChunkX + TileSettings.TileChunkDefaultSize)) {
+                indexOfItems++;
+            }
+        }
+        for (let r = 0; r < indexOfItems; r++) {
+            const latestItems = chunkScene.items.shift();
+            chunkScene.physics.world.removeCollider(chunkScene.itemTileCollider.shift());
         }
         for (let r = 0; r < indexOfEnemies; r++) {
             const latestEnemy = chunkScene.enemies.shift();
