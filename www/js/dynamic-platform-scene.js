@@ -15,7 +15,9 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.chunkColliders = [];
         this.chunkCliffColliders = [];
         this.enemies = [];
-        this.enemyTileCollider = [];        
+        this.enemyTileCollider = [];
+        this.items = [];
+        this.itemTileCollider = [];
         this.chunkWidth = TileSettings.TileChunkDefaultSize;
         this.activeChunks = TileSettings.TileChunkDefaultActive; 
         this.backgroundImages = Utils.createBackgrounds(this, 1, "background-hills", 0);
@@ -68,6 +70,9 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this.player.sprite.setVelocityX(0);
             Utils.runLoseSequenceDynamic(this, 0, 5, !this.loseSequenceShatter); 
         }
+        this.items.forEach(items => {
+            item.update();
+        });
         this.enemies.forEach(enemy => {
             enemy.update(time, delta);
         });
@@ -78,8 +83,9 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.enemies.push(enemy);
     }
     createItem(scene, chunk, x, y) {
-        //const item = new Item(chunk, scene, x, y);
-        console.log("Generate item here:" + x + " " + y);
+        const item = new Item(chunk, scene, x, y);
+        this.itemTileCollider.push(item.spriteCollider);
+        this.items.push(item);
     }
     removeOldestChunk() {
         if (this.chunks.length > (this.activeChunks * 2)) {
@@ -88,7 +94,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             oldestChunk.destroy();
             this.physics.world.removeCollider(this.chunkColliders.shift());
             this.physics.world.removeCollider(this.chunkCliffColliders.shift());
-            this.manageOldEnemyData(this, oldestChunkValueX);
+            this.manageOldObjectData(this, oldestChunkValueX);
             this.updateCameraBounds();
         }
     }
@@ -103,7 +109,7 @@ export default class DynamicPlatformScene extends Phaser.Scene {
             this.removeOldestChunk();
         }
     }
-    manageOldEnemyData(chunkScene, oldChunkX) {
+    manageOldObjectData(chunkScene, oldChunkX) {
         let indexOfEnemies = 0;
         for (let i = 0; i < chunkScene.enemies.length; i++) {
             if (chunkScene.enemies[i].sprite.x < (oldChunkX + TileSettings.TileChunkDefaultSize)) {
