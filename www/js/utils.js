@@ -22,9 +22,6 @@ export default class Utils {
                 case "spritesheets":
                     scene.load.spritesheet(value.name, resourcePath, value.options);
                     break;
-                case "tilemaps":
-                    scene.load.tilemapTiledJSON(value.name, resourcePath);
-                    break;
                 default:
                     break;
             }

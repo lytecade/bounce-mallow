@@ -67,12 +67,6 @@ export const BASE_RESOURCES = new Map([
         name: "tileset-platform",
         ext: "png",
         options: {}
-    }],
-    ["tilemap-platform", {
-        type: "tilemaps",
-        name: "tilemap-platform",
-        ext: "json",
-        options: {}
     }]
 ]);
 
