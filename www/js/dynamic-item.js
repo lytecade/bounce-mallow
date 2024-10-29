@@ -1,4 +1,5 @@
 import { ItemTypes } from "/js/constants.js";
+import Utils from "/js/utils.js";
 
 export default class Item {
     constructor(chunk, scene, x, y, type) {
@@ -8,6 +9,7 @@ export default class Item {
         this.activated = false;
         this.sprite = scene.physics.add.sprite(x, y, "sprite-items", 0).setSize(8, 8);
         this.spriteCollider = scene.physics.world.addCollider(this.sprite, chunk.groundLayer);
+        this.setupOverlap();
     }
     update() {
         if (this.type === ItemTypes.Coffee) {
@@ -17,5 +19,17 @@ export default class Item {
         } else {
             this.sprite.anims.play("chocolate", true);
         }
+    }
+    setupOverlap() {
+        const { scene } = this;
+        scene.physics.add.overlap(
+            this.sprite,
+            scene.player.sprite,
+            () => {
+                Utils.createItemSequence(scene.player, this.sprite);
+            },
+            null,
+            this
+        );
     }
 }

@@ -287,6 +287,7 @@ export default class Utils {
                 scene.slowSound.play();
             }             
             if (item.type == ItemTypes.Chocolate) {
+                console.log("Choco"); 
                 scene.fastSound.play();
             }
             scene.time.delayedCall(2000, () => {
