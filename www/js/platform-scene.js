@@ -1,14 +1,13 @@
 import LevelChunk from "/js/level-chunk.js";
 import Utils from "/js/utils.js";
-import Enemy from "/js/dynamic-enemy.js";
-import Item from "/js/dynamic-item.js";
+import Enemy from "/js/enemy.js";
+import Item from "/js/item.js";
 import Player from "/js/player.js";
-import { LoseTileTypes, ItemTypes, TileSettings, BASE_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
+import { LoseTileTypes, ItemTypes, TileSettings, BASE_RESOURCES } from "/js/constants.js";
 
-export default class DynamicPlatformScene extends Phaser.Scene {
+export default class PlatformScene extends Phaser.Scene {
     preload() {
         Utils.loadResources(this, BASE_RESOURCES);
-        Utils.loadResources(this, BACKGROUND_RESOURCES_HILLS);
     }
     create() {
         this.chunks = [];

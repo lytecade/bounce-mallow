@@ -67,10 +67,7 @@ export const BASE_RESOURCES = new Map([
         name: "tileset-platform",
         ext: "png",
         options: {}
-    }]
-]);
-
-export const BACKGROUND_RESOURCES_HILLS = new Map([
+    }],
     ["background-hills", {
         type: "images",
         name: "background-hills",
