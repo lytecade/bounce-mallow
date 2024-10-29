@@ -1,4 +1,3 @@
-import StaticPlatformScene from "/js/static-platform-scene.js";
 import DynamicPlatformScene from "/js/dynamic-platform-scene.js";
 
 const game = new Phaser.Game({
