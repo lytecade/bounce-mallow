@@ -76,6 +76,13 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.enemies.forEach(enemy => {
             enemy.update(time, delta);
         });
+        if (this.sound.context.state === 'suspended') {
+            this.sound.context.resume().then(() => {
+                if (!this.backgroundMusic.isPlaying) {
+                    this.backgroundMusic.play();
+                }
+            });
+        }
     }
     createEnemy(scene, chunk, x, y) {
         const enemy = new Enemy(chunk, scene, x, y);
