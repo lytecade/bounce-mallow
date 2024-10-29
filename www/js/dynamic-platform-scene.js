@@ -3,7 +3,7 @@ import Utils from "/js/utils.js";
 import Enemy from "/js/dynamic-enemy.js";
 import Item from "/js/dynamic-item.js";
 import Player from "/js/player.js";
-import { LoseTileTypes, TileSettings, BASE_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
+import { LoseTileTypes, ItemTypes, TileSettings, BASE_RESOURCES, BACKGROUND_RESOURCES_HILLS } from "/js/constants.js";
 
 export default class DynamicPlatformScene extends Phaser.Scene {
     preload() {
@@ -83,11 +83,10 @@ export default class DynamicPlatformScene extends Phaser.Scene {
         this.enemies.push(enemy);
     }
     createItem(scene, chunk, x, y) {
-        const item = new Item(chunk, scene, x, y, "COFFEE");
+        const itemTypesArray = Object.keys(ItemTypes);
+        const item = new Item(chunk, scene, x, y, ItemTypes[itemTypesArray[Math.floor(Math.random() * itemTypesArray.length)]]);
         this.itemTileCollider.push(item.spriteCollider);
         this.items.push(item);
-        console.log(this.items);
-        console.log(this.itemTileCollider);
     }
     removeOldestChunk() {
         if (this.chunks.length > (this.activeChunks * 2)) {

@@ -1,10 +1,10 @@
 import { ItemTypes } from "/js/constants.js";
 
 export default class Item {
-    constructor(chunk, scene, x, y, name) {
+    constructor(chunk, scene, x, y, type) {
         this.scene = scene;
         this.chunk = chunk;
-        this.type = this.assignType(name);
+        this.type = type;
         this.activated = false;
         this.sprite = scene.physics.add.sprite(x, y, "sprite-items", 0).setSize(8, 8);
         this.spriteCollider = scene.physics.world.addCollider(this.sprite, chunk.groundLayer);
@@ -18,15 +18,4 @@ export default class Item {
             this.sprite.anims.play("chocolate", true);
         }
     }
-    assignType(nameValue) {
-        if (nameValue.includes("coffee")) {
-            return ItemTypes.Coffee;
-        } else if (nameValue.includes("camomile")) {
-            return ItemTypes.Camomile
-        } else if (nameValue.includes("chocolate")) {
-            return ItemTypes.Chocolate
-        } else {
-            return '';
-        }
-    } 
 }
