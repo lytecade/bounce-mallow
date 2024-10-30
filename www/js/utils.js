@@ -149,46 +149,6 @@ export default class Utils {
         scene.loseSequenceShatter = false;
         scene.loseSequenceSound = false;
     }
-    static createSceneColliders = (scene) => {
-        scene.playerLoseColliderCliff = scene.physics.add.overlap(
-            scene.player.sprite,
-            scene.loseLayer,
-            () => this.createLoseSequence(scene, true),
-            (player, tile) => {
-                return (tile.index === 1);
-            },
-            this
-        );
-        scene.playerLoseColliderSpikes = scene.physics.add.overlap(
-            scene.player.sprite,
-            scene.loseLayer,
-            () => this.createLoseSequence(scene, false),
-            (player, tile) => {
-                return (tile.index === 20);
-            },
-            this
-        );
-        scene.playerEnemyCollider = scene.physics.add.overlap(
-            scene.player.sprite,
-            scene.enemies.map(enemy => enemy.sprite),
-            () => this.createLoseSequence(scene, false),
-            null,
-            this
-        );
-        scene.playerItemCollider = scene.physics.add.overlap(
-            scene.player.sprite,
-            scene.items.map(item => item.sprite),
-            this.createItemSequence,
-            null,
-            this
-        );
-    }
-    static createLoseSequence = (scene, lossByFall) => {
-	if (scene.player.sprite) {
-	    scene.loseSequenceActive = true;
-	    this.runLoseSequence(scene, 0, 5, lossByFall);
-	}
-    }
     static runLoseSequenceDynamic(scene, currentStage, time, byFall) {
         scene.time.delayedCall(time, () => {
             currentStage++;
@@ -218,48 +178,6 @@ export default class Utils {
                         } 
                         scene.cameras.main.stopFollow();
                         this.runLoseSequenceDynamic(scene, currentStage, time * 200, byFall);
-                        break;
-                    default:
-                        scene.scene.restart();
-                }
-            }
-        }, [], this);
-    }
-    static runLoseSequence(scene, currentStage, time, byFall) {
-        scene.time.delayedCall(time, () => {
-            currentStage++;
-            if (byFall === true) {
-                switch (currentStage) {
-                    case 1:
-                        scene.player.sprite.setVisible(false);
-                        this.runLoseSequence(scene, currentStage, time, byFall);
-                        break;
-                    case 2:
-                        if (scene.loseSequenceSound === false) {
-                            scene.loseSound.play();
-                            scene.loseSequenceSound = true;
-                        } 
-                        scene.cameras.main.stopFollow();
-                        this.runLoseSequence(scene, currentStage, time * 400, byFall);
-                        break;
-                    default:
-                        scene.scene.restart();
-                }
-            } else {
-                switch (currentStage) {
-                    case 1:
-                        if (scene.player.sprite.anims) {
-                            scene.player.sprite.anims.play("player-destroy", true); 
-                        } 
-                        this.runLoseSequence(scene, currentStage, time, byFall);
-                        break;
-                    case 2:
-                        if (scene.loseSequenceSound === false) {
-                            scene.loseSound.play();
-                            scene.loseSequenceSound = true;
-                        } 
-                        scene.cameras.main.stopFollow();
-                        this.runLoseSequence(scene, currentStage, time * 200, byFall);
                         break;
                     default:
                         scene.scene.restart();
