@@ -51,7 +51,7 @@ export default class PlatformScene extends Phaser.Scene {
     }
 
     runHudCount() {
-        if (this.player.movementState) {
+        if (this.player.movementState && !this.loseSequenceActive) {
             this.hudCounters[this.hudCounters.length - 1]++;
             for (let i = this.hudCounters.length - 1; i >= 0; i--) {
                 if (this.hudCounters[i] > 9) {
