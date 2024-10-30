@@ -21,7 +21,9 @@ export default class PlatformScene extends Phaser.Scene {
         this.chunkWidth = TileSettings.TileChunkDefaultSize;
         this.activeChunks = TileSettings.TileChunkDefaultActive; 
         this.backgroundImages = Utils.createBackgrounds(this, 1, "background-hills", 0);
-        Utils.createSceneAttributes(this, BASE_RESOURCES);
+        this.loseSequenceActive = false;
+        this.loseSequenceShatter = false;
+        this.loseSequenceSound = false;
         this.player = new Player(this, this.chunkWidth, 10);
         this.generateInitialChunks();
         Utils.createAnimations(this);

@@ -123,14 +123,6 @@ export default class Utils {
         }
     }
 
-    static createSceneAttributes = (scene) => {
-        scene.enemies = [];
-        scene.items = [];
-        scene.loseSequenceActive = false;
-        scene.loseSequenceShatter = false;
-        scene.loseSequenceSound = false;
-    }
-
     static runLoseSequenceDynamic(scene, currentStage, time, byFall) {
         scene.time.delayedCall(time, () => {
             currentStage++;
