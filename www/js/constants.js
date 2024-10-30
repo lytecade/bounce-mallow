@@ -51,6 +51,17 @@ export const BASE_RESOURCES = new Map([
             spacing: 0
         }
     }],
+    ["sprite-hud", {
+        type: "spritesheets",
+        name: "sprite-hud",
+        ext: "png",
+        options: {
+            frameWidth: 8,
+            frameHeight: 8,
+            margin: 0,
+            spacing: 0
+        }
+    }],
     ["sprite-items", {
         type: "spritesheets",
         name: "sprite-items",

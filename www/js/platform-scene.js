@@ -32,16 +32,21 @@ export default class PlatformScene extends Phaser.Scene {
         this.updateCameraBounds();
  
         this.count = 0;
-        this.countText = this.add.text(32, 24, '0', {
-            fontSize: '8px',
-            fill: '#fff'
+        this.countImage = this.add.image(60, 8, 'sprite-hud', 0).setOrigin(1, 0);
+        this.countImage.setScrollFactor(0);
+        this.time.addEvent({ 
+            delay: 1000, 
+            callback: this.updateCount, 
+            callbackScope: this, 
+            loop: true 
         });
-        this.time.addEvent({ delay: 1000, callback: this.updateCount, callbackScope: this, loop: true });
     }
 
     updateCount() {
-        this.count++;
-        this.countText.setText('' + this.count);
+        if (this.count < 9 && this.player.movementState) {
+            this.count++;
+            this.countImage.setFrame(this.count); 
+        }
     }
 
     generateInitialChunks() {
