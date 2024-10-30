@@ -2,17 +2,18 @@ import { ItemTypes, SpeedTypes } from "/js/constants.js";
 
 export default class Utils {
     static isValueEmpty = (resourceValue) => {
-       if (resourceValue == 0 || resourceValue == undefined || resourceValue == "") {
-           return true;
-       }
-       return false;
+        if (resourceValue === 0 || resourceValue === undefined || resourceValue === "") {
+            return true;
+        }
+        return false;
     }
+
     static loadResources = (scene, resourceCollection) => {
         for (const [key, value] of resourceCollection) {
-            let resourcePath = "/assets/" + value.type + "/" + value.name + "." + value.ext;
+            let resourcePath = `/assets/${value.type}/${value.name}.${value.ext}`;
             switch (value.type) {
                 case "music":
-                case "sounds": 
+                case "sounds":
                     scene.load.audio(value.name, resourcePath);
                     break;
                 case "images":
@@ -27,83 +28,61 @@ export default class Utils {
             }
         }
     }
+
     static createAnimations = (scene) => {
         const anims = scene.anims;
-        if (anims.anims.size == 0) {
+        if (anims.anims.size === 0) {
             anims.create({
                 key: "player-idle",
-                frames: anims.generateFrameNumbers("sprite-player", {
-                    start: 0,
-                    end: 3
-                }),
+                frames: anims.generateFrameNumbers("sprite-player", { start: 0, end: 3 }),
                 frameRate: 3,
                 repeat: -1,
             });
             anims.create({
                 key: "player-run",
-                frames: anims.generateFrameNumbers("sprite-player", {
-                    start: 8,
-                    end: 15
-                }),
+                frames: anims.generateFrameNumbers("sprite-player", { start: 8, end: 15 }),
                 frameRate: 12,
                 repeat: -1,
             });
             anims.create({
                 key: "player-destroy",
-                frames: anims.generateFrameNumbers("sprite-player", {
-                    start: 16,
-                    end: 23
-                }),
+                frames: anims.generateFrameNumbers("sprite-player", { start: 16, end: 23 }),
                 frameRate: 8,
-                repeat: 0, 
+                repeat: 0,
             });
             anims.create({
                 key: "enemy-idle",
-                frames: anims.generateFrameNumbers("sprite-enemy-spike", {
-                    start: 0,
-                    end: 3
-                }),
+                frames: anims.generateFrameNumbers("sprite-enemy-spike", { start: 0, end: 3 }),
                 frameRate: 4,
                 repeat: -1,
             });
             anims.create({
                 key: "enemy-walk",
-                frames: anims.generateFrameNumbers("sprite-enemy-spike", {
-                    start: 4,
-                    end: 7
-                }),
+                frames: anims.generateFrameNumbers("sprite-enemy-spike", { start: 4, end: 7 }),
                 frameRate: 4,
-                repeat: -1
+                repeat: -1,
             });
             anims.create({
                 key: "coffee",
-                frames: anims.generateFrameNumbers("sprite-items", {
-                    start: 0,
-                    end: 3
-                }),
+                frames: anims.generateFrameNumbers("sprite-items", { start: 0, end: 3 }),
                 frameRate: 4,
-                repeat: -1
+                repeat: -1,
             });
             anims.create({
                 key: "camomile",
-                frames: anims.generateFrameNumbers("sprite-items", {
-                    start: 4,
-                    end: 7
-                }),
+                frames: anims.generateFrameNumbers("sprite-items", { start: 4, end: 7 }),
                 frameRate: 4,
-                repeat: -1
+                repeat: -1,
             });
             anims.create({
                 key: "chocolate",
-                frames: anims.generateFrameNumbers("sprite-items", {
-                    start: 8,
-                    end: 11
-                }),
+                frames: anims.generateFrameNumbers("sprite-items", { start: 8, end: 11 }),
                 frameRate: 4,
-                repeat: -1
+                repeat: -1,
             });
         }
     }
+
     static createBackgrounds = (scene, count, texture, scrollFactor) => {
         let trackingXValue = 0;
         let images = [];
@@ -116,21 +95,22 @@ export default class Utils {
         }
         return images;
     }
+
     static createSounds = (scene, resourceCollection) => {
         for (const [key, value] of resourceCollection) {
-            if (value.type === "sounds") { 
-	        if (value.name.includes("jump")) {
-	            scene.jumpSound = scene.sound.add(value.name);
-	        }
-	        if (value.name.includes("lose")) {
-	            scene.loseSound = scene.sound.add(value.name);
-	        }
-	        if (value.name.includes("fast")) {
-	            scene.fastSound = scene.sound.add(value.name);
-	        }
-	        if (value.name.includes("slow")) {
-	            scene.slowSound = scene.sound.add(value.name);
-	        }
+            if (value.type === "sounds") {
+                if (value.name.includes("jump")) {
+                    scene.jumpSound = scene.sound.add(value.name);
+                }
+                if (value.name.includes("lose")) {
+                    scene.loseSound = scene.sound.add(value.name);
+                }
+                if (value.name.includes("fast")) {
+                    scene.fastSound = scene.sound.add(value.name);
+                }
+                if (value.name.includes("slow")) {
+                    scene.slowSound = scene.sound.add(value.name);
+                }
             }
             if (value.type === "music") {
                 if (value.name.includes("level")) {
@@ -142,6 +122,7 @@ export default class Utils {
             }
         }
     }
+
     static createSceneAttributes = (scene) => {
         scene.enemies = [];
         scene.items = [];
@@ -149,17 +130,18 @@ export default class Utils {
         scene.loseSequenceShatter = false;
         scene.loseSequenceSound = false;
     }
+
     static runLoseSequenceDynamic(scene, currentStage, time, byFall) {
         scene.time.delayedCall(time, () => {
             currentStage++;
             if (byFall === true) {
                 if (currentStage === 1) {
-		    if (scene.loseSequenceSound === false) {
-		        scene.loseSound.play();
-		        scene.loseSequenceSound = true;
-		    } 
-		    scene.cameras.main.stopFollow();
-		    this.runLoseSequenceDynamic(scene, currentStage, time * 400, byFall);
+                    if (scene.loseSequenceSound === false) {
+                        scene.loseSound.play();
+                        scene.loseSequenceSound = true;
+                    }
+                    scene.cameras.main.stopFollow();
+                    this.runLoseSequenceDynamic(scene, currentStage, time * 400, byFall);
                 } else {
                     scene.scene.restart();
                 }
@@ -167,15 +149,15 @@ export default class Utils {
                 switch (currentStage) {
                     case 1:
                         if (scene.player.sprite.anims) {
-                            scene.player.sprite.anims.play("player-destroy", true); 
-                        } 
+                            scene.player.sprite.anims.play("player-destroy", true);
+                        }
                         this.runLoseSequenceDynamic(scene, currentStage, time, byFall);
                         break;
                     case 2:
                         if (scene.loseSequenceSound === false) {
                             scene.loseSound.play();
                             scene.loseSequenceSound = true;
-                        } 
+                        }
                         scene.cameras.main.stopFollow();
                         this.runLoseSequenceDynamic(scene, currentStage, time * 200, byFall);
                         break;
@@ -185,6 +167,7 @@ export default class Utils {
             }
         }, [], this);
     }
+
     static createItemSequence = (playerReference, itemSprite) => {
         const scene = playerReference.scene;
         const item = scene.items.find(i => i.sprite === itemSprite);
@@ -193,16 +176,16 @@ export default class Utils {
             itemSprite.setVisible(false);
             scene.player.fastSequenceActive = false;
             scene.player.slowSequenceActive = false;
-            if (item.type == ItemTypes.Coffee) {
+            if (item.type === ItemTypes.Coffee) {
                 scene.player.fastSequenceActive = true;
                 scene.fastSound.play();
             }
-            if (item.type == ItemTypes.Camomile) {
+            if (item.type === ItemTypes.Camomile) {
                 scene.player.slowSequenceActive = true;
                 scene.slowSound.play();
-            }             
-            if (item.type == ItemTypes.Chocolate) {
-                console.log("Choco"); 
+            }
+            if (item.type === ItemTypes.Chocolate) {
+                console.log("Choco");
                 scene.fastSound.play();
             }
             scene.time.delayedCall(2000, () => {
@@ -212,3 +195,4 @@ export default class Utils {
         }
     }
 }
+
