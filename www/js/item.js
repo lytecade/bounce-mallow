@@ -11,6 +11,7 @@ export default class Item {
         this.spriteCollider = scene.physics.world.addCollider(this.sprite, chunk.groundLayer);
         this.setupOverlap();
     }
+
     update() {
         if (this.type === ItemTypes.Coffee) {
             this.sprite.anims.play("coffee", true);
@@ -20,6 +21,7 @@ export default class Item {
             this.sprite.anims.play("chocolate", true);
         }
     }
+
     setupOverlap() {
         const { scene } = this;
         scene.physics.add.overlap(
@@ -33,3 +35,4 @@ export default class Item {
         );
     }
 }
+

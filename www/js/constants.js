@@ -77,7 +77,7 @@ export const BASE_RESOURCES = new Map([
 ]);
 
 export const ItemTypes = {
-    Coffee: 'COFFEE', 
+    Coffee: 'COFFEE',
     Camomile: 'CAMOMILE',
     Chocolate: 'CHOCOLATE'
 };
@@ -92,7 +92,7 @@ export const SpeedTypes = {
 export const LoseTileTypes = {
     Cliff: 1,
     Spikes: 2
-}
+};
 
 export const TileSettings = {
     TileSize: 8,
@@ -100,4 +100,5 @@ export const TileSettings = {
     TileGroundLevel: 3,
     TileChunkDefaultSize: 88,
     TileChunkDefaultActive: 4,
-}
+};
+
