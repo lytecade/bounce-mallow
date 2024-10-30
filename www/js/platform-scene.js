@@ -30,22 +30,37 @@ export default class PlatformScene extends Phaser.Scene {
         Utils.createSounds(this, BASE_RESOURCES);
         this.cameras.main.startFollow(this.player.sprite);
         this.updateCameraBounds();
- 
-        this.count = 0;
-        this.countImage = this.add.image(60, 8, 'sprite-hud', 0).setOrigin(1, 0);
-        this.countImage.setScrollFactor(0);
+
+
+        this.hudCounters = [0, 0];
+        this.hudCounterImages = [];
+        for (let i = 0; i < this.hudCounters.length; i++) {
+            const countImage = this.add.image((this.chunkWidth / 2) + (i * 4) - 4, 8, 'sprite-hud', 0).setOrigin(0.5, 0);
+            countImage.setScrollFactor(0);
+            this.hudCounterImages.push(countImage);
+        }
         this.time.addEvent({ 
             delay: 1000, 
-            callback: this.updateCount, 
+            callback: this.runHudCount, 
             callbackScope: this, 
             loop: true 
         });
     }
 
-    updateCount() {
-        if (this.count < 9 && this.player.movementState) {
-            this.count++;
-            this.countImage.setFrame(this.count); 
+    runHudCount() {
+        if (this.player.movementState) {
+            this.hudCounters[this.hudCounters.length - 1]++;
+            for (let i = this.hudCounters.length - 1; i >= 0; i--) {
+                if (this.hudCounters[i] > 9) {
+                    this.hudCounters[i] = 0;
+                    if (i > 0) {
+                        this.hudCounters[i - 1]++;
+                    }
+                }
+            }
+            for (let i = 0; i < this.hudCounters.length; i++) {
+                this.hudCounterImages[i].setFrame(this.hudCounters[i]);
+            }
         }
     }
 
@@ -105,7 +120,7 @@ export default class PlatformScene extends Phaser.Scene {
         if (this.sound.context.state === 'suspended') {
             this.sound.context.resume().then(() => {
                 if (!this.backgroundMusic.isPlaying) {
-                    this.backgroundMusic.play();
+                    // this.backgroundMusic.play();
                 }
             });
         }
