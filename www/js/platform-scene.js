@@ -34,8 +34,8 @@ export default class PlatformScene extends Phaser.Scene {
 
         this.hudCounters = [0, 0];
         this.hudCounterImages = [];
-        const offsetX = 5; // Adjust this value for spacing between digits
-        const offsetY = 6; // Adjust this value for spacing from the top
+        const offsetX = 5;
+        const offsetY = 6;
         for (let i = 0; i < this.hudCounters.length; i++) {
             const countImage = this.add.image(offsetX + (i * offsetX === 0 ? 1 : i * offsetX), offsetY, 'sprite-hud', 0).setOrigin(0.5, 0);
             countImage.setScrollFactor(0);
