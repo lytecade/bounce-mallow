@@ -34,26 +34,24 @@ export default class PlatformScene extends Phaser.Scene {
 
         this.hudCounters = [0, 0];
         this.hudCounterImages = [];
-        const offsetX = 5;
-        const offsetY = 6;
+        this.hudBar = this.add.image(10, 8, 'sprite-hud', 16).setOrigin(1, 0).setScrollFactor(0);
+        this.hudBarCounter = 0;
         for (let i = 0; i < this.hudCounters.length; i++) {
-            const countImage = this.add.image(offsetX + (i * offsetX === 0 ? 1 : i * offsetX), offsetY, 'sprite-hud', 0).setOrigin(0.5, 0);
-            countImage.setScrollFactor(0);
-            this.hudCounterImages.push(countImage);
+            this.hudCounterImages.push(this.add.image(16 + (i * 4), 8, 'sprite-hud', 0).setOrigin(1, 0).setScrollFactor(0));
         }
-        this.time.addEvent({ 
+        this.hudTimer = this.time.addEvent({ 
             delay: 1000, 
             callback: this.runHudCount, 
             callbackScope: this, 
             loop: true 
         });
-        console.log(this.cameras);
     }
 
     runHudCount() {
         if (this.player.movementState && !this.loseSequenceActive) {
             this.hudCounters[this.hudCounters.length - 1]++;
             for (let i = this.hudCounters.length - 1; i >= 0; i--) {
+                console.log(this.hudCounters[i]);
                 if (this.hudCounters[i] > 9) {
                     this.hudCounters[i] = 0;
                     if (i > 0) {

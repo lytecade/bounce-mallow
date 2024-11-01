@@ -177,8 +177,27 @@ export default class Utils {
                 scene.slowSound.play();
             }
             if (item.type === ItemTypes.Chocolate) {
-                console.log("Choco");
                 scene.fastSound.play();
+                scene.hudBarCounter++;
+                if (scene.hudBarCounter > 3) {
+                    scene.hudBarCounter = 3;
+                }
+                switch (scene.hudBarCounter) {
+                    case 0:
+                        scene.hudBar.setFrame(16);
+                        break;
+                    case 1:
+                        scene.hudBar.setFrame(17);
+                        break;
+                    case 2:
+                        scene.hudBar.setFrame(18);
+                        break;
+                    case 3:
+                        scene.hudBar.setFrame(19);
+                        break;
+                    default:
+                        break;
+                }
             }
             scene.time.delayedCall(2000, () => {
                 scene.player.fastSequenceActive = false;
