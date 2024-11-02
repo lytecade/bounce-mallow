@@ -35,7 +35,7 @@ export default class PlatformScene extends Phaser.Scene {
         this.hudCounters = [0, 0];
         this.hudCounterImages = [];
         this.hudBar = this.add.image(10, 8, 'sprite-hud', 16).setOrigin(1, 0).setScrollFactor(0);
-        this.hudBarCounter = 0;
+        this.hudJumpBarCounter = 0;
         for (let i = 0; i < this.hudCounters.length; i++) {
             this.hudCounterImages.push(this.add.image(16 + (i * 4), 8, 'sprite-hud', 0).setOrigin(1, 0).setScrollFactor(0));
         }

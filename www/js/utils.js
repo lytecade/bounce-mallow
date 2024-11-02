@@ -178,11 +178,11 @@ export default class Utils {
             }
             if (item.type === ItemTypes.Chocolate) {
                 scene.fastSound.play();
-                scene.hudBarCounter++;
-                if (scene.hudBarCounter > 3) {
-                    scene.hudBarCounter = 3;
+                scene.hudJumpBarCounter++;
+                if (scene.hudJumpBarCounter > 3) {
+                    scene.hudJumpBarCounter = 3;
                 }
-                switch (scene.hudBarCounter) {
+                switch (scene.hudJumpBarCounter) {
                     case 0:
                         scene.hudBar.setFrame(16);
                         break;
