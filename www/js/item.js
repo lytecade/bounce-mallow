@@ -5,7 +5,7 @@ export default class Item {
     constructor(chunk, scene, x, y, type) {
         this.scene = scene;
         this.chunk = chunk;
-        this.type = type;
+        this.type = ItemTypes.Chocolate; //type;
         this.activated = false;
         this.sprite = scene.physics.add.sprite(x, y, "sprite-items", 0).setSize(8, 8);
         this.spriteCollider = scene.physics.world.addCollider(this.sprite, chunk.groundLayer);

@@ -28,12 +28,19 @@ export default class Player {
             sprite.body.setVelocityX(this.movementState ? this.baseSpeed : 0);
             
             if (sprite.body.blocked.down) {
-                if (keys.space.isDown && this.canJump) {
+                if (keys.space.isDown && (this.canJump || this.scene.hudJumpBarCounter > 0)) {
                     sprite.body.setVelocityY(-SpeedTypes.Jump);
                     this.scene.jumpSound.play();
                     this.canJump = false; 
                 }
-                if (keys.space.isUp) this.canJump = true;
+                if (this.scene.hudJumpBarCounter > 0) {
+                    console.log("Enabled");
+                    console.log(this.scene.hudJumpBarCounter);
+                    console.log(sprite.body.velocity.y);
+                }
+                if (keys.space.isUp) { 
+                    this.canJump = true; 
+                }
 
                 sprite.anims.play(sprite.body.velocity.x ? "player-run" : "player-idle", true);
             } else {
