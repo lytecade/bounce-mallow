@@ -182,28 +182,32 @@ export default class Utils {
                 if (scene.hudJumpBarCounter > 3) {
                     scene.hudJumpBarCounter = 3;
                 }
-                switch (scene.hudJumpBarCounter) {
-                    case 0:
-                        scene.hudBar.setFrame(16);
-                        break;
-                    case 1:
-                        scene.hudBar.setFrame(17);
-                        break;
-                    case 2:
-                        scene.hudBar.setFrame(18);
-                        break;
-                    case 3:
-                        scene.hudBar.setFrame(19);
-                        break;
-                    default:
-                        break;
-                }
+                this.setHudBar(scene);
             }
             scene.time.delayedCall(2000, () => {
                 scene.player.fastSequenceActive = false;
                 scene.player.slowSequenceActive = false;
             });
         }
+    }
+
+    static setHudBar = (sceneReference) => {
+	switch (sceneReference.hudJumpBarCounter) {
+	    case 0:
+		sceneReference.hudBar.setFrame(16);
+		break;
+	    case 1:
+		sceneReference.hudBar.setFrame(17);
+		break;
+	    case 2:
+		sceneReference.hudBar.setFrame(18);
+		break;
+	    case 3:
+		sceneReference.hudBar.setFrame(19);
+		break;
+	    default:
+		break;
+	}
     }
 }
 

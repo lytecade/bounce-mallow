@@ -1,4 +1,5 @@
 import { SpeedTypes } from "/js/constants.js";
+import Utils from "/js/utils.js";
 
 export default class Player {
     constructor(scene, x, y) {
@@ -46,22 +47,8 @@ export default class Player {
                         this.scene.hudJumpBarCounter--;
                         sprite.body.setVelocityY(-SpeedTypes.DoubleJump);
                         this.scene.jumpSound.play();
-                        switch (this.scene.hudJumpBarCounter) {
-                            case 0:
-                                this.scene.hudBar.setFrame(16);
-                                break;
-                            case 1:
-                                this.scene.hudBar.setFrame(17);
-                                break;
-                            case 2:
-                                this.scene.hudBar.setFrame(18);
-                                break;
-                            case 3:
-                                this.scene.hudBar.setFrame(19);
-                                break;
-                            default:
-                                break;
-                        }
+
+                        Utils.setHudBar(this.scene);
                         this.canDoubleJump = false;
                     }
                     if (keys.space.isUp) { 
