@@ -98,7 +98,7 @@ export const SpeedTypes = {
     Slow: 30,
     Fast: 90,
     Jump: 240,
-    DoubleJump: 360
+    DoubleJump: 280
 };
 
 export const LoseTileTypes = {
