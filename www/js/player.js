@@ -24,11 +24,9 @@ export default class Player {
             this.baseSpeed = this.fastSequenceActive ? SpeedTypes.Fast :
                              this.slowSequenceActive ? SpeedTypes.Slow : 
                              SpeedTypes.Normal;
-
             sprite.body.setMaxVelocity(this.baseSpeed, SpeedTypes.Jump);
             if (Phaser.Input.Keyboard.JustDown(keys.enter)) this.movementState = !this.movementState;
             sprite.body.setVelocityX(this.movementState ? this.baseSpeed : 0);
- 
             if (sprite.body.blocked.down) {
                 if (keys.space.isDown && this.canJump) {
                     sprite.body.setVelocityY(-SpeedTypes.Jump);
@@ -47,7 +45,6 @@ export default class Player {
                         this.scene.hudJumpBarCounter--;
                         sprite.body.setVelocityY(-SpeedTypes.DoubleJump);
                         this.scene.jumpSound.play();
-
                         Utils.setHudBar(this.scene);
                         this.canDoubleJump = false;
                     }

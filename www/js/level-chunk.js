@@ -142,7 +142,8 @@ export default class LevelChunk {
         }
         if (validSpawnPoints.length > 0) {
             const randomEnemyIndex = Math.floor(Math.random() * 7);
-            const randomItemIndex = Math.floor(Math.random() * 10);
+            const randomItemIndex = Math.floor(Math.random() * 4);
+
             if (this.cliffShow && randomEnemyIndex >= 0 && randomEnemyIndex < validSpawnPoints.length) {
 	        this.enemySpawnPoint = {
 	            x: this.x + validSpawnPoints[randomEnemyIndex].col * this.tileSize,
