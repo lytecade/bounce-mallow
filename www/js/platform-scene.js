@@ -45,6 +45,21 @@ export default class PlatformScene extends Phaser.Scene {
             callbackScope: this, 
             loop: true 
         });
+        if (!Utils.isValueEmpty(this.player)) {
+            const playerReference = this.player;
+            this.input.on('pointerdown', function (pointer) {
+                if (playerReference.movementState === false) {
+                    playerReference.switchMovementState();
+                } else {
+                    playerReference.switchJumpState(true, false, playerReference.sprite);
+                }
+            });
+            this.input.on('pointerup', function (pointer) {
+                if (playerReference.movementState !== false) {
+                    playerReference.switchJumpState(false, true, playerReference.sprite);
+                }
+            });
+        } 
     }
 
     runHudCount() {
