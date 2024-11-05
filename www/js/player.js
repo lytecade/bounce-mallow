@@ -25,36 +25,46 @@ export default class Player {
                              this.slowSequenceActive ? SpeedTypes.Slow : 
                              SpeedTypes.Normal;
             sprite.body.setMaxVelocity(this.baseSpeed, SpeedTypes.Jump);
-            if (Phaser.Input.Keyboard.JustDown(keys.enter)) this.movementState = !this.movementState;
-            sprite.body.setVelocityX(this.movementState ? this.baseSpeed : 0);
-            if (sprite.body.blocked.down) {
-                if (keys.space.isDown && this.canJump) {
-                    sprite.body.setVelocityY(-SpeedTypes.Jump);
-                    this.scene.jumpSound.play();
-                    this.canJump = false; 
-                    this.canDoubleJump = false;
-                }
-                if (keys.space.isUp) { 
-                    this.canJump = true; 
-                    this.canDoubleJump = true;
-                }
-                sprite.anims.play(sprite.body.velocity.x ? "player-run" : "player-idle", true);
-            } else {
-                if (this.scene.hudJumpBarCounter > 0) {
-                    if (keys.space.isDown && this.canDoubleJump) {
-                        this.scene.hudJumpBarCounter--;
-                        sprite.body.setVelocityY(-SpeedTypes.DoubleJump);
-                        this.scene.jumpSound.play();
-                        Utils.setHudBar(this.scene);
-                        this.canDoubleJump = false;
-                    }
-                    if (keys.space.isUp) { 
-                        this.canDoubleJump = true;
-                    }
-                }
-                sprite.anims.stop();
-                sprite.setTexture("sprite-player", 9);
+            if (Phaser.Input.Keyboard.JustDown(keys.enter)) {
+                this.switchMovementState()
             }
+            sprite.body.setVelocityX(this.movementState ? this.baseSpeed : 0);
+            this.switchJumpState(keys.space.isDown, keys.space.isUp, sprite);
+        }
+    }
+
+    switchMovementState() {
+        this.movementState = !this.movementState;
+    }
+
+    switchJumpState(downActionCheck, upActionCheck, actionSprite) {
+        if (actionSprite.body.blocked.down) {
+            if (downActionCheck && this.canJump) {
+                actionSprite.body.setVelocityY(-SpeedTypes.Jump);
+                this.scene.jumpSound.play();
+                this.canJump = false; 
+                this.canDoubleJump = false;
+            }
+            if (upActionCheck) { 
+                this.canJump = true; 
+                this.canDoubleJump = true;
+            }
+            actionSprite.anims.play(actionSprite.body.velocity.x ? "player-run" : "player-idle", true);
+        } else {
+            if (this.scene.hudJumpBarCounter > 0) {
+                if (downActionCheck && this.canDoubleJump) {
+            	    this.scene.hudJumpBarCounter--;
+            	    actionSprite.body.setVelocityY(-SpeedTypes.DoubleJump);
+            	    this.scene.jumpSound.play();
+            	    Utils.setHudBar(this.scene);
+            	    this.canDoubleJump = false;
+                }
+                if (upActionCheck) { 
+            	    this.canDoubleJump = true;
+                }
+            }
+            actionSprite.anims.stop();
+            actionSprite.setTexture("sprite-player", 9);
         }
     }
 }
