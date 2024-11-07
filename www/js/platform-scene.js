@@ -15,8 +15,6 @@ export default class PlatformScene extends Phaser.Scene {
     }
 
     create() {
-        console.log(this.game.registry.get('audioHudPressed'));
-
         this.chunks = [];
         this.chunkColliders = [];
         this.chunkLoseSeqColliders = [];
@@ -41,11 +39,11 @@ export default class PlatformScene extends Phaser.Scene {
         this.hudCounterImages = [];
         this.hudBar = this.add.image(10, 8, 'sprite-hud', 16).setOrigin(1, 0).setScrollFactor(0);
 
-        if (this.game.registry.get('audioHudPressed') === undefined) {
-            this.game.registry.set('audioHudPressed', true);
+        if (this.game.registry.get('settingAudioActive') === undefined) {
+            this.game.registry.set('settingAudioActive', true);
             this.audioBar = this.add.image(10, 56, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0);
             this.sound.volume = 1;
-        } else if (this.game.registry.get('audioHudPressed') === false) {
+        } else if (this.game.registry.get('settingAudioActive') === false) {
             this.audioBar = this.add.image(10, 56, 'sprite-hud', 15).setOrigin(1, 0).setScrollFactor(0);
             this.sound.volume = 0;
         } else {
@@ -66,15 +64,15 @@ export default class PlatformScene extends Phaser.Scene {
         if (!Utils.isValueEmpty(this.player)) {
             const playerReference = this.player;
             const audioBarReference = this.audioBar;
-            let audioBarPressedReference = this.game; //.registry.get('audioHudPressed');
+            let audioBarPressedReference = this.game; 
             this.input.on('pointerdown', function (pointer) {
                 if (audioBarReference.getBounds().contains(pointer.x, pointer.y)) {
-                    if (audioBarPressedReference.registry.get('audioHudPressed') === true) {
+                    if (audioBarPressedReference.registry.get('settingAudioActive') === true) {
                         audioBarReference.setFrame(15);
-                        audioBarPressedReference.registry.set('audioHudPressed', false);
+                        audioBarPressedReference.registry.set('settingAudioActive', false);
                     } else {
                         audioBarReference.setFrame(14);
-                        audioBarPressedReference.registry.set('audioHudPressed', true);
+                        audioBarPressedReference.registry.set('settingAudioActive', true);
                     }
                 } else {
                     if (playerReference.movementState === false) {
