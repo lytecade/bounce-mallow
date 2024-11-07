@@ -6,11 +6,17 @@ import Player from "/js/player.js";
 import { LoseTileTypes, ItemTypes, TileSettings, BASE_RESOURCES } from "/js/constants.js";
 
 export default class PlatformScene extends Phaser.Scene {
+    constructor() {
+        super({ key: 'PlatformScene' });
+    }
+
     preload() {
         Utils.loadResources(this, BASE_RESOURCES);
     }
 
     create() {
+        console.log(this.game.registry.get('audioHudPressed'));
+
         this.chunks = [];
         this.chunkColliders = [];
         this.chunkLoseSeqColliders = [];
@@ -34,8 +40,19 @@ export default class PlatformScene extends Phaser.Scene {
         this.hudCounters = [0, 0];
         this.hudCounterImages = [];
         this.hudBar = this.add.image(10, 8, 'sprite-hud', 16).setOrigin(1, 0).setScrollFactor(0);
-        this.audioBar = this.add.image(10, 56, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0);
-        this.audioBarPressed = false;
+
+        if (this.game.registry.get('audioHudPressed') === undefined) {
+            this.game.registry.set('audioHudPressed', true);
+            this.audioBar = this.add.image(10, 56, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0);
+            this.sound.volume = 1;
+        } else if (this.game.registry.get('audioHudPressed') === false) {
+            this.audioBar = this.add.image(10, 56, 'sprite-hud', 15).setOrigin(1, 0).setScrollFactor(0);
+            this.sound.volume = 0;
+        } else {
+            this.audioBar = this.add.image(10, 56, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0);
+            this.sound.volume = 1;
+        }
+
         this.hudJumpBarCounter = 0;
         for (let i = 0; i < this.hudCounters.length; i++) {
             this.hudCounterImages.push(this.add.image(16 + (i * 4), 8, 'sprite-hud', 0).setOrigin(1, 0).setScrollFactor(0));
@@ -49,14 +66,15 @@ export default class PlatformScene extends Phaser.Scene {
         if (!Utils.isValueEmpty(this.player)) {
             const playerReference = this.player;
             const audioBarReference = this.audioBar;
-            let audioBarPressedReference = this.audioBarPressed;
+            let audioBarPressedReference = this.game; //.registry.get('audioHudPressed');
             this.input.on('pointerdown', function (pointer) {
                 if (audioBarReference.getBounds().contains(pointer.x, pointer.y)) {
-                    audioBarPressedReference = !audioBarPressedReference
-                    if (audioBarPressedReference === true) {
+                    if (audioBarPressedReference.registry.get('audioHudPressed') === true) {
                         audioBarReference.setFrame(15);
+                        audioBarPressedReference.registry.set('audioHudPressed', false);
                     } else {
                         audioBarReference.setFrame(14);
+                        audioBarPressedReference.registry.set('audioHudPressed', true);
                     }
                 } else {
                     if (playerReference.movementState === false) {
