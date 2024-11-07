@@ -31,11 +31,11 @@ export default class PlatformScene extends Phaser.Scene {
         this.cameras.main.startFollow(this.player.sprite);
         this.updateCameraBounds();
 
-
         this.hudCounters = [0, 0];
         this.hudCounterImages = [];
         this.hudBar = this.add.image(10, 8, 'sprite-hud', 16).setOrigin(1, 0).setScrollFactor(0);
         this.audioBar = this.add.image(10, 56, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0);
+        this.audioBarPressed = false;
         this.hudJumpBarCounter = 0;
         for (let i = 0; i < this.hudCounters.length; i++) {
             this.hudCounterImages.push(this.add.image(16 + (i * 4), 8, 'sprite-hud', 0).setOrigin(1, 0).setScrollFactor(0));
@@ -48,17 +48,28 @@ export default class PlatformScene extends Phaser.Scene {
         });
         if (!Utils.isValueEmpty(this.player)) {
             const playerReference = this.player;
+            const audioBarReference = this.audioBar;
+            let audioBarPressedReference = this.audioBarPressed;
             this.input.on('pointerdown', function (pointer) {
-                if (playerReference.movementState === false) {
-                    playerReference.switchMovementState();
+                if (audioBarReference.getBounds().contains(pointer.x, pointer.y)) {
+                    audioBarPressedReference = !audioBarPressedReference
+                    if (audioBarPressedReference === true) {
+                        audioBarReference.setFrame(15);
+                    } else {
+                        audioBarReference.setFrame(14);
+                    }
                 } else {
-                    playerReference.switchJumpState(true, false, playerReference.sprite);
+                    if (playerReference.movementState === false) {
+                        playerReference.switchMovementState();
+                    } else {
+                        playerReference.switchJumpState(true, false, playerReference.sprite);
+                    }
                 }
             });
             this.input.on('pointerup', function (pointer) {
-                if (playerReference.movementState !== false) {
-                    playerReference.switchJumpState(false, true, playerReference.sprite);
-                }
+	        if (playerReference.movementState !== false) {
+	            playerReference.switchJumpState(false, true, playerReference.sprite);
+	        }
             });
         } 
     }
@@ -117,6 +128,11 @@ export default class PlatformScene extends Phaser.Scene {
     }
 
     update(time, delta) {
+        if (this.audioBar.frame.name == 15) {
+            this.sound.volume = 0;
+        } else if (this.audioBar.frame.name == 14) {
+            this.sound.volume = 1;
+        }
         if (!this.loseSequenceActive) {
             this.manageChunks();
             this.player.update();
@@ -136,7 +152,7 @@ export default class PlatformScene extends Phaser.Scene {
         if (this.sound.context.state === 'suspended') {
             this.sound.context.resume().then(() => {
                 if (!this.backgroundMusic.isPlaying) {
-                    // this.backgroundMusic.play();
+                    this.backgroundMusic.play();
                 }
             });
         }

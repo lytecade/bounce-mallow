@@ -114,10 +114,7 @@ export default class Utils {
             }
             if (value.type === "music") {
                 if (value.name.includes("level")) {
-                    scene.backgroundMusic = scene.sound.add(value.name, {
-                        loop: true,
-                        volume: 0.5
-                    });
+                    scene.backgroundMusic = scene.sound.add(value.name, { loop: true });
                 }
             }
         }
