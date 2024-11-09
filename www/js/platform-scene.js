@@ -51,6 +51,26 @@ export default class PlatformScene extends Phaser.Scene {
             this.sound.volume = 1;
         }
 
+
+        this.liveHudCounter = 5;
+        if (this.game.registry.get('settingLiveCounter') === undefined) {
+            this.game.registry.set('settingLiveCounter', this.liveHudCounter);
+        } else {
+            this.liveHudCounter = this.game.registry.get('settingLiveCounter');
+        }
+
+
+        if (this.game.registry.get('settingLiveRemoved') === undefined) {
+            this.game.registry.set('settingLiveRemoved', false);
+        } else if (this.game.registry.get('settingLiveRemoved') === true){
+            let tempCount = this.game.registry.get('settingLiveCounter');
+            this.liveHudCounter = tempCount - 1;
+            this.game.registry.set('settingLiveCounter', this.liveHudCounter);
+            this.game.registry.set('settingLiveRemoved', false);
+            console.log("Remove heart"); 
+            console.log(this.liveHudCounter); 
+        }
+
         this.hudJumpBarCounter = 0;
         for (let i = 0; i < this.hudCounters.length; i++) {
             this.hudCounterImages.push(this.add.image(16 + (i * 4), 8, 'sprite-hud', 0).setOrigin(1, 0).setScrollFactor(0));
@@ -154,6 +174,7 @@ export default class PlatformScene extends Phaser.Scene {
             this.player.update();
         } else {
             this.player.sprite.setVelocityX(0);
+            this.game.registry.set('settingLiveRemoved', true);
             Utils.runLoseSequenceDynamic(this, 0, 5, !this.loseSequenceShatter); 
         }
 
