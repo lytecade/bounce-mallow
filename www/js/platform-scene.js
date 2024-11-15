@@ -65,6 +65,10 @@ export default class PlatformScene extends Phaser.Scene {
             this.game.registry.set('settingLiveCounter', this.liveHudCounter);
             this.game.registry.set('settingLiveRemoved', false);
         }
+		this.liveBarImages = [];
+	    for (let h = 0; h < this.liveHudCounter; h++) {
+            this.liveBarImages.push(this.add.image(10 + (h * 6), 16, 'sprite-hud', 10).setOrigin(1, 0).setScrollFactor(0));
+		}	
 
         this.hudJumpBarCounter = 0;
         for (let i = 0; i < this.hudCounters.length; i++) {
@@ -180,14 +184,6 @@ export default class PlatformScene extends Phaser.Scene {
         this.enemies.forEach(enemy => {
             enemy.update(time, delta);
         });
-
-        if (this.sound.context.state === 'suspended') {
-            this.sound.context.resume().then(() => {
-                if (!this.backgroundMusic.isPlaying) {
-                    this.backgroundMusic.play();
-                }
-            });
-        }
     }
 
     createEnemy(scene, chunk, x, y) {
