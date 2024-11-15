@@ -12,7 +12,6 @@ export default class Utils {
         for (const [key, value] of resourceCollection) {
             let resourcePath = `/assets/${value.type}/${value.name}.${value.ext}`;
             switch (value.type) {
-                case "music":
                 case "sounds":
                     scene.load.audio(value.name, resourcePath);
                     break;
@@ -110,11 +109,6 @@ export default class Utils {
                 }
                 if (value.name.includes("slow")) {
                     scene.slowSound = scene.sound.add(value.name);
-                }
-            }
-            if (value.type === "music") {
-                if (value.name.includes("level")) {
-                    scene.backgroundMusic = scene.sound.add(value.name, { loop: true });
                 }
             }
         }
