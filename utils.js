@@ -1,4 +1,4 @@
-import { ItemTypes, SpeedTypes } from "/js/constants.js";
+import { ItemTypes, SpeedTypes } from "./constants.js";
 
 export default class Utils {
     static isValueEmpty = (resourceValue) => {

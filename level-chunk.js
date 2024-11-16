@@ -1,5 +1,5 @@
-import { LoseTileTypes, TileSettings } from "/js/constants.js";
-import Utils from "/js/utils.js";
+import { LoseTileTypes, TileSettings } from "./constants.js";
+import Utils from "./utils.js";
 
 export default class LevelChunk {
     constructor(scene, x, y, chunkSize, chunkCliffs) {
