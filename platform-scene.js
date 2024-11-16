@@ -1,9 +1,9 @@
-import LevelChunk from "/js/level-chunk.js";
-import Utils from "/js/utils.js";
-import Enemy from "/js/enemy.js";
-import Item from "/js/item.js";
-import Player from "/js/player.js";
-import { LoseTileTypes, ItemTypes, TileSettings, BASE_RESOURCES } from "/js/constants.js";
+import LevelChunk from "./level-chunk.js";
+import Utils from "./utils.js";
+import Enemy from "./enemy.js";
+import Item from "./item.js";
+import Player from "./player.js";
+import { LoseTileTypes, ItemTypes, TileSettings, BASE_RESOURCES } from "./constants.js";
 
 export default class PlatformScene extends Phaser.Scene {
     constructor() {
