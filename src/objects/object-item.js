@@ -1,4 +1,4 @@
-import { ItemTypes, Utils } from "../utilities/utility-helpers.js";
+import { ItemTypes, Helpers } from "../utilities/utility-helpers.js";
 
 export default class Item {
     constructor(chunk, scene, x, y, type) {
@@ -27,7 +27,7 @@ export default class Item {
             this.sprite,
             scene.player.sprite,
             () => {
-                Utils.createItemSequence(scene.player, this.sprite);
+                Helpers.createItemSequence(scene.player, this.sprite);
             },
             null,
             this

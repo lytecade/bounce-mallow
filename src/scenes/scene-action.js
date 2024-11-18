@@ -2,7 +2,7 @@ import LevelChunk from "../objects/object-level.js";
 import Enemy from "../objects/object-enemy.js";
 import Item from "../objects/object-item.js";
 import Player from "../objects/object-player.js";
-import { Utils, LoseTileTypes, ItemTypes, TileSettings } from "../utilities/utility-helpers.js";
+import { Helpers, LoseTileTypes, ItemTypes, TileSettings } from "../utilities/utility-helpers.js";
 import Resources from "../utilities/utility-resources.js"
 
 export default class PlatformScene extends Phaser.Scene {
@@ -80,7 +80,7 @@ export default class PlatformScene extends Phaser.Scene {
             callbackScope: this, 
             loop: true 
         });
-        if (!Utils.isValueEmpty(this.player)) {
+        if (!Helpers.isValueEmpty(this.player)) {
             const playerReference = this.player;
             const audioBarReference = this.audioBar;
             let audioBarPressedReference = this.game; 
@@ -174,7 +174,7 @@ export default class PlatformScene extends Phaser.Scene {
         } else {
             this.player.sprite.setVelocityX(0);
             this.game.registry.set('settingLiveRemoved', true);
-            Utils.runLoseSequenceDynamic(this, 0, 5, !this.loseSequenceShatter); 
+            Helpers.runLoseSequenceDynamic(this, 0, 5, !this.loseSequenceShatter); 
         }
 
         this.items.forEach(item => {

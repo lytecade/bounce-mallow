@@ -25,7 +25,7 @@ export const TileSettings = {
     TileChunkDefaultActive: 4,
 };
 
-export class Utils {
+export class Helpers {
     static isValueEmpty = (resourceValue) => {
         if (resourceValue === 0 || resourceValue === undefined || resourceValue === "") {
             return true;

@@ -1,4 +1,4 @@
-import { LoseTileTypes, TileSettings, Utils } from "../utilities/utility-helpers.js";
+import { LoseTileTypes, TileSettings, Helpers } from "../utilities/utility-helpers.js";
 
 export default class LevelChunk {
     constructor(scene, x, y, chunkSize, chunkCliffs) {
@@ -109,11 +109,11 @@ export default class LevelChunk {
         }
         for (let column = 0; column < widthInTiles; column++) {
             if (this.tiles[platformLevel][column] == 5) {
-	        if (Utils.isValueEmpty(this.tiles[platformLevel][column - 1]) && Utils.isValueEmpty(this.tiles[platformLevel][column + 1])) {
+	        if (Helpers.isValueEmpty(this.tiles[platformLevel][column - 1]) && Helpers.isValueEmpty(this.tiles[platformLevel][column + 1])) {
 	            this.tiles[platformLevel][column] = 1;
-	        } else if (Utils.isValueEmpty(this.tiles[platformLevel][column - 1]) && !Utils.isValueEmpty(this.tiles[platformLevel][column + 1])) {
+	        } else if (Helpers.isValueEmpty(this.tiles[platformLevel][column - 1]) && !Helpers.isValueEmpty(this.tiles[platformLevel][column + 1])) {
 	            this.tiles[platformLevel][column] = 4;
-	        } else if (!Utils.isValueEmpty(this.tiles[platformLevel][column - 1]) && Utils.isValueEmpty(this.tiles[platformLevel][column + 1])) {
+	        } else if (!Helpers.isValueEmpty(this.tiles[platformLevel][column - 1]) && Helpers.isValueEmpty(this.tiles[platformLevel][column + 1])) {
 	            this.tiles[platformLevel][column] = 6;
                 }
             } 

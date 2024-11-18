@@ -1,4 +1,4 @@
-import { Utils, SpeedTypes } from "../utilities/utility-helpers.js";
+import { Helpers, SpeedTypes } from "../utilities/utility-helpers.js";
 
 export default class Player {
     constructor(scene, x, y) {
@@ -55,7 +55,7 @@ export default class Player {
             	    this.scene.hudJumpBarCounter--;
             	    actionSprite.body.setVelocityY(-SpeedTypes.DoubleJump);
             	    this.scene.jumpSound.play();
-            	    Utils.setHudBar(this.scene);
+            	    Helpers.setHudBar(this.scene);
             	    this.canDoubleJump = false;
                 }
                 if (upActionCheck) { 
