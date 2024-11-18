@@ -10,7 +10,7 @@ export default class Utils {
 
     static loadResources = (scene, resourceCollection) => {
         for (const [key, value] of resourceCollection) {
-            let resourcePath = `/assets/${value.type}/${value.name}.${value.ext}`;
+            let resourcePath = `assets/${value.type}/${value.name}.${value.ext}`;
             switch (value.type) {
                 case "sounds":
                     scene.load.audio(value.name, resourcePath);
@@ -20,7 +20,7 @@ export default class Utils {
                     scene.load.image(value.name, resourcePath);
                     break;
                 case "spritesheets":
-                    scene.load.spritesheet(value.name, resourcePath, value.options);
+                    scene.load.spritesheet(value.name, resourcePath, { frameWidth: 8, frameHeight: 8, margin: 0, spacing: 0 });
                     break;
                 default:
                     break;

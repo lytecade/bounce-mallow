@@ -1,84 +1,14 @@
 export const BASE_RESOURCES = new Map([
-    ["sfx-fast", {
-        type: "sounds",
-        name: "sfx-fast",
-        ext: "wav",
-        options: {}
-    }],
-    ["sfx-slow", {
-        type: "sounds",
-        name: "sfx-slow",
-        ext: "wav",
-        options: {}
-    }],
-    ["sfx-jump", {
-        type: "sounds",
-        name: "sfx-jump",
-        ext: "wav",
-        options: {}
-    }],
-    ["sfx-lose", {
-        type: "sounds",
-        name: "sfx-lose",
-        ext: "wav",
-        options: {}
-    }],
-    ["sprite-player", {
-        type: "spritesheets",
-        name: "sprite-player",
-        ext: "png",
-        options: {
-            frameWidth: 8,
-            frameHeight: 8,
-            margin: 0,
-            spacing: 0
-        }
-    }],
-    ["sprite-enemy-spike", {
-        type: "spritesheets",
-        name: "sprite-enemy-spike",
-        ext: "png",
-        options: {
-            frameWidth: 8,
-            frameHeight: 8,
-            margin: 0,
-            spacing: 0
-        }
-    }],
-    ["sprite-hud", {
-        type: "spritesheets",
-        name: "sprite-hud",
-        ext: "png",
-        options: {
-            frameWidth: 8,
-            frameHeight: 8,
-            margin: 0,
-            spacing: 0
-        }
-    }],
-    ["sprite-items", {
-        type: "spritesheets",
-        name: "sprite-items",
-        ext: "png",
-        options: {
-            frameWidth: 8,
-            frameHeight: 8,
-            margin: 0,
-            spacing: 0
-        }
-    }],
-    ["tileset-platform", {
-        type: "tilesets",
-        name: "tileset-platform",
-        ext: "png",
-        options: {}
-    }],
-    ["background-hills", {
-        type: "images",
-        name: "background-hills",
-        ext: "png",
-        options: {}
-    }]
+    ["sfx-fast", { type: "sounds", name: "sfx-fast", ext: "wav" }],
+    ["sfx-slow", { type: "sounds", name: "sfx-slow", ext: "wav" }],
+    ["sfx-jump", { type: "sounds", name: "sfx-jump", ext: "wav" }],
+    ["sfx-lose", { type: "sounds", name: "sfx-lose", ext: "wav" }],
+    ["sprite-player", { type: "spritesheets", name: "sprite-player", ext: "png" }],
+    ["sprite-enemy-spike", { type: "spritesheets", name: "sprite-enemy-spike", ext: "png" }],
+    ["sprite-hud", { type: "spritesheets", name: "sprite-hud", ext: "png" }],
+    ["sprite-items", { type: "spritesheets", name: "sprite-items", ext: "png" }],
+    ["tileset-platform", { type: "tilesets", name: "tileset-platform", ext: "png" }],
+    ["background-hills", { type: "images", name: "background-hills", ext: "png" }]
 ]);
 
 export const ItemTypes = {
