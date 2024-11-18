@@ -1,9 +1,9 @@
-import LevelChunk from "./level-chunk.js";
-import Utils from "./utils.js";
-import Enemy from "./enemy.js";
-import Item from "./item.js";
-import Player from "./player.js";
-import { LoseTileTypes, ItemTypes, TileSettings, BASE_RESOURCES } from "./constants.js";
+import LevelChunk from "../objects/object-level.js";
+import Enemy from "../objects/object-enemy.js";
+import Item from "../objects/object-item.js";
+import Player from "../objects/object-player.js";
+import { Utils, LoseTileTypes, ItemTypes, TileSettings } from "../utilities/utility-helpers.js";
+import Resources from "../utilities/utility-resources.js"
 
 export default class PlatformScene extends Phaser.Scene {
     constructor() {
@@ -11,7 +11,7 @@ export default class PlatformScene extends Phaser.Scene {
     }
 
     preload() {
-        Utils.loadResources(this, BASE_RESOURCES);
+        Resources.createResources(this);
     }
 
     create() {
@@ -24,14 +24,14 @@ export default class PlatformScene extends Phaser.Scene {
         this.itemTileCollider = [];
         this.chunkWidth = TileSettings.TileChunkDefaultSize;
         this.activeChunks = TileSettings.TileChunkDefaultActive; 
-        this.backgroundImages = Utils.createBackgrounds(this, 1, "background-hills", 0);
+        Resources.createBackgrounds(this, 1, "background-hills", 0);
         this.loseSequenceActive = false;
         this.loseSequenceShatter = false;
         this.loseSequenceSound = false;
         this.player = new Player(this, this.chunkWidth, 10);
         this.generateInitialChunks();
-        Utils.createAnimations(this);
-        Utils.createSounds(this, BASE_RESOURCES);
+        Resources.createAnimations(this);
+        Resources.createSounds(this);
         this.cameras.main.startFollow(this.player.sprite);
         this.updateCameraBounds();
 
