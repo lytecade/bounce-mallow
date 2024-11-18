@@ -1,4 +1,4 @@
-import { Utils, SpeedTypes } from "./utils.js";
+import { Utils, SpeedTypes } from "../utilities/utility-helper.js";
 
 export default class Player {
     constructor(scene, x, y) {

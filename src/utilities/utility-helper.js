@@ -1,4 +1,4 @@
-export const BASE_RESOURCES = new Map([
+export const BaseResources = new Map([
     ["sfx-fast", { type: "sounds", name: "sfx-fast", ext: "wav" }],
     ["sfx-slow", { type: "sounds", name: "sfx-slow", ext: "wav" }],
     ["sfx-jump", { type: "sounds", name: "sfx-jump", ext: "wav" }],
@@ -38,7 +38,7 @@ export const TileSettings = {
     TileChunkDefaultActive: 4,
 };
 
-export default class Utils {
+export class Utils {
     static isValueEmpty = (resourceValue) => {
         if (resourceValue === 0 || resourceValue === undefined || resourceValue === "") {
             return true;
@@ -46,8 +46,8 @@ export default class Utils {
         return false;
     }
 
-    static loadResources = (scene, resourceCollection) => {
-        for (const [key, value] of resourceCollection) {
+    static loadResources = (scene) => {
+        for (const [key, value] of BaseResources) {
             let resourcePath = `assets/${value.type}/${value.name}.${value.ext}`;
             switch (value.type) {
                 case "sounds":
@@ -133,8 +133,8 @@ export default class Utils {
         return images;
     }
 
-    static createSounds = (scene, resourceCollection) => {
-        for (const [key, value] of resourceCollection) {
+    static createSounds = (scene) => {
+        for (const [key, value] of BaseResources) {
             if (value.type === "sounds") {
                 if (value.name.includes("jump")) {
                     scene.jumpSound = scene.sound.add(value.name);

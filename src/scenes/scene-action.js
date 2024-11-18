@@ -1,8 +1,8 @@
-import LevelChunk from "./level-chunk.js";
-import Enemy from "./enemy.js";
-import Item from "./item.js";
-import Player from "./player.js";
-import { Utils, LoseTileTypes, ItemTypes, TileSettings, BASE_RESOURCES } from "./utils.js";
+import LevelChunk from "../objects/object-level.js";
+import Enemy from "../objects/object-enemy.js";
+import Item from "../objects/object-item.js";
+import Player from "../objects/object-player.js";
+import { Utils, LoseTileTypes, ItemTypes, TileSettings } from "../utilities/utility-helper.js";
 
 export default class PlatformScene extends Phaser.Scene {
     constructor() {
@@ -10,7 +10,7 @@ export default class PlatformScene extends Phaser.Scene {
     }
 
     preload() {
-        Utils.loadResources(this, BASE_RESOURCES);
+        Utils.loadResources(this);
     }
 
     create() {
@@ -30,7 +30,7 @@ export default class PlatformScene extends Phaser.Scene {
         this.player = new Player(this, this.chunkWidth, 10);
         this.generateInitialChunks();
         Utils.createAnimations(this);
-        Utils.createSounds(this, BASE_RESOURCES);
+        Utils.createSounds(this);
         this.cameras.main.startFollow(this.player.sprite);
         this.updateCameraBounds();
 

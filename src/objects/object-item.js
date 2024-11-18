@@ -1,4 +1,4 @@
-import { ItemTypes, Utils } from "./utils.js";
+import { ItemTypes, Utils } from "../utilities/utility-helper.js";
 
 export default class Item {
     constructor(chunk, scene, x, y, type) {
