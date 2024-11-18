@@ -1,5 +1,4 @@
-import { ItemTypes } from "./constants.js";
-import Utils from "./utils.js";
+import { ItemTypes, Utils } from "./utils.js";
 
 export default class Item {
     constructor(chunk, scene, x, y, type) {
