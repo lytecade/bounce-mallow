@@ -5,9 +5,9 @@ import Player from "../objects/object-player.js";
 import { Helpers, LoseTileTypes, ItemTypes, TileSettings } from "../utilities/utility-helpers.js";
 import Resources from "../utilities/utility-resources.js"
 
-export default class PlatformScene extends Phaser.Scene {
+export default class ActionScene extends Phaser.Scene {
     constructor() {
-        super({ key: 'PlatformScene' });
+        super({ key: 'ActionScene' });
     }
 
     preload() {
@@ -25,13 +25,13 @@ export default class PlatformScene extends Phaser.Scene {
         this.chunkWidth = TileSettings.TileChunkDefaultSize;
         this.activeChunks = TileSettings.TileChunkDefaultActive; 
         Resources.createBackgrounds(this, 1, "background-hills", 0);
+        Resources.createAnimations(this);
+        Resources.createSounds(this);
         this.loseSequenceActive = false;
         this.loseSequenceShatter = false;
         this.loseSequenceSound = false;
         this.player = new Player(this, this.chunkWidth, 10);
         this.generateInitialChunks();
-        Resources.createAnimations(this);
-        Resources.createSounds(this);
         this.cameras.main.startFollow(this.player.sprite);
         this.updateCameraBounds();
 
@@ -174,7 +174,7 @@ export default class PlatformScene extends Phaser.Scene {
         } else {
             this.player.sprite.setVelocityX(0);
             this.game.registry.set('settingLiveRemoved', true);
-            Helpers.runLoseSequenceDynamic(this, 0, 5, !this.loseSequenceShatter); 
+            Helpers.setLoseSequence(this, 0, 5, !this.loseSequenceShatter); 
         }
 
         this.items.forEach(item => {
@@ -193,15 +193,7 @@ export default class PlatformScene extends Phaser.Scene {
     }
 
     createItem(scene, chunk, x, y) {
-        const itemTypesArray = Object.keys(ItemTypes);
-        const item = new Item(
-            chunk,
-            scene,
-            x,
-            y,
-            ItemTypes[itemTypesArray[Math.floor(Math.random() * itemTypesArray.length)]]
-        );
-
+        const item = new Item(chunk, scene, x, y);
         this.itemTileCollider.push(item.spriteCollider);
         this.items.push(item);
     }
@@ -235,28 +227,14 @@ export default class PlatformScene extends Phaser.Scene {
     }
 
     manageOldObjectData(chunkScene, oldChunkX) {
-        let indexOfEnemies = 0;
-        let indexOfItems = 0;
-
-        for (let i = 0; i < chunkScene.enemies.length; i++) {
-            if (chunkScene.enemies[i].sprite.x < (oldChunkX + TileSettings.TileChunkDefaultSize)) {
-                indexOfEnemies++;
-            }
-        }
-
-        for (let i = 0; i < chunkScene.items.length; i++) {
-            if (chunkScene.items[i].sprite.x < (oldChunkX + TileSettings.TileChunkDefaultSize)) {
-                indexOfItems++;
-            }
-        }
-
+        let indexOfEnemies = Helpers.getOutOfBoundsIndicies(chunkScene.enemies, (oldChunkX + TileSettings.TileChunkDefaultSize));
+        let indexOfItems = Helpers.getOutOfBoundsIndicies(chunkScene.items, (oldChunkX + TileSettings.TileChunkDefaultSize));;
         for (let r = 0; r < indexOfItems; r++) {
-            const latestItems = chunkScene.items.shift();
+            chunkScene.items.shift();
             chunkScene.physics.world.removeCollider(chunkScene.itemTileCollider.shift());
         }
-
         for (let r = 0; r < indexOfEnemies; r++) {
-            const latestEnemy = chunkScene.enemies.shift();
+            chunkScene.enemies.shift();
             chunkScene.physics.world.removeCollider(chunkScene.enemyTileCollider.shift());
         }
     }
