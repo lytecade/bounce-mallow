@@ -32,7 +32,16 @@ export class Helpers {
         }
         return false;
     }
-    static runLoseSequenceDynamic(scene, currentStage, time, byFall) {
+	static getOutOfBoundsIndicies = (objectList, xValue) => {
+        let baseIndexValue = 0;
+        for (let i = 0; i < objectList.length; i++) {
+            if (objectList[i].sprite.x < xValue) {
+                baseIndexValue = baseIndexValue + 1;
+            }
+        }
+        return baseIndexValue;
+	}
+    static setLoseSequence(scene, currentStage, time, byFall) {
         scene.time.delayedCall(time, () => {
             currentStage++;
             if (byFall === true) {
@@ -42,7 +51,7 @@ export class Helpers {
                         scene.loseSequenceSound = true;
                     }
                     scene.cameras.main.stopFollow();
-                    this.runLoseSequenceDynamic(scene, currentStage, time * 400, byFall);
+                    this.setLoseSequence(scene, currentStage, time * 400, byFall);
                 } else {
                     scene.scene.restart();
                 }
@@ -52,7 +61,7 @@ export class Helpers {
                         if (scene.player.sprite.anims) {
                             scene.player.sprite.anims.play("player-destroy", true);
                         }
-                        this.runLoseSequenceDynamic(scene, currentStage, time, byFall);
+                        this.setLoseSequence(scene, currentStage, time, byFall);
                         break;
                     case 2:
                         if (scene.loseSequenceSound === false) {
@@ -60,7 +69,7 @@ export class Helpers {
                             scene.loseSequenceSound = true;
                         }
                         scene.cameras.main.stopFollow();
-                        this.runLoseSequenceDynamic(scene, currentStage, time * 200, byFall);
+                        this.setLoseSequence(scene, currentStage, time * 200, byFall);
                         break;
                     default:
                         scene.scene.restart();
@@ -68,7 +77,7 @@ export class Helpers {
             }
         }, [], this);
     }
-    static createItemSequence = (playerReference, itemSprite) => {
+    static setItemSequence = (playerReference, itemSprite) => {
         const scene = playerReference.scene;
         const item = scene.items.find(i => i.sprite === itemSprite);
         if (item && item.activated === false) {
@@ -99,22 +108,22 @@ export class Helpers {
         }
     }
     static setHudBar = (sceneReference) => {
-	switch (sceneReference.hudJumpBarCounter) {
-	    case 0:
-		sceneReference.hudBar.setFrame(16);
-		break;
-	    case 1:
-		sceneReference.hudBar.setFrame(17);
-		break;
-	    case 2:
-		sceneReference.hudBar.setFrame(18);
-		break;
-	    case 3:
-		sceneReference.hudBar.setFrame(19);
-		break;
-	    default:
-		break;
-	}
+	    switch (sceneReference.hudJumpBarCounter) {
+	        case 0:
+	    	    sceneReference.hudBar.setFrame(16);
+	    	    break;
+	        case 1:
+	    	    sceneReference.hudBar.setFrame(17);
+	    	    break;
+	        case 2:
+	    	    sceneReference.hudBar.setFrame(18);
+	    	    break;
+	        case 3:
+	    	    sceneReference.hudBar.setFrame(19);
+	    	    break;
+	        default:
+	    	    break;
+	    }
     }
 }
 

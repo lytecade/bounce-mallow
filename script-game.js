@@ -1,4 +1,4 @@
-import PlatformScene from "./src/scenes/scene-action.js";
+import ActionScene from "./src/scenes/scene-action.js";
 
 const game = new Phaser.Game({
     parent: "game",
@@ -6,7 +6,7 @@ const game = new Phaser.Game({
     width: 120,
     height: 72,
     pixelArt: true,
-    scene: PlatformScene,
+    scene: ActionScene,
     physics: {
         default: "arcade",
         arcade: {
