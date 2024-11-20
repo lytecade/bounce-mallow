@@ -3,7 +3,6 @@ export const ItemTypes = {
     Camomile: 'CAMOMILE',
     Chocolate: 'CHOCOLATE'
 };
-
 export const SpeedTypes = {
     Normal: 60,
     Slow: 30,
@@ -11,12 +10,10 @@ export const SpeedTypes = {
     Jump: 240,
     DoubleJump: 280
 };
-
 export const LoseTileTypes = {
     Cliff: 1,
     Spikes: 2
 };
-
 export const TileSettings = {
     TileSize: 8,
     TileRows: 11,
@@ -24,7 +21,6 @@ export const TileSettings = {
     TileChunkDefaultSize: 88,
     TileChunkDefaultActive: 4,
 };
-
 export class Helpers {
     static isValueEmpty = (resourceValue) => {
         if (resourceValue === 0 || resourceValue === undefined || resourceValue === "") {

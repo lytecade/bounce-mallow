@@ -1,5 +1,4 @@
 import { ItemTypes, Helpers } from "../utilities/utility-helpers.js";
-
 export default class Item {
     constructor(chunk, scene, x, y) {
         this.scene = scene;
@@ -10,16 +9,13 @@ export default class Item {
 		this.setupType(this);
         this.setupOverlap();
     }
-
     update() {
         this.sprite.anims.play(this.type, true);
     }
-
     setupType(scene) {
         const typeKeys = Object.keys(ItemTypes);
 		scene.type = ItemTypes[typeKeys[Math.floor(Math.random() * typeKeys.length)]];
 	}
-	
     setupOverlap() {
 		const { scene } = this;
         scene.physics.add.overlap(

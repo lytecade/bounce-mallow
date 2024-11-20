@@ -4,16 +4,13 @@ import Item from "../objects/object-item.js";
 import Player from "../objects/object-player.js";
 import { Helpers, LoseTileTypes, ItemTypes, TileSettings } from "../utilities/utility-helpers.js";
 import Resources from "../utilities/utility-resources.js"
-
 export default class ActionScene extends Phaser.Scene {
     constructor() {
         super({ key: 'ActionScene' });
     }
-
     preload() {
         Resources.createResources(this);
     }
-
     create() {
         this.chunks = [];
         this.chunkColliders = [];
@@ -36,11 +33,9 @@ export default class ActionScene extends Phaser.Scene {
         }
         this.cameras.main.startFollow(this.player.sprite);
         this.updateCameraBounds();
-
         this.hudCounters = [0, 0];
         this.hudCounterImages = [];
         this.hudBar = this.add.image(10, 9, 'sprite-hud', 16).setOrigin(1, 0).setScrollFactor(0);
-
         if (this.game.registry.get('settingAudioActive') === undefined) {
             this.game.registry.set('settingAudioActive', true);
             this.audioBar = this.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
@@ -52,7 +47,6 @@ export default class ActionScene extends Phaser.Scene {
             this.audioBar = this.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
             this.sound.volume = 1;
         }
-
         this.liveHudCounter = 5;
         if (this.game.registry.get('settingLiveCounter') === undefined) {
             this.game.registry.set('settingLiveCounter', this.liveHudCounter);
@@ -71,7 +65,6 @@ export default class ActionScene extends Phaser.Scene {
 	    for (let h = 0; h < this.liveHudCounter; h++) {
             this.liveBarImages.push(this.add.image(10 + (h * 6), 16, 'sprite-hud', 10).setOrigin(1, 0).setScrollFactor(0));
 		}	
-
         this.hudJumpBarCounter = 0;
         for (let i = 0; i < this.hudCounters.length; i++) {
             this.hudCounterImages.push(this.add.image(16 + (i * 4), 9, 'sprite-hud', 0).setOrigin(1, 0).setScrollFactor(0));
@@ -108,7 +101,6 @@ export default class ActionScene extends Phaser.Scene {
 		    }
 		});
     }
-
     runHudCount() {
         if (this.player.movementState && !this.loseSequenceActive) {
             this.hudCounters[this.hudCounters.length - 1]++;
@@ -125,17 +117,20 @@ export default class ActionScene extends Phaser.Scene {
             }
         }
     }
-
     createChunk(x, y, showCliff) {
         const chunk = new LevelChunk(this, x, y, this.chunkWidth, showCliff);
         const groundLayer = chunk.create();
         this.chunks.push(chunk);
         this.chunkColliders.push(this.physics.add.collider(this.player.sprite, chunk.groundLayer));
         if (chunk.enemySpawnPoint) {
-            this.createEnemy(this, chunk, chunk.enemySpawnPoint.x, chunk.enemySpawnPoint.y);
+            const enemy = new Enemy(chunk, this, chunk.enemySpawnPoint.x, chunk.enemySpawnPoint.y);
+            this.enemyTileCollider.push(enemy.spriteCollider);
+            this.enemies.push(enemy);
         }
         if (chunk.itemSpawnPoint) {
-            this.createItem(this, chunk, chunk.itemSpawnPoint.x, chunk.itemSpawnPoint.y);
+            const item = new Item(chunk, this, chunk.itemSpawnPoint.x, chunk.itemSpawnPoint.y);
+            this.itemTileCollider.push(item.spriteCollider);
+            this.items.push(item);
         }
         this.chunkLoseSeqColliders.push(this.physics.add.overlap(
             this.player.sprite,
@@ -151,7 +146,6 @@ export default class ActionScene extends Phaser.Scene {
         ));
         this.updateCameraBounds();
     }
-
     update(time, delta) {
         if (this.audioBar.frame.name == 15) {
             this.sound.volume = 0;
@@ -159,7 +153,7 @@ export default class ActionScene extends Phaser.Scene {
             this.sound.volume = 1;
         }
         if (!this.loseSequenceActive) {
-            this.manageChunks();
+            this.updateChunks();
             this.player.update();
         } else {
             this.player.sprite.setVelocityX(0);
@@ -173,19 +167,6 @@ export default class ActionScene extends Phaser.Scene {
             enemy.update(time, delta);
         });
     }
-
-    createEnemy(scene, chunk, x, y) {
-        const enemy = new Enemy(chunk, scene, x, y);
-        this.enemyTileCollider.push(enemy.spriteCollider);
-        this.enemies.push(enemy);
-    }
-
-    createItem(scene, chunk, x, y) {
-        const item = new Item(chunk, scene, x, y);
-        this.itemTileCollider.push(item.spriteCollider);
-        this.items.push(item);
-    }
-
     updateCameraBounds() {
         if (this.chunks.length > 0) {
             this.cameras.main.setBounds(0, 0, 
@@ -194,8 +175,7 @@ export default class ActionScene extends Phaser.Scene {
             );
         }
     }
-
-    manageChunks() {
+    updateChunks() {
         if (this.player.sprite.x > this.chunks[this.chunks.length - 1].x - this.chunkWidth) {
             this.createChunk(this.chunks[this.chunks.length - 1].x + this.chunkWidth, 0, true);
             if (this.chunks.length > (this.activeChunks * 2)) {

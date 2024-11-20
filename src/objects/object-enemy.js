@@ -10,7 +10,6 @@ export default class Enemy {
         this.activityFactor = Math.random();
         this.moveTimer = null;
     }
-
     setupOverlap() {
         const { scene } = this;
         scene.physics.add.overlap(
@@ -24,27 +23,21 @@ export default class Enemy {
             this
         );
     }
-
     update(time) {
-        if (!this.moveTimer) this.moveTimer = time;
-
-        if (this.shouldChangeState(time)) {
+        if (!this.moveTimer) { 
+			this.moveTimer = time;
+		}
+        if (time - this.moveTimer > 4000 || (this.activityFactor > 0 && this.activityFactor < 0.5)) {
             this.toggleMovement();
             this.moveTimer = time;
         }
         this.updateSprite();
     }
-
-    shouldChangeState(time) {
-        return time - this.moveTimer > 4000 || (this.activityFactor > 0 && this.activityFactor < 0.5);
-    }
-
     toggleMovement() {
         this.isStationary = !this.isStationary;
         if (!this.isStationary) this.isForward = !this.isForward;
         else this.activityFactor = -1;
     }
-
     updateSprite() {
         const velocity = this.isStationary ? 0 : (this.isForward ? 5 : -5);
         this.sprite.setVelocityX(velocity);

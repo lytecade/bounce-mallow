@@ -1,5 +1,4 @@
 import { LoseTileTypes, TileSettings, Helpers } from "../utilities/utility-helpers.js";
-
 export default class LevelChunk {
     constructor(scene, x, y, chunkSize, chunkCliffs) {
         this.scene = scene;
@@ -142,18 +141,17 @@ export default class LevelChunk {
         if (validSpawnPoints.length > 0) {
             const randomEnemyIndex = Math.floor(Math.random() * 7);
             const randomItemIndex = Math.floor(Math.random() * 4);
-
             if (this.cliffShow && randomEnemyIndex >= 0 && randomEnemyIndex < validSpawnPoints.length) {
-	        this.enemySpawnPoint = {
-	            x: this.x + validSpawnPoints[randomEnemyIndex].col * this.tileSize,
-	            y: (validSpawnPoints[randomEnemyIndex].row - 1) * this.tileSize
-	        };
+	            this.enemySpawnPoint = {
+	                x: this.x + validSpawnPoints[randomEnemyIndex].col * this.tileSize,
+	                y: (validSpawnPoints[randomEnemyIndex].row - 1) * this.tileSize
+	            };
             }
             if (this.cliffShow && randomItemIndex >= 0 && randomItemIndex < validSpawnPoints.length) {
-	        this.itemSpawnPoint = {
-	            x: this.x + validSpawnPoints[randomItemIndex].col * this.tileSize,
-	            y: (validSpawnPoints[randomItemIndex].row - 1) * this.tileSize
-	        };
+	            this.itemSpawnPoint = {
+	                x: this.x + validSpawnPoints[randomItemIndex].col * this.tileSize,
+	                y: (validSpawnPoints[randomItemIndex].row - 1) * this.tileSize
+	            };
             }
         }
     }

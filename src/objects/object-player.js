@@ -1,5 +1,4 @@
 import { Helpers, SpeedTypes } from "../utilities/utility-helpers.js";
-
 export default class Player {
     constructor(scene, x, y) {
         this.movementState = false;
@@ -16,7 +15,6 @@ export default class Player {
         this.canJump = true;
         this.canDoubleJump = false;
     }
-
     update() {
         const { keys, sprite } = this;
         if (sprite.body) {
@@ -31,11 +29,9 @@ export default class Player {
             this.switchJumpState(keys.space.isDown, keys.space.isUp, sprite);
         }
     }
-
     switchMovementState() {
         this.movementState = !this.movementState;
     }
-
     switchJumpState(downActionCheck, upActionCheck, actionSprite) {
         if (actionSprite.body.blocked.down) {
             if (downActionCheck && this.canJump) {
