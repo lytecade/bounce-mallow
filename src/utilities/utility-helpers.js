@@ -3,7 +3,6 @@ export const ItemTypes = {
     Camomile: 'CAMOMILE',
     Chocolate: 'CHOCOLATE'
 };
-
 export const SpeedTypes = {
     Normal: 60,
     Slow: 30,
@@ -11,12 +10,10 @@ export const SpeedTypes = {
     Jump: 240,
     DoubleJump: 280
 };
-
 export const LoseTileTypes = {
     Cliff: 1,
     Spikes: 2
 };
-
 export const TileSettings = {
     TileSize: 8,
     TileRows: 11,
@@ -24,7 +21,6 @@ export const TileSettings = {
     TileChunkDefaultSize: 88,
     TileChunkDefaultActive: 4,
 };
-
 export class Helpers {
     static isValueEmpty = (resourceValue) => {
         if (resourceValue === 0 || resourceValue === undefined || resourceValue === "") {
@@ -32,16 +28,22 @@ export class Helpers {
         }
         return false;
     }
-	static getOutOfBoundsIndicies = (objectList, xValue) => {
-        let baseIndexValue = 0;
+	static getOutOfBoundsCount = (objectList, xValue) => {
+        let baseIndexCount = 0;
         for (let i = 0; i < objectList.length; i++) {
             if (objectList[i].sprite.x < xValue) {
-                baseIndexValue = baseIndexValue + 1;
+                baseIndexCount = baseIndexCount + 1;
             }
         }
-        return baseIndexValue;
+        return baseIndexCount;
 	}
-    static setLoseSequence(scene, currentStage, time, byFall) {
+    static removeObjectsByCount = (countValue, scene, sceneObject, sceneObjectCollider) => {
+        for (let r = 0; r < countValue; r++) {
+            sceneObject.shift();
+            scene.physics.world.removeCollider(sceneObjectCollider.shift());
+        }
+	}	
+    static setLoseSequence = (scene, currentStage, time, byFall) => {
         scene.time.delayedCall(time, () => {
             currentStage++;
             if (byFall === true) {

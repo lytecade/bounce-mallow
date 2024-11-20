@@ -1,5 +1,4 @@
 import ActionScene from "./src/scenes/scene-action.js";
-
 const game = new Phaser.Game({
     parent: "game",
     type: Phaser.AUTO,
@@ -10,7 +9,6 @@ const game = new Phaser.Game({
     physics: {
         default: "arcade",
         arcade: {
-            //debug: true,
             gravity: {
                 y: 1000
             },
