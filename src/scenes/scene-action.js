@@ -31,7 +31,9 @@ export default class ActionScene extends Phaser.Scene {
         this.loseSequenceShatter = false;
         this.loseSequenceSound = false;
         this.player = new Player(this, this.chunkWidth, 10);
-        this.generateInitialChunks();
+        for (let i = 0; i < (this.activeChunks * 3); i++) {
+            this.createChunk(i * this.chunkWidth, 0, !(i < this.activeChunks));
+        }
         this.cameras.main.startFollow(this.player.sprite);
         this.updateCameraBounds();
 
@@ -41,13 +43,13 @@ export default class ActionScene extends Phaser.Scene {
 
         if (this.game.registry.get('settingAudioActive') === undefined) {
             this.game.registry.set('settingAudioActive', true);
-            this.audioBar = this.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0);
+            this.audioBar = this.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
             this.sound.volume = 1;
         } else if (this.game.registry.get('settingAudioActive') === false) {
-            this.audioBar = this.add.image(10, 54, 'sprite-hud', 15).setOrigin(1, 0).setScrollFactor(0);
+            this.audioBar = this.add.image(10, 54, 'sprite-hud', 15).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
             this.sound.volume = 0;
         } else {
-            this.audioBar = this.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0);
+            this.audioBar = this.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
             this.sound.volume = 1;
         }
 
@@ -80,33 +82,31 @@ export default class ActionScene extends Phaser.Scene {
             callbackScope: this, 
             loop: true 
         });
-        if (!Helpers.isValueEmpty(this.player)) {
-            const playerReference = this.player;
-            const audioBarReference = this.audioBar;
-            let audioBarPressedReference = this.game; 
-            this.input.on('pointerdown', function (pointer) {
-                if (audioBarReference.getBounds().contains(pointer.x, pointer.y)) {
-                    if (audioBarPressedReference.registry.get('settingAudioActive') === true) {
-                        audioBarReference.setFrame(15);
-                        audioBarPressedReference.registry.set('settingAudioActive', false);
-                    } else {
-                        audioBarReference.setFrame(14);
-                        audioBarPressedReference.registry.set('settingAudioActive', true);
-                    }
-                } else {
-                    if (playerReference.movementState === false) {
-                        playerReference.switchMovementState();
-                    } else {
-                        playerReference.switchJumpState(true, false, playerReference.sprite);
-                    }
-                }
-            });
-            this.input.on('pointerup', function (pointer) {
-	        if (playerReference.movementState !== false) {
-	            playerReference.switchJumpState(false, true, playerReference.sprite);
-	        }
-            });
-        } 
+		const playerReference = this.player;
+		const audioBarReference = this.audioBar;
+		let audioBarPressedReference = this.game; 
+		this.input.on('pointerdown', function (pointer) {
+			if (audioBarReference.getBounds().contains(pointer.x, pointer.y)) {
+				if (audioBarPressedReference.registry.get('settingAudioActive') === true) {
+					audioBarReference.setFrame(15);
+					audioBarPressedReference.registry.set('settingAudioActive', false);
+				} else {
+					audioBarReference.setFrame(14);
+					audioBarPressedReference.registry.set('settingAudioActive', true);
+				}
+			} else {
+				if (playerReference.movementState === false) {
+					playerReference.switchMovementState();
+				} else {
+					playerReference.switchJumpState(true, false, playerReference.sprite);
+				}
+			}
+		});
+		this.input.on('pointerup', function (pointer) {
+		    if (playerReference.movementState !== false) {
+		    	playerReference.switchJumpState(false, true, playerReference.sprite);
+		    }
+		});
     }
 
     runHudCount() {
@@ -126,26 +126,17 @@ export default class ActionScene extends Phaser.Scene {
         }
     }
 
-    generateInitialChunks() {
-        for (let i = 0; i < (this.activeChunks * 3); i++) {
-            this.createChunk(i * this.chunkWidth, 0, !(i < this.activeChunks));
-        }
-    }
-
     createChunk(x, y, showCliff) {
         const chunk = new LevelChunk(this, x, y, this.chunkWidth, showCliff);
         const groundLayer = chunk.create();
         this.chunks.push(chunk);
         this.chunkColliders.push(this.physics.add.collider(this.player.sprite, chunk.groundLayer));
-
         if (chunk.enemySpawnPoint) {
             this.createEnemy(this, chunk, chunk.enemySpawnPoint.x, chunk.enemySpawnPoint.y);
         }
-
         if (chunk.itemSpawnPoint) {
             this.createItem(this, chunk, chunk.itemSpawnPoint.x, chunk.itemSpawnPoint.y);
         }
-
         this.chunkLoseSeqColliders.push(this.physics.add.overlap(
             this.player.sprite,
             chunk.loseLayer,
@@ -158,7 +149,6 @@ export default class ActionScene extends Phaser.Scene {
             },
             this
         ));
-
         this.updateCameraBounds();
     }
 
@@ -176,11 +166,9 @@ export default class ActionScene extends Phaser.Scene {
             this.game.registry.set('settingLiveRemoved', true);
             Helpers.setLoseSequence(this, 0, 5, !this.loseSequenceShatter); 
         }
-
         this.items.forEach(item => {
             item.update();
         });
-
         this.enemies.forEach(enemy => {
             enemy.update(time, delta);
         });
