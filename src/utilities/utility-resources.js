@@ -1,3 +1,4 @@
+import { ItemTypes } from "./utility-helpers.js";
 export default class Resources {
     static BaseResources = new Map([
         ["sfx-fast", { type: "sounds", name: "sfx-fast", ext: "wav" }],
@@ -64,19 +65,19 @@ export default class Resources {
                 repeat: -1,
             });
             anims.create({
-                key: "coffee",
+                key: ItemTypes.Coffee,
                 frames: anims.generateFrameNumbers("sprite-items", { start: 0, end: 3 }),
                 frameRate: 4,
                 repeat: -1,
             });
             anims.create({
-                key: "camomile",
+                key: ItemTypes.Camomile,
                 frames: anims.generateFrameNumbers("sprite-items", { start: 4, end: 7 }),
                 frameRate: 4,
                 repeat: -1,
             });
             anims.create({
-                key: "chocolate",
+                key: ItemTypes.Chocolate,
                 frames: anims.generateFrameNumbers("sprite-items", { start: 8, end: 11 }),
                 frameRate: 4,
                 repeat: -1,

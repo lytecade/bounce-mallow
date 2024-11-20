@@ -198,18 +198,6 @@ export default class ActionScene extends Phaser.Scene {
         this.items.push(item);
     }
 
-    removeOldestChunk() {
-        if (this.chunks.length > (this.activeChunks * 2)) {
-            const oldestChunk = this.chunks.shift();
-            const oldestChunkValueX = oldestChunk.x;
-            oldestChunk.destroy();
-            this.physics.world.removeCollider(this.chunkColliders.shift());
-            this.physics.world.removeCollider(this.chunkLoseSeqColliders.shift());
-            this.manageOldObjectData(this, oldestChunkValueX);
-            this.updateCameraBounds();
-        }
-    }
-
     updateCameraBounds() {
         if (this.chunks.length > 0) {
             this.cameras.main.setBounds(0, 0, 
@@ -222,20 +210,18 @@ export default class ActionScene extends Phaser.Scene {
     manageChunks() {
         if (this.player.sprite.x > this.chunks[this.chunks.length - 1].x - this.chunkWidth) {
             this.createChunk(this.chunks[this.chunks.length - 1].x + this.chunkWidth, 0, true);
-            this.removeOldestChunk();
-        }
-    }
-
-    manageOldObjectData(chunkScene, oldChunkX) {
-        let indexOfEnemies = Helpers.getOutOfBoundsIndicies(chunkScene.enemies, (oldChunkX + TileSettings.TileChunkDefaultSize));
-        let indexOfItems = Helpers.getOutOfBoundsIndicies(chunkScene.items, (oldChunkX + TileSettings.TileChunkDefaultSize));;
-        for (let r = 0; r < indexOfItems; r++) {
-            chunkScene.items.shift();
-            chunkScene.physics.world.removeCollider(chunkScene.itemTileCollider.shift());
-        }
-        for (let r = 0; r < indexOfEnemies; r++) {
-            chunkScene.enemies.shift();
-            chunkScene.physics.world.removeCollider(chunkScene.enemyTileCollider.shift());
+            if (this.chunks.length > (this.activeChunks * 2)) {
+                const oldestChunk = this.chunks.shift();
+                const oldestChunkValueX = oldestChunk.x;
+                oldestChunk.destroy();
+                this.physics.world.removeCollider(this.chunkColliders.shift());
+                this.physics.world.removeCollider(this.chunkLoseSeqColliders.shift());
+                const indexOfEnemies = Helpers.getOutOfBoundsCount(this.enemies, (oldestChunkValueX + TileSettings.TileChunkDefaultSize))
+                const indexOfItems = Helpers.getOutOfBoundsCount(this.items, (oldestChunkValueX + TileSettings.TileChunkDefaultSize));
+                Helpers.removeObjectsByCount(indexOfEnemies, this, this.enemies, this.enemyTileCollider);
+                Helpers.removeObjectsByCount(indexOfItems, this, this.items, this.itemTileCollider);
+				this.updateCameraBounds();
+            }
         }
     }
 }

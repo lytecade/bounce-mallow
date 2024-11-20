@@ -32,16 +32,22 @@ export class Helpers {
         }
         return false;
     }
-	static getOutOfBoundsIndicies = (objectList, xValue) => {
-        let baseIndexValue = 0;
+	static getOutOfBoundsCount = (objectList, xValue) => {
+        let baseIndexCount = 0;
         for (let i = 0; i < objectList.length; i++) {
             if (objectList[i].sprite.x < xValue) {
-                baseIndexValue = baseIndexValue + 1;
+                baseIndexCount = baseIndexCount + 1;
             }
         }
-        return baseIndexValue;
+        return baseIndexCount;
 	}
-    static setLoseSequence(scene, currentStage, time, byFall) {
+    static removeObjectsByCount = (countValue, scene, sceneObject, sceneObjectCollider) => {
+        for (let r = 0; r < countValue; r++) {
+            sceneObject.shift();
+            scene.physics.world.removeCollider(sceneObjectCollider.shift());
+        }
+	}	
+    static setLoseSequence = (scene, currentStage, time, byFall) => {
         scene.time.delayedCall(time, () => {
             currentStage++;
             if (byFall === true) {
