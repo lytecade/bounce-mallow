@@ -1,3 +1,4 @@
+import UIs from "./utility-uis.js"
 export const ItemTypes = {
     Coffee: 'COFFEE',
     Camomile: 'CAMOMILE',
@@ -20,6 +21,8 @@ export const TileSettings = {
     TileGroundLevel: 3,
     TileChunkDefaultSize: 88,
     TileChunkDefaultActive: 4,
+};
+export const GameSettings = {
 };
 export class Helpers {
     static isValueEmpty = (resourceValue) => {
@@ -101,31 +104,13 @@ export class Helpers {
                 if (scene.hudJumpBarCounter > 3) {
                     scene.hudJumpBarCounter = 3;
                 }
-                this.setHudBar(scene);
+                UIs.setHudBar(scene);
             }
             scene.time.delayedCall(2000, () => {
                 scene.player.fastSequenceActive = false;
                 scene.player.slowSequenceActive = false;
             });
         }
-    }
-    static setHudBar = (sceneReference) => {
-	    switch (sceneReference.hudJumpBarCounter) {
-	        case 0:
-	    	    sceneReference.hudBar.setFrame(16);
-	    	    break;
-	        case 1:
-	    	    sceneReference.hudBar.setFrame(17);
-	    	    break;
-	        case 2:
-	    	    sceneReference.hudBar.setFrame(18);
-	    	    break;
-	        case 3:
-	    	    sceneReference.hudBar.setFrame(19);
-	    	    break;
-	        default:
-	    	    break;
-	    }
     }
 }
 

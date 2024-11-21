@@ -84,17 +84,8 @@ export default class Resources {
             });
         }
     }
-    static createBackgrounds = (scene, count, texture, scrollFactor) => {
-        let trackingXValue = 0;
-        let images = [];
-        for (let i = 0; i < count; ++i) {
-            const currentImage = scene.add.image(trackingXValue, 0, texture)
-                .setOrigin(0, 0)
-                .setScrollFactor(scrollFactor);
-            trackingXValue += currentImage.width;
-            images.push(currentImage);
-        }
-        scene.backgroundImages = images;
+    static createBackgrounds = (sceneReference, texture) => {
+        sceneReference.add.image(0, 0, texture).setOrigin(0, 0).setScrollFactor(0);
     }
     static createSounds = (scene) => {
         for (const [key, value] of this.BaseResources) {
