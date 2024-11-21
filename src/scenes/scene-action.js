@@ -20,17 +20,15 @@ export default class ActionScene extends Phaser.Scene {
         this.enemyTileCollider = [];
         this.items = [];
         this.itemTileCollider = [];
-        this.chunkWidth = TileSettings.TileChunkDefaultSize;
-        this.activeChunks = TileSettings.TileChunkDefaultActive; 
-        Resources.createBackgrounds(this, "background-hills");
-        Resources.createAnimations(this);
-        Resources.createSounds(this);
         this.loseSequenceActive = false;
         this.loseSequenceShatter = false;
         this.loseSequenceSound = false;
-        this.player = new Player(this, this.chunkWidth, 10);
-        for (let i = 0; i < (this.activeChunks * 3); i++) {
-            this.setChunk(i * this.chunkWidth, 0, !(i < this.activeChunks));
+        Resources.createBackgrounds(this, "background-hills");
+        Resources.createAnimations(this);
+        Resources.createSounds(this);
+        this.player = new Player(this, TileSettings.TileChunkDefaultSize, 10);
+        for (let i = 0; i < (TileSettings.TileChunkDefaultActive * 3); i++) {
+            this.setChunk(i * TileSettings.TileChunkDefaultSize, 0, !(i < TileSettings.TileChunkDefaultActive));
         }
         this.cameras.main.startFollow(this.player.sprite);
         this.setChunkCamera();
@@ -43,9 +41,9 @@ export default class ActionScene extends Phaser.Scene {
     update(time, delta) {
 		UIs.setAudioUpdate(this);
         if (!this.loseSequenceActive) {
-            if (this.player.sprite.x > this.chunks[this.chunks.length - 1].x - this.chunkWidth) {
-                this.setChunk(this.chunks[this.chunks.length - 1].x + this.chunkWidth, 0, true);
-                if (this.chunks.length > (this.activeChunks * 2)) {
+            if (this.player.sprite.x > this.chunks[this.chunks.length - 1].x - TileSettings.TileChunkDefaultSize) {
+                this.setChunk(this.chunks[this.chunks.length - 1].x + TileSettings.TileChunkDefaultSize, 0, true);
+                if (this.chunks.length > (TileSettings.TileChunkDefaultActive * 2)) {
                     const oldestChunk = this.chunks.shift();
                     const oldestChunkValueX = oldestChunk.x;
                     oldestChunk.destroy();
@@ -72,7 +70,7 @@ export default class ActionScene extends Phaser.Scene {
         });
     }
     setChunk(x, y, showCliff) {
-        const chunk = new LevelChunk(this, x, y, this.chunkWidth, showCliff);
+        const chunk = new LevelChunk(this, x, y, TileSettings.TileChunkDefaultSize, showCliff);
         const groundLayer = chunk.create();
         this.chunks.push(chunk);
         this.chunkColliders.push(this.physics.add.collider(this.player.sprite, chunk.groundLayer));
@@ -103,7 +101,7 @@ export default class ActionScene extends Phaser.Scene {
     setChunkCamera() {
         if (this.chunks.length > 0) {
             this.cameras.main.setBounds(0, 0, 
-                (this.chunks[this.chunks.length - 1].x + this.chunkWidth), 
+                (this.chunks[this.chunks.length - 1].x + TileSettings.TileChunkDefaultSize), 
                 (this.sys.game.config.height)
             );
         }
