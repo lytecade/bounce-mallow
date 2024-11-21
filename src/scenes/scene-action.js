@@ -22,7 +22,7 @@ export default class ActionScene extends Phaser.Scene {
         this.itemTileCollider = [];
         this.chunkWidth = TileSettings.TileChunkDefaultSize;
         this.activeChunks = TileSettings.TileChunkDefaultActive; 
-        Resources.createBackgrounds(this, 1, "background-hills", 0);
+        Resources.createBackgrounds(this, "background-hills");
         Resources.createAnimations(this);
         Resources.createSounds(this);
         this.loseSequenceActive = false;
@@ -30,17 +30,52 @@ export default class ActionScene extends Phaser.Scene {
         this.loseSequenceSound = false;
         this.player = new Player(this, this.chunkWidth, 10);
         for (let i = 0; i < (this.activeChunks * 3); i++) {
-            this.createChunk(i * this.chunkWidth, 0, !(i < this.activeChunks));
+            this.setChunk(i * this.chunkWidth, 0, !(i < this.activeChunks));
         }
         this.cameras.main.startFollow(this.player.sprite);
-        this.updateCameraBounds();
+        this.setChunkCamera();
 		UIs.setHudCounter(this);
 		UIs.setLifeCounter(this, this.game.registry);
 		UIs.setLifeBar(this);
         UIs.setAudioStatus(this, this.game.registry);
         UIs.setAudioBar(this, this.player, this.audioBar, this.game);
     }
-    createChunk(x, y, showCliff) {
+    update(time, delta) {
+        if (this.audioBar.frame.name == 15) {
+            this.sound.volume = 0;
+        } else if (this.audioBar.frame.name == 14) {
+            this.sound.volume = 1;
+        }
+        if (!this.loseSequenceActive) {
+            if (this.player.sprite.x > this.chunks[this.chunks.length - 1].x - this.chunkWidth) {
+                this.setChunk(this.chunks[this.chunks.length - 1].x + this.chunkWidth, 0, true);
+                if (this.chunks.length > (this.activeChunks * 2)) {
+                    const oldestChunk = this.chunks.shift();
+                    const oldestChunkValueX = oldestChunk.x;
+                    oldestChunk.destroy();
+                    this.physics.world.removeCollider(this.chunkColliders.shift());
+                    this.physics.world.removeCollider(this.chunkLoseSeqColliders.shift());
+                    const indexOfEnemies = Helpers.getOutOfBoundsCount(this.enemies, (oldestChunkValueX + TileSettings.TileChunkDefaultSize))
+                    const indexOfItems = Helpers.getOutOfBoundsCount(this.items, (oldestChunkValueX + TileSettings.TileChunkDefaultSize));
+                    Helpers.removeObjectsByCount(indexOfEnemies, this, this.enemies, this.enemyTileCollider);
+                    Helpers.removeObjectsByCount(indexOfItems, this, this.items, this.itemTileCollider);
+		    		this.setChunkCamera();
+                }
+            }
+            this.player.update();
+        } else {
+            this.player.sprite.setVelocityX(0);
+            this.game.registry.set('settingLiveRemoved', true);
+            Helpers.setLoseSequence(this, 0, 5, !this.loseSequenceShatter); 
+        }
+        this.items.forEach(item => {
+            item.update();
+        });
+        this.enemies.forEach(enemy => {
+            enemy.update(time, delta);
+        });
+    }
+    setChunk(x, y, showCliff) {
         const chunk = new LevelChunk(this, x, y, this.chunkWidth, showCliff);
         const groundLayer = chunk.create();
         this.chunks.push(chunk);
@@ -67,52 +102,14 @@ export default class ActionScene extends Phaser.Scene {
             },
             this
         ));
-        this.updateCameraBounds();
+        this.setChunkCamera();
     }
-    update(time, delta) {
-        if (this.audioBar.frame.name == 15) {
-            this.sound.volume = 0;
-        } else if (this.audioBar.frame.name == 14) {
-            this.sound.volume = 1;
-        }
-        if (!this.loseSequenceActive) {
-            this.updateChunks();
-            this.player.update();
-        } else {
-            this.player.sprite.setVelocityX(0);
-            this.game.registry.set('settingLiveRemoved', true);
-            Helpers.setLoseSequence(this, 0, 5, !this.loseSequenceShatter); 
-        }
-        this.items.forEach(item => {
-            item.update();
-        });
-        this.enemies.forEach(enemy => {
-            enemy.update(time, delta);
-        });
-    }
-    updateCameraBounds() {
+    setChunkCamera() {
         if (this.chunks.length > 0) {
             this.cameras.main.setBounds(0, 0, 
                 (this.chunks[this.chunks.length - 1].x + this.chunkWidth), 
                 (this.sys.game.config.height)
             );
-        }
-    }
-    updateChunks() {
-        if (this.player.sprite.x > this.chunks[this.chunks.length - 1].x - this.chunkWidth) {
-            this.createChunk(this.chunks[this.chunks.length - 1].x + this.chunkWidth, 0, true);
-            if (this.chunks.length > (this.activeChunks * 2)) {
-                const oldestChunk = this.chunks.shift();
-                const oldestChunkValueX = oldestChunk.x;
-                oldestChunk.destroy();
-                this.physics.world.removeCollider(this.chunkColliders.shift());
-                this.physics.world.removeCollider(this.chunkLoseSeqColliders.shift());
-                const indexOfEnemies = Helpers.getOutOfBoundsCount(this.enemies, (oldestChunkValueX + TileSettings.TileChunkDefaultSize))
-                const indexOfItems = Helpers.getOutOfBoundsCount(this.items, (oldestChunkValueX + TileSettings.TileChunkDefaultSize));
-                Helpers.removeObjectsByCount(indexOfEnemies, this, this.enemies, this.enemyTileCollider);
-                Helpers.removeObjectsByCount(indexOfItems, this, this.items, this.itemTileCollider);
-				this.updateCameraBounds();
-            }
         }
     }
 }
