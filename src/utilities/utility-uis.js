@@ -11,28 +11,25 @@ export default class UIs {
         scene.hudTimer = scene.time.addEvent({ 
             delay: 1000, 
             callback: () => {
-                currentUI.runHudCount(scene)
+                if (scene.player.movementState && !scene.loseSequenceActive) {
+                    scene.hudCounters[scene.hudCounters.length - 1]++;
+                    for (let i = scene.hudCounters.length - 1; i >= 0; i--) {
+                        if (scene.hudCounters[i] > 9) {
+                            scene.hudCounters[i] = 0;
+                            if (i > 0) {
+                                scene.hudCounters[i - 1]++;
+                            }
+                        }
+                    }
+                    for (let i = 0; i < scene.hudCounters.length; i++) {
+                        scene.hudCounterImages[i].setFrame(scene.hudCounters[i]);
+                    }
+                }
 			}, 
             callbackScope: scene, 
             loop: true 
         });
 	}
-    static runHudCount = (scene) => {
-        if (scene.player.movementState && !scene.loseSequenceActive) {
-            scene.hudCounters[scene.hudCounters.length - 1]++;
-            for (let i = scene.hudCounters.length - 1; i >= 0; i--) {
-                if (scene.hudCounters[i] > 9) {
-                    scene.hudCounters[i] = 0;
-                    if (i > 0) {
-                        scene.hudCounters[i - 1]++;
-                    }
-                }
-            }
-            for (let i = 0; i < scene.hudCounters.length; i++) {
-                scene.hudCounterImages[i].setFrame(scene.hudCounters[i]);
-            }
-        }
-    }
     static setHudBar = (sceneReference) => {
 	    switch (sceneReference.hudJumpBarCounter) {
 	        case 0:

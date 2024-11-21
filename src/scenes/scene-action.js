@@ -46,23 +46,23 @@ export default class ActionScene extends Phaser.Scene {
             this.audioBar = this.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
             this.sound.volume = 1;
         }
-        this.liveHudCounter = 5;
+        this.lifeBarCounter = 5;
         if (this.game.registry.get('settingLiveCounter') === undefined) {
-            this.game.registry.set('settingLiveCounter', this.liveHudCounter);
+            this.game.registry.set('settingLiveCounter', this.lifeBarCounter);
         } else {
-            this.liveHudCounter = this.game.registry.get('settingLiveCounter');
+            this.lifeBarCounter = this.game.registry.get('settingLiveCounter');
         }
         if (this.game.registry.get('settingLiveRemoved') === undefined) {
             this.game.registry.set('settingLiveRemoved', false);
         } else if (this.game.registry.get('settingLiveRemoved') === true){
             let tempCount = this.game.registry.get('settingLiveCounter');
-            this.liveHudCounter = tempCount - 1;
-            this.game.registry.set('settingLiveCounter', this.liveHudCounter);
+            this.lifeBarCounter = tempCount - 1;
+            this.game.registry.set('settingLiveCounter', this.lifeBarCounter);
             this.game.registry.set('settingLiveRemoved', false);
         }
-		this.liveBarImages = [];
-	    for (let h = 0; h < this.liveHudCounter; h++) {
-            this.liveBarImages.push(this.add.image(10 + (h * 6), 16, 'sprite-hud', 10).setOrigin(1, 0).setScrollFactor(0));
+		this.lifeBarImages = [];
+	    for (let h = 0; h < this.lifeBarCounter; h++) {
+            this.lifeBarImages.push(this.add.image(10 + (h * 6), 16, 'sprite-hud', 10).setOrigin(1, 0).setScrollFactor(0));
 		}	
 		const playerReference = this.player;
 		const audioBarReference = this.audioBar;
