@@ -1,6 +1,5 @@
 export default class UIs {
 	static setHudCounter = (scene) => {
-		const currentUI = this;
         scene.hudCounters = [0, 0];
         scene.hudCounterImages = [];
         scene.hudBar = scene.add.image(10, 9, 'sprite-hud', 16).setOrigin(1, 0).setScrollFactor(0);
@@ -48,5 +47,64 @@ export default class UIs {
 	    	    break;
 	    }
     }
+	static setLifeCounter = (scene, settings) => {
+        scene.lifeBarCounter = 5;
+        if (settings.get('settingLiveCounter') === undefined) {
+            settings.set('settingLiveCounter', scene.lifeBarCounter);
+        } else {
+            scene.lifeBarCounter = settings.get('settingLiveCounter');
+        }
+        if (settings.get('settingLiveRemoved') === undefined) {
+            settings.set('settingLiveRemoved', false);
+        } else if (settings.get('settingLiveRemoved') === true){
+            let tempCount = settings.get('settingLiveCounter');
+            scene.lifeBarCounter = tempCount - 1;
+            settings.set('settingLiveCounter', scene.lifeBarCounter);
+            settings.set('settingLiveRemoved', false);
+        }
+	}
+	static setLifeBar = (scene) => {
+		scene.lifeBarImages = [];
+	    for (let h = 0; h < scene.lifeBarCounter; h++) {
+            scene.lifeBarImages.push(scene.add.image(10 + (h * 6), 16, 'sprite-hud', 10).setOrigin(1, 0).setScrollFactor(0));
+		}	
+	}
+	static setAudioStatus = (scene, settings) => {
+        if (settings.get('settingAudioActive') === undefined) {
+            settings.set('settingAudioActive', true);
+            scene.audioBar = scene.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+            scene.sound.volume = 1;
+        } else if (settings.get('settingAudioActive') === false) {
+            scene.audioBar = scene.add.image(10, 54, 'sprite-hud', 15).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+            scene.sound.volume = 0;
+        } else {
+            scene.audioBar = scene.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+            scene.sound.volume = 1;
+        }
+	}
+	static setAudioBar = (scene, playerReference, audioBarReference, audioBarPressedReference) => {
+		scene.input.on('pointerdown', function (pointer) {
+			if (audioBarReference.getBounds().contains(pointer.x, pointer.y)) {
+				if (audioBarPressedReference.registry.get('settingAudioActive') === true) {
+					audioBarReference.setFrame(15);
+					audioBarPressedReference.registry.set('settingAudioActive', false);
+				} else {
+					audioBarReference.setFrame(14);
+					audioBarPressedReference.registry.set('settingAudioActive', true);
+				}
+			} else {
+				if (playerReference.movementState === false) {
+					playerReference.switchMovementState();
+				} else {
+					playerReference.switchJumpState(true, false, playerReference.sprite);
+				}
+			}
+		});
+		scene.input.on('pointerup', function (pointer) {
+		    if (playerReference.movementState !== false) {
+		    	playerReference.switchJumpState(false, true, playerReference.sprite);
+		    }
+		});
+	}
 }
 

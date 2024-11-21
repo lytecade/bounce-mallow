@@ -35,60 +35,10 @@ export default class ActionScene extends Phaser.Scene {
         this.cameras.main.startFollow(this.player.sprite);
         this.updateCameraBounds();
 		UIs.setHudCounter(this);
-        if (this.game.registry.get('settingAudioActive') === undefined) {
-            this.game.registry.set('settingAudioActive', true);
-            this.audioBar = this.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
-            this.sound.volume = 1;
-        } else if (this.game.registry.get('settingAudioActive') === false) {
-            this.audioBar = this.add.image(10, 54, 'sprite-hud', 15).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
-            this.sound.volume = 0;
-        } else {
-            this.audioBar = this.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
-            this.sound.volume = 1;
-        }
-        this.lifeBarCounter = 5;
-        if (this.game.registry.get('settingLiveCounter') === undefined) {
-            this.game.registry.set('settingLiveCounter', this.lifeBarCounter);
-        } else {
-            this.lifeBarCounter = this.game.registry.get('settingLiveCounter');
-        }
-        if (this.game.registry.get('settingLiveRemoved') === undefined) {
-            this.game.registry.set('settingLiveRemoved', false);
-        } else if (this.game.registry.get('settingLiveRemoved') === true){
-            let tempCount = this.game.registry.get('settingLiveCounter');
-            this.lifeBarCounter = tempCount - 1;
-            this.game.registry.set('settingLiveCounter', this.lifeBarCounter);
-            this.game.registry.set('settingLiveRemoved', false);
-        }
-		this.lifeBarImages = [];
-	    for (let h = 0; h < this.lifeBarCounter; h++) {
-            this.lifeBarImages.push(this.add.image(10 + (h * 6), 16, 'sprite-hud', 10).setOrigin(1, 0).setScrollFactor(0));
-		}	
-		const playerReference = this.player;
-		const audioBarReference = this.audioBar;
-		let audioBarPressedReference = this.game; 
-		this.input.on('pointerdown', function (pointer) {
-			if (audioBarReference.getBounds().contains(pointer.x, pointer.y)) {
-				if (audioBarPressedReference.registry.get('settingAudioActive') === true) {
-					audioBarReference.setFrame(15);
-					audioBarPressedReference.registry.set('settingAudioActive', false);
-				} else {
-					audioBarReference.setFrame(14);
-					audioBarPressedReference.registry.set('settingAudioActive', true);
-				}
-			} else {
-				if (playerReference.movementState === false) {
-					playerReference.switchMovementState();
-				} else {
-					playerReference.switchJumpState(true, false, playerReference.sprite);
-				}
-			}
-		});
-		this.input.on('pointerup', function (pointer) {
-		    if (playerReference.movementState !== false) {
-		    	playerReference.switchJumpState(false, true, playerReference.sprite);
-		    }
-		});
+		UIs.setLifeCounter(this, this.game.registry);
+		UIs.setLifeBar(this);
+        UIs.setAudioStatus(this, this.game.registry);
+        UIs.setAudioBar(this, this.player, this.audioBar, this.game);
     }
     createChunk(x, y, showCliff) {
         const chunk = new LevelChunk(this, x, y, this.chunkWidth, showCliff);
