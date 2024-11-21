@@ -41,11 +41,7 @@ export default class ActionScene extends Phaser.Scene {
         UIs.setAudioBar(this, this.player, this.audioBar, this.game);
     }
     update(time, delta) {
-        if (this.audioBar.frame.name == 15) {
-            this.sound.volume = 0;
-        } else if (this.audioBar.frame.name == 14) {
-            this.sound.volume = 1;
-        }
+		UIs.setAudioUpdate(this);
         if (!this.loseSequenceActive) {
             if (this.player.sprite.x > this.chunks[this.chunks.length - 1].x - this.chunkWidth) {
                 this.setChunk(this.chunks[this.chunks.length - 1].x + this.chunkWidth, 0, true);

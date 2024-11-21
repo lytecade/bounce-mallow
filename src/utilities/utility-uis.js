@@ -82,6 +82,13 @@ export default class UIs {
             scene.sound.volume = 1;
         }
 	}
+	static setAudioUpdate = (scene) => {
+        if (scene.audioBar.frame.name == 15) {
+            scene.sound.volume = 0;
+        } else if (scene.audioBar.frame.name == 14) {
+            scene.sound.volume = 1;
+        }
+	}
 	static setAudioBar = (scene, playerReference, audioBarReference, audioBarPressedReference) => {
 		scene.input.on('pointerdown', function (pointer) {
 			if (audioBarReference.getBounds().contains(pointer.x, pointer.y)) {
