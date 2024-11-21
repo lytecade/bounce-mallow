@@ -4,6 +4,7 @@ import Item from "../objects/object-item.js";
 import Player from "../objects/object-player.js";
 import { Helpers, LoseTileTypes, ItemTypes, TileSettings } from "../utilities/utility-helpers.js";
 import Resources from "../utilities/utility-resources.js"
+import UIs from "../utilities/utility-uis.js"
 export default class ActionScene extends Phaser.Scene {
     constructor() {
         super({ key: 'ActionScene' });
@@ -33,9 +34,7 @@ export default class ActionScene extends Phaser.Scene {
         }
         this.cameras.main.startFollow(this.player.sprite);
         this.updateCameraBounds();
-        this.hudCounters = [0, 0];
-        this.hudCounterImages = [];
-        this.hudBar = this.add.image(10, 9, 'sprite-hud', 16).setOrigin(1, 0).setScrollFactor(0);
+		UIs.setHudCounter(this);
         if (this.game.registry.get('settingAudioActive') === undefined) {
             this.game.registry.set('settingAudioActive', true);
             this.audioBar = this.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
@@ -65,16 +64,6 @@ export default class ActionScene extends Phaser.Scene {
 	    for (let h = 0; h < this.liveHudCounter; h++) {
             this.liveBarImages.push(this.add.image(10 + (h * 6), 16, 'sprite-hud', 10).setOrigin(1, 0).setScrollFactor(0));
 		}	
-        this.hudJumpBarCounter = 0;
-        for (let i = 0; i < this.hudCounters.length; i++) {
-            this.hudCounterImages.push(this.add.image(16 + (i * 4), 9, 'sprite-hud', 0).setOrigin(1, 0).setScrollFactor(0));
-        }
-        this.hudTimer = this.time.addEvent({ 
-            delay: 1000, 
-            callback: this.runHudCount, 
-            callbackScope: this, 
-            loop: true 
-        });
 		const playerReference = this.player;
 		const audioBarReference = this.audioBar;
 		let audioBarPressedReference = this.game; 
@@ -100,22 +89,6 @@ export default class ActionScene extends Phaser.Scene {
 		    	playerReference.switchJumpState(false, true, playerReference.sprite);
 		    }
 		});
-    }
-    runHudCount() {
-        if (this.player.movementState && !this.loseSequenceActive) {
-            this.hudCounters[this.hudCounters.length - 1]++;
-            for (let i = this.hudCounters.length - 1; i >= 0; i--) {
-                if (this.hudCounters[i] > 9) {
-                    this.hudCounters[i] = 0;
-                    if (i > 0) {
-                        this.hudCounters[i - 1]++;
-                    }
-                }
-            }
-            for (let i = 0; i < this.hudCounters.length; i++) {
-                this.hudCounterImages[i].setFrame(this.hudCounters[i]);
-            }
-        }
     }
     createChunk(x, y, showCliff) {
         const chunk = new LevelChunk(this, x, y, this.chunkWidth, showCliff);
