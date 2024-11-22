@@ -1,5 +1,5 @@
 import { LoseTileTypes, TileSettings, Helpers } from "../utilities/utility-helpers.js";
-export default class LevelChunk {
+export default class Chunk {
     constructor(scene, x, y, chunkSize, chunkCliffs) {
         this.scene = scene;
         this.x = x;

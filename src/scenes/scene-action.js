@@ -1,4 +1,4 @@
-import LevelChunk from "../objects/object-level.js";
+import Chunk from "../objects/object-chunk.js";
 import Enemy from "../objects/object-enemy.js";
 import Item from "../objects/object-item.js";
 import Player from "../objects/object-player.js";
@@ -70,7 +70,7 @@ export default class ActionScene extends Phaser.Scene {
         });
     }
     setChunk(x, y, showCliff) {
-        const chunk = new LevelChunk(this, x, y, TileSettings.TileChunkDefaultSize, showCliff);
+        const chunk = new Chunk(this, x, y, TileSettings.TileChunkDefaultSize, showCliff);
         const groundLayer = chunk.create();
         this.chunks.push(chunk);
         this.chunkColliders.push(this.physics.add.collider(this.player.sprite, chunk.groundLayer));
