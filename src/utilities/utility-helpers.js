@@ -40,7 +40,7 @@ export class Helpers {
         }
         return baseIndexCount;
 	}
-    static removeObjectsByCount = (countValue, scene, sceneObject, sceneObjectCollider) => {
+    static setObjectRemoveByCount = (countValue, scene, sceneObject, sceneObjectCollider) => {
         for (let r = 0; r < countValue; r++) {
             sceneObject.shift();
             scene.physics.world.removeCollider(sceneObjectCollider.shift());
