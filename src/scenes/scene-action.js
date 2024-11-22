@@ -26,15 +26,15 @@ export default class ActionScene extends Phaser.Scene {
         Resources.createBackgrounds(this, "background-hills");
         Resources.createAnimations(this);
         Resources.createSounds(this);
-		this.setPlayerInit(this);
-		UIs.setHudCounter(this);
-		UIs.setLifeCounter(this, this.game.registry);
-		UIs.setLifeBar(this);
+        this.setPlayerInit(this);
+        UIs.setHudCounter(this);
+        UIs.setLifeCounter(this, this.game.registry);
+        UIs.setLifeBar(this);
         UIs.setAudioStatus(this, this.game.registry);
         UIs.setAudioBar(this, this.player, this.audioBar, this.game);
     }
     update(time, delta) {
-		UIs.setAudioUpdate(this);
+    UIs.setAudioUpdate(this);
         if (!this.loseSequenceActive) {
             if (this.player.sprite.x > this.chunks[this.chunks.length - 1].x - TileSettings.TileChunkDefaultSize) {
                 this.setChunk(this.chunks[this.chunks.length - 1].x + TileSettings.TileChunkDefaultSize, 0, true);
@@ -48,7 +48,7 @@ export default class ActionScene extends Phaser.Scene {
                     const indexOfItems = Helpers.getOutOfBoundsCount(this.items, (oldestChunkValueX + TileSettings.TileChunkDefaultSize));
                     Helpers.setObjectRemoveByCount(indexOfEnemies, this, this.enemies, this.enemyTileCollider);
                     Helpers.setObjectRemoveByCount(indexOfItems, this, this.items, this.itemTileCollider);
-		    		this.setChunkCamera();
+                    this.setChunkCamera();
                 }
             }
             this.player.update();
@@ -64,14 +64,14 @@ export default class ActionScene extends Phaser.Scene {
             enemy.update(time, delta);
         });
     }
-	setPlayerInit(scene) {
+    setPlayerInit(scene) {
         scene.player = new Player(scene, TileSettings.TileChunkDefaultSize, 10);
         for (let i = 0; i < (TileSettings.TileChunkDefaultActive * 3); i++) {
             scene.setChunk(i * TileSettings.TileChunkDefaultSize, 0, !(i < TileSettings.TileChunkDefaultActive));
         }
         scene.cameras.main.startFollow(scene.player.sprite);
         scene.setChunkCamera();
-	}
+    }
     setChunk(x, y, showCliff) {
         const chunk = new Chunk(this, x, y, TileSettings.TileChunkDefaultSize, showCliff);
         const groundLayer = chunk.create();

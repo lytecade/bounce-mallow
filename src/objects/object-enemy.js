@@ -25,8 +25,8 @@ export default class Enemy {
     }
     update(time) {
         if (!this.moveTimer) { 
-			this.moveTimer = time;
-		}
+            this.moveTimer = time;
+        }
         if (time - this.moveTimer > 4000 || (this.activityFactor > 0 && this.activityFactor < 0.5)) {
             this.toggleMovement();
             this.moveTimer = time;

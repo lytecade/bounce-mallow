@@ -1,5 +1,5 @@
 export default class UIs {
-	static setHudCounter = (scene) => {
+    static setHudCounter = (scene) => {
         scene.hudCounters = [0, 0];
         scene.hudCounterImages = [];
         scene.hudBar = scene.add.image(10, 9, 'sprite-hud', 16).setOrigin(1, 0).setScrollFactor(0);
@@ -24,30 +24,30 @@ export default class UIs {
                         scene.hudCounterImages[i].setFrame(scene.hudCounters[i]);
                     }
                 }
-			}, 
+            }, 
             callbackScope: scene, 
             loop: true 
         });
-	}
-    static setHudBar = (sceneReference) => {
-	    switch (sceneReference.hudJumpBarCounter) {
-	        case 0:
-	    	    sceneReference.hudBar.setFrame(16);
-	    	    break;
-	        case 1:
-	    	    sceneReference.hudBar.setFrame(17);
-	    	    break;
-	        case 2:
-	    	    sceneReference.hudBar.setFrame(18);
-	    	    break;
-	        case 3:
-	    	    sceneReference.hudBar.setFrame(19);
-	    	    break;
-	        default:
-	    	    break;
-	    }
     }
-	static setLifeCounter = (scene, settings) => {
+    static setHudBar = (sceneReference) => {
+        switch (sceneReference.hudJumpBarCounter) {
+            case 0:
+                sceneReference.hudBar.setFrame(16);
+                break;
+            case 1:
+                sceneReference.hudBar.setFrame(17);
+                break;
+            case 2:
+                sceneReference.hudBar.setFrame(18);
+                break;
+            case 3:
+                sceneReference.hudBar.setFrame(19);
+                break;
+            default:
+                break;
+        }
+    }
+    static setLifeCounter = (scene, settings) => {
         scene.lifeBarCounter = 5;
         if (settings.get('settingLiveCounter') === undefined) {
             settings.set('settingLiveCounter', scene.lifeBarCounter);
@@ -62,14 +62,14 @@ export default class UIs {
             settings.set('settingLiveCounter', scene.lifeBarCounter);
             settings.set('settingLiveRemoved', false);
         }
-	}
-	static setLifeBar = (scene) => {
-		scene.lifeBarImages = [];
-	    for (let h = 0; h < scene.lifeBarCounter; h++) {
+    }
+    static setLifeBar = (scene) => {
+        scene.lifeBarImages = [];
+        for (let h = 0; h < scene.lifeBarCounter; h++) {
             scene.lifeBarImages.push(scene.add.image(10 + (h * 6), 16, 'sprite-hud', 10).setOrigin(1, 0).setScrollFactor(0));
-		}	
-	}
-	static setAudioStatus = (scene, settings) => {
+        }    
+    }
+    static setAudioStatus = (scene, settings) => {
         if (settings.get('settingAudioActive') === undefined) {
             settings.set('settingAudioActive', true);
             scene.audioBar = scene.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
@@ -81,37 +81,37 @@ export default class UIs {
             scene.audioBar = scene.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
             scene.sound.volume = 1;
         }
-	}
-	static setAudioUpdate = (scene) => {
+    }
+    static setAudioUpdate = (scene) => {
         if (scene.audioBar.frame.name == 15) {
             scene.sound.volume = 0;
         } else if (scene.audioBar.frame.name == 14) {
             scene.sound.volume = 1;
         }
-	}
-	static setAudioBar = (scene, playerReference, audioBarReference, audioBarPressedReference) => {
-		scene.input.on('pointerdown', function (pointer) {
-			if (audioBarReference.getBounds().contains(pointer.x, pointer.y)) {
-				if (audioBarPressedReference.registry.get('settingAudioActive') === true) {
-					audioBarReference.setFrame(15);
-					audioBarPressedReference.registry.set('settingAudioActive', false);
-				} else {
-					audioBarReference.setFrame(14);
-					audioBarPressedReference.registry.set('settingAudioActive', true);
-				}
-			} else {
-				if (playerReference.movementState === false) {
-					playerReference.switchMovementState();
-				} else {
-					playerReference.switchJumpState(true, false, playerReference.sprite);
-				}
-			}
-		});
-		scene.input.on('pointerup', function (pointer) {
-		    if (playerReference.movementState !== false) {
-		    	playerReference.switchJumpState(false, true, playerReference.sprite);
-		    }
-		});
-	}
+    }
+    static setAudioBar = (scene, playerReference, audioBarReference, audioBarPressedReference) => {
+        scene.input.on('pointerdown', function (pointer) {
+            if (audioBarReference.getBounds().contains(pointer.x, pointer.y)) {
+                if (audioBarPressedReference.registry.get('settingAudioActive') === true) {
+                    audioBarReference.setFrame(15);
+                    audioBarPressedReference.registry.set('settingAudioActive', false);
+                } else {
+                    audioBarReference.setFrame(14);
+                    audioBarPressedReference.registry.set('settingAudioActive', true);
+                }
+            } else {
+                if (playerReference.movementState === false) {
+                    playerReference.switchMovementState();
+                } else {
+                    playerReference.switchJumpState(true, false, playerReference.sprite);
+                }
+            }
+        });
+        scene.input.on('pointerup', function (pointer) {
+            if (playerReference.movementState !== false) {
+                playerReference.switchJumpState(false, true, playerReference.sprite);
+            }
+        });
+    }
 }
 

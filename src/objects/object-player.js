@@ -20,8 +20,8 @@ export default class Player {
         const { keys, sprite } = this;
         if (sprite.body) {
             this.baseSpeed = this.fastSequenceActive ? SpeedTypes.Fast :
-                             this.slowSequenceActive ? SpeedTypes.Slow : 
-                             SpeedTypes.Normal;
+                this.slowSequenceActive ? SpeedTypes.Slow : 
+                SpeedTypes.Normal;
             sprite.body.setMaxVelocity(this.baseSpeed, SpeedTypes.Jump);
             if (Phaser.Input.Keyboard.JustDown(keys.enter)) {
                 this.switchMovementState()
@@ -49,14 +49,14 @@ export default class Player {
         } else {
             if (this.scene.hudJumpBarCounter > 0) {
                 if (downActionCheck && this.canDoubleJump) {
-            	    this.scene.hudJumpBarCounter--;
-            	    actionSprite.body.setVelocityY(-SpeedTypes.DoubleJump);
-            	    this.scene.jumpSound.play();
-            	    UIs.setHudBar(this.scene);
-            	    this.canDoubleJump = false;
+                    this.scene.hudJumpBarCounter--;
+                    actionSprite.body.setVelocityY(-SpeedTypes.DoubleJump);
+                    this.scene.jumpSound.play();
+                    UIs.setHudBar(this.scene);
+                    this.canDoubleJump = false;
                 }
                 if (upActionCheck) { 
-            	    this.canDoubleJump = true;
+                    this.canDoubleJump = true;
                 }
             }
             actionSprite.anims.stop();
