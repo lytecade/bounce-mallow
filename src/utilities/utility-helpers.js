@@ -22,8 +22,6 @@ export const TileSettings = {
     TileChunkDefaultSize: 88,
     TileChunkDefaultActive: 4,
 };
-export const GameSettings = {
-};
 export class Helpers {
     static isValueEmpty = (resourceValue) => {
         if (resourceValue === 0 || resourceValue === undefined || resourceValue === "") {
@@ -31,7 +29,7 @@ export class Helpers {
         }
         return false;
     }
-	static getOutOfBoundsCount = (objectList, xValue) => {
+    static getOutOfBoundsCount = (objectList, xValue) => {
         let baseIndexCount = 0;
         for (let i = 0; i < objectList.length; i++) {
             if (objectList[i].sprite.x < xValue) {
@@ -39,13 +37,13 @@ export class Helpers {
             }
         }
         return baseIndexCount;
-	}
-    static removeObjectsByCount = (countValue, scene, sceneObject, sceneObjectCollider) => {
+    }
+    static setObjectRemoveByCount = (countValue, scene, sceneObject, sceneObjectCollider) => {
         for (let r = 0; r < countValue; r++) {
             sceneObject.shift();
             scene.physics.world.removeCollider(sceneObjectCollider.shift());
         }
-	}	
+    }    
     static setLoseSequence = (scene, currentStage, time, byFall) => {
         scene.time.delayedCall(time, () => {
             currentStage++;

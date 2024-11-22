@@ -1,5 +1,5 @@
 import { LoseTileTypes, TileSettings, Helpers } from "../utilities/utility-helpers.js";
-export default class LevelChunk {
+export default class Chunk {
     constructor(scene, x, y, chunkSize, chunkCliffs) {
         this.scene = scene;
         this.x = x;
@@ -108,12 +108,12 @@ export default class LevelChunk {
         }
         for (let column = 0; column < widthInTiles; column++) {
             if (this.tiles[platformLevel][column] == 5) {
-	        if (Helpers.isValueEmpty(this.tiles[platformLevel][column - 1]) && Helpers.isValueEmpty(this.tiles[platformLevel][column + 1])) {
-	            this.tiles[platformLevel][column] = 1;
-	        } else if (Helpers.isValueEmpty(this.tiles[platformLevel][column - 1]) && !Helpers.isValueEmpty(this.tiles[platformLevel][column + 1])) {
-	            this.tiles[platformLevel][column] = 4;
-	        } else if (!Helpers.isValueEmpty(this.tiles[platformLevel][column - 1]) && Helpers.isValueEmpty(this.tiles[platformLevel][column + 1])) {
-	            this.tiles[platformLevel][column] = 6;
+                if (Helpers.isValueEmpty(this.tiles[platformLevel][column - 1]) && Helpers.isValueEmpty(this.tiles[platformLevel][column + 1])) {
+                    this.tiles[platformLevel][column] = 1;
+                } else if (Helpers.isValueEmpty(this.tiles[platformLevel][column - 1]) && !Helpers.isValueEmpty(this.tiles[platformLevel][column + 1])) {
+                    this.tiles[platformLevel][column] = 4;
+                } else if (!Helpers.isValueEmpty(this.tiles[platformLevel][column - 1]) && Helpers.isValueEmpty(this.tiles[platformLevel][column + 1])) {
+                    this.tiles[platformLevel][column] = 6;
                 }
             } 
         }
@@ -142,16 +142,16 @@ export default class LevelChunk {
             const randomEnemyIndex = Math.floor(Math.random() * 7);
             const randomItemIndex = Math.floor(Math.random() * 4);
             if (this.cliffShow && randomEnemyIndex >= 0 && randomEnemyIndex < validSpawnPoints.length) {
-	            this.enemySpawnPoint = {
-	                x: this.x + validSpawnPoints[randomEnemyIndex].col * this.tileSize,
-	                y: (validSpawnPoints[randomEnemyIndex].row - 1) * this.tileSize
-	            };
+                this.enemySpawnPoint = {
+                    x: this.x + validSpawnPoints[randomEnemyIndex].col * this.tileSize,
+                    y: (validSpawnPoints[randomEnemyIndex].row - 1) * this.tileSize
+                };
             }
             if (this.cliffShow && randomItemIndex >= 0 && randomItemIndex < validSpawnPoints.length) {
-	            this.itemSpawnPoint = {
-	                x: this.x + validSpawnPoints[randomItemIndex].col * this.tileSize,
-	                y: (validSpawnPoints[randomItemIndex].row - 1) * this.tileSize
-	            };
+                this.itemSpawnPoint = {
+                    x: this.x + validSpawnPoints[randomItemIndex].col * this.tileSize,
+                    y: (validSpawnPoints[randomItemIndex].row - 1) * this.tileSize
+                };
             }
         }
     }

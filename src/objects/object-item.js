@@ -6,7 +6,7 @@ export default class Item {
         this.activated = false;
         this.sprite = scene.physics.add.sprite(x, y, "sprite-items", 0).setSize(8, 8);
         this.spriteCollider = scene.physics.world.addCollider(this.sprite, chunk.groundLayer);
-		this.setupType(this);
+        this.setupType(this);
         this.setupOverlap();
     }
     update() {
@@ -14,10 +14,10 @@ export default class Item {
     }
     setupType(scene) {
         const typeKeys = Object.keys(ItemTypes);
-		scene.type = ItemTypes[typeKeys[Math.floor(Math.random() * typeKeys.length)]];
-	}
+        scene.type = ItemTypes[typeKeys[Math.floor(Math.random() * typeKeys.length)]];
+    }
     setupOverlap() {
-		const { scene } = this;
+        const { scene } = this;
         scene.physics.add.overlap(
             this.sprite,
             scene.player.sprite,
