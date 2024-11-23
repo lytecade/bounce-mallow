@@ -23,7 +23,7 @@ export default class ActionScene extends Phaser.Scene {
         this.loseSequenceActive = false;
         this.loseSequenceShatter = false;
         this.loseSequenceSound = false;
-        Resources.createBackgrounds(this, "background-hills");
+        Resources.createBackgrounds(this, "image-background");
         Resources.createAnimations(this);
         Resources.createSounds(this);
         this.setPlayerInit(this);

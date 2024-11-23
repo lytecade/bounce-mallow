@@ -10,7 +10,9 @@ export default class Resources {
         ["sprite-hud", { type: "spritesheets", name: "sprite-hud", ext: "png" }],
         ["sprite-items", { type: "spritesheets", name: "sprite-items", ext: "png" }],
         ["tileset-platform", { type: "tilesets", name: "tileset-platform", ext: "png" }],
-        ["background-hills", { type: "images", name: "background-hills", ext: "png" }]
+        ["image-background", { type: "images", name: "image-background", ext: "png" }]
+        ["image-title", { type: "images", name: "image-title", ext: "png" }]
+        ["image-gameover", { type: "images", name: "image-gameover", ext: "png" }]
     ]);
     static createResources = (scene) => {
         for (const [key, value] of this.BaseResources) {
