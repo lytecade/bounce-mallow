@@ -1,4 +1,4 @@
-import ActionScene from "./src/scenes/scene-action.js";
+import ActionScene from "./scenes/scene-action.js";
 const game = new Phaser.Game({
     parent: "game",
     type: Phaser.AUTO,
