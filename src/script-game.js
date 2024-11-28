@@ -1,3 +1,4 @@
+import InitScene from "./scenes/scene-init.js";
 import ActionScene from "./scenes/scene-action.js";
 const game = new Phaser.Game({
     parent: "game",
@@ -5,7 +6,7 @@ const game = new Phaser.Game({
     width: 120,
     height: 72,
     pixelArt: true,
-    scene: ActionScene,
+    scene: [InitScene, ActionScene],
     physics: {
         default: "arcade",
         arcade: {
