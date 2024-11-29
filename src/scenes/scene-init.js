@@ -8,9 +8,19 @@ export default class InitScene extends Phaser.Scene {
         Resources.createResources(this);
     }
     create() {
+        const { ENTER, SPACE } = Phaser.Input.Keyboard.KeyCodes;
+        this.keys = this.input.keyboard.addKeys({ enter: ENTER, space: SPACE });
         Resources.createBackgrounds(this, "image-background");
 		UIs.setTitleResource(this);
 		UIs.setTitleInput(this, this.buttonPlay, this.buttonGuide);
 		Resources
     }
+	update() {
+        const { keys } = this;
+		if (Phaser.Input.Keyboard.JustDown(keys.enter)) {
+            console.log('play button pressed');
+		} else if (Phaser.Input.Keyboard.JustDown(keys.space)) {
+            console.log('guide button pressed');
+		}
+	}
 }
