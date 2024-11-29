@@ -122,7 +122,8 @@ export default class UIs {
 	static setTitleInput = (scene, playReference, guideReference) => {
         scene.input.on('pointerdown', function (pointer) {
             if (playReference.getBounds().contains(pointer.x, pointer.y)) {
-                console.log('play button pressed');
+                scene.scene.stop('InitScene');
+				scene.scene.start('ActionScene');
 			}
             if (guideReference.getBounds().contains(pointer.x, pointer.y)) {
                 console.log('guide button pressed');

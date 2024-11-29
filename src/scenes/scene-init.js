@@ -17,7 +17,8 @@ export default class InitScene extends Phaser.Scene {
 	update() {
         const { keys } = this;
 		if (Phaser.Input.Keyboard.JustDown(keys.enter)) {
-            console.log('play button pressed');
+			this.scene.stop('InitScene');
+			this.scene.start('ActionScene');
 		} else if (Phaser.Input.Keyboard.JustDown(keys.space)) {
             console.log('guide button pressed');
 		}
