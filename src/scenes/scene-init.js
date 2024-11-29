@@ -1,4 +1,5 @@
 import Resources from "../utilities/utility-resources.js"
+import UIs from "../utilities/utility-uis.js"
 export default class InitScene extends Phaser.Scene {
     constructor() {
         super({ key: 'InitScene' });
@@ -7,10 +8,18 @@ export default class InitScene extends Phaser.Scene {
         Resources.createResources(this);
     }
     create() {
+        const { ENTER, SPACE } = Phaser.Input.Keyboard.KeyCodes;
+        this.keys = this.input.keyboard.addKeys({ enter: ENTER, space: SPACE });
         Resources.createBackgrounds(this, "image-background");
-		const centerX = this.cameras.main.width / 2;
-        this.titleBanner = this.add.image(centerX, 8, "image-title").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
-        this.buttonPlay = this.add.image(centerX, 44, "image-playbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
-        this.buttonGuide = this.add.image(centerX, 54, "image-guidebutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+		UIs.setTitleResource(this);
+		UIs.setTitleInput(this, this.buttonPlay, this.buttonGuide);
     }
+	update() {
+        const { keys } = this;
+		if (Phaser.Input.Keyboard.JustDown(keys.enter)) {
+            console.log('play button pressed');
+		} else if (Phaser.Input.Keyboard.JustDown(keys.space)) {
+            console.log('guide button pressed');
+		}
+	}
 }
