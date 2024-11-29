@@ -13,7 +13,6 @@ export default class InitScene extends Phaser.Scene {
         Resources.createBackgrounds(this, "image-background");
 		UIs.setTitleResource(this);
 		UIs.setTitleInput(this, this.buttonPlay, this.buttonGuide);
-		Resources
     }
 	update() {
         const { keys } = this;
