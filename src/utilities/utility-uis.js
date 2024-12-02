@@ -130,6 +130,12 @@ export default class UIs {
 			}
 		});
 	}
-
+    static setGuideInput = (scene, backReference) => {
+        scene.input.on('pointerdown', function (pointer) {
+            if (guideReference.getBounds().contains(pointer.x, pointer.y)) {
+                console.log('back button pressed');
+			}
+		});
+	}
 }
 
