@@ -115,9 +115,9 @@ export default class UIs {
     }
     static setTitleResource = (scene) => {
 		const centerX = scene.cameras.main.width / 2;
-        scene.titleBanner = scene.add.image(centerX, 8, "image-title").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
-        scene.buttonPlay = scene.add.image(centerX, 44, "image-playbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
-        scene.buttonGuide = scene.add.image(centerX, 54, "image-guidebutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+        scene.titleBanner = scene.add.image(centerX, 10, "image-title").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+        scene.buttonPlay = scene.add.image(centerX, 43, "image-playbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+        scene.buttonGuide = scene.add.image(centerX, 53, "image-guidebutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
 	}
 	static setTitleInput = (scene, playReference, guideReference) => {
         scene.input.on('pointerdown', function (pointer) {
