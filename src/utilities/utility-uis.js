@@ -126,14 +126,20 @@ export default class UIs {
                 scene.scene.start('ActionScene');
             }
             if (guideReference.getBounds().contains(pointer.x, pointer.y)) {
-                console.log('guide button pressed');
+                scene.scene.stop('InitScene');
+                scene.scene.start('GuideScene');
             }
         });
     }
+    static setGuideResource = (scene) => {
+        const centerX = scene.cameras.main.width / 2;
+        scene.buttonBack = scene.add.image(centerX, 53, "image-backbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+    }
     static setGuideInput = (scene, backReference) => {
         scene.input.on('pointerdown', function (pointer) {
-            if (guideReference.getBounds().contains(pointer.x, pointer.y)) {
-                console.log('back button pressed');
+            if (backReference.getBounds().contains(pointer.x, pointer.y)) {
+                scene.scene.stop('GuideScene');
+                scene.scene.start('InitScene');
             }
         });
     }
