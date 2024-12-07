@@ -11,16 +11,17 @@ export default class InitScene extends Phaser.Scene {
         const { ENTER, SPACE } = Phaser.Input.Keyboard.KeyCodes;
         this.keys = this.input.keyboard.addKeys({ enter: ENTER, space: SPACE });
         Resources.createBackgrounds(this, "image-background");
-		UIs.setTitleResource(this);
-		UIs.setTitleInput(this, this.buttonPlay, this.buttonGuide);
+        UIs.setTitleResource(this);
+        UIs.setTitleInput(this, this.buttonPlay, this.buttonGuide);
     }
-	update() {
+    update() {
         const { keys } = this;
-		if (Phaser.Input.Keyboard.JustDown(keys.enter)) {
-			this.scene.stop('InitScene');
-			this.scene.start('ActionScene');
-		} else if (Phaser.Input.Keyboard.JustDown(keys.space)) {
-            console.log('guide button pressed');
-		}
-	}
+        if (Phaser.Input.Keyboard.JustDown(keys.enter)) {
+            this.scene.stop('InitScene');
+            this.scene.start('ActionScene');
+        } else if (Phaser.Input.Keyboard.JustDown(keys.space)) {
+            this.scene.stop('InitScene');
+            this.scene.start('GuideScene');
+        }
+    }
 }

@@ -11,12 +11,14 @@ export default class GuideScene extends Phaser.Scene {
         const { ENTER, SPACE } = Phaser.Input.Keyboard.KeyCodes;
         this.keys = this.input.keyboard.addKeys({ enter: ENTER, space: SPACE });
         Resources.createBackgrounds(this, "image-background");
+        UIs.setGuideResource(this);
+        UIs.setGuideInput(this, this.buttonBack);
     }
-	update() {
-		if (Phaser.Input.Keyboard.JustDown(keys.enter)) {
-            console.log('enter button pressed');
-		} else if (Phaser.Input.Keyboard.JustDown(keys.space)) {
-            console.log('space button pressed');
-		}
-	}
+    update() {
+        const { keys } = this;
+        if (Phaser.Input.Keyboard.JustDown(keys.enter)) {
+            this.scene.stop('GuideScene');
+            this.scene.start('InitScene');
+        }
+    }
 }
