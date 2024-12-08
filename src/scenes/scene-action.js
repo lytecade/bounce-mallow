@@ -34,7 +34,7 @@ export default class ActionScene extends Phaser.Scene {
         UIs.setAudioBar(this, this.player, this.audioBar, this.game);
     }
     update(time, delta) {
-    UIs.setAudioUpdate(this);
+        UIs.setAudioUpdate(this);
         if (!this.loseSequenceActive) {
             if (this.player.sprite.x > this.chunks[this.chunks.length - 1].x - TileSettings.TileChunkDefaultSize) {
                 this.setChunk(this.chunks[this.chunks.length - 1].x + TileSettings.TileChunkDefaultSize, 0, true);
