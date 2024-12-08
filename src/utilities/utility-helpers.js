@@ -75,7 +75,13 @@ export class Helpers {
                         this.setLoseSequence(scene, currentStage, time * 200, byFall);
                         break;
                     default:
-                        scene.scene.restart();
+                        console.log(scene.lifeBarCounter);
+                        if (scene.lifeBarCounter > 1) {
+                            scene.scene.restart();
+                        } else {
+                            scene.scene.stop('ActionScene');
+                            scene.scene.start('EndScene');
+                        }
                 }
             }
         }, [], this);
