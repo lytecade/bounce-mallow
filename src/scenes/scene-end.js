@@ -16,7 +16,7 @@ export default class EndScene extends Phaser.Scene {
     }
     update() {
         const { keys } = this;
-        if (Phaser.Input.Keyboard.JustDown(keys.enter) || Phaser.Input.Keyboard.JustDown(keys.enter)) {
+        if (Phaser.Input.Keyboard.JustDown(keys.enter) || Phaser.Input.Keyboard.JustDown(keys.space)) {
             this.scene.stop(this.scene.key);
             this.scene.start('InitScene');
         }
