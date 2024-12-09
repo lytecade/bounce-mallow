@@ -75,11 +75,10 @@ export class Helpers {
                         this.setLoseSequence(scene, currentStage, time * 200, byFall);
                         break;
                     default:
-                        console.log(scene.lifeBarCounter);
                         if (scene.lifeBarCounter > 1) {
                             scene.scene.restart();
                         } else {
-                            scene.scene.stop('ActionScene');
+                            scene.scene.stop(scene.scene.key);
                             scene.scene.start('EndScene');
                         }
                 }
