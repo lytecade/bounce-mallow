@@ -12,7 +12,8 @@ export default class InitScene extends Phaser.Scene {
         this.keys = this.input.keyboard.addKeys({ enter: ENTER, space: SPACE });
         Resources.createBackgrounds(this, "image-background");
         UIs.setTitleResource(this);
-        UIs.setTitleInput(this, this.buttonPlay, this.buttonGuide);
+        UIs.setButtonInput(this, this.buttonPlay, this.scene.key, 'ActionScene');
+        UIs.setButtonInput(this, this.buttonGuide, this.scene.key, 'GuideScene');
     }
     update() {
         const { keys } = this;

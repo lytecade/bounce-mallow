@@ -119,18 +119,6 @@ export default class UIs {
         scene.buttonPlay = scene.add.image(centerX, 43, "image-playbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
         scene.buttonGuide = scene.add.image(centerX, 53, "image-guidebutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
     }
-    static setTitleInput = (scene, playReference, guideReference) => {
-        scene.input.on('pointerdown', function (pointer) {
-            if (playReference.getBounds().contains(pointer.x, pointer.y)) {
-                scene.scene.stop('InitScene');
-                scene.scene.start('ActionScene');
-            }
-            if (guideReference.getBounds().contains(pointer.x, pointer.y)) {
-                scene.scene.stop('InitScene');
-                scene.scene.start('GuideScene');
-            }
-        });
-    }
     static setBackResource = (scene) => {
         const centerX = scene.cameras.main.width / 2;
         scene.buttonBack = scene.add.image(centerX, 53, "image-backbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
