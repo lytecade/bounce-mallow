@@ -15,7 +15,8 @@ export default class Resources {
         ["image-gameover", { type: "images", name: "image-gameover", ext: "png" }],
         ["image-guidebutton", { type: "images", name: "image-guidebutton", ext: "png" }],
         ["image-playbutton", { type: "images", name: "image-playbutton", ext: "png" }],
-        ["image-backbutton", { type: "images", name: "image-backbutton", ext: "png" }]
+        ["image-backbutton", { type: "images", name: "image-backbutton", ext: "png" }],
+        ["image-banner", { type: "images", name: "image-banner", ext: "png" }]
     ]);
     static createResources = (scene) => {
         for (const [key, value] of this.BaseResources) {
