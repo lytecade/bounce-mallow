@@ -13,6 +13,7 @@ export default class GuideScene extends Phaser.Scene {
         Resources.createBackgrounds(this, "image-background");
         UIs.setBackResource(this);
         UIs.setButtonInput(this, this.buttonBack, this.scene.key, 'InitScene');
+        UIs.setBannerResource(this);
     }
     update() {
         const { keys } = this;
