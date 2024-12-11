@@ -115,5 +115,15 @@ export class Helpers {
             });
         }
     }
+    static setScoreCounter = (counterReference) => {
+        let currentScoreCounter = 0;
+        for (let i = 0; i < counterReference[0]; i++) {
+            currentScoreCounter = currentScoreCounter + 10;
+        }
+        for (let j = 0; j < counterReference[1]; j++) {
+            currentScoreCounter = currentScoreCounter + 1;
+        }
+        return currentScoreCounter;
+    }
 }
 
