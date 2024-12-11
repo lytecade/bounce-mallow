@@ -125,5 +125,15 @@ export class Helpers {
         }
         return currentScoreCounter;
     }
+    static setScoreRegister = (settingsReference, counterValue) => {
+        if (settingsReference.get('settingScoreSet') === undefined) {
+            settingsReference.set('settingScoreSet', []);
+        }
+        let scoreSetting = settingReference.get('settingScoreSet');
+        if (counterValue != undefined && counterValue != null) {
+            scoreSetting.push(counterValue);
+            settingsReference.set('settingScoreSet', scoreSetting);
+        }
+    }
 }
 
