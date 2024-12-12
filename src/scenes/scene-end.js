@@ -14,6 +14,7 @@ export default class EndScene extends Phaser.Scene {
         UIs.setBackResource(this);
         UIs.setButtonInput(this, this.buttonBack, this.scene.key, 'InitScene');
         UIs.setBannerResource(this);
+        UIs.setBannerTitle(this, "image-finalcount");
     }
     update() {
         const { keys } = this;
