@@ -123,6 +123,10 @@ export default class UIs {
         const centerX = scene.cameras.main.width / 2;
         scene.screenBanner = scene.add.image(centerX, 10, "image-banner").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
     }
+    static setBannerTitle = (scene, title) => {
+        const centerX = scene.cameras.main.width / 2;
+        scene.bannerTitle = scene.add.image(centerX, 13, title).setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+    }
     static setBackResource = (scene) => {
         const centerX = scene.cameras.main.width / 2;
         scene.buttonBack = scene.add.image(centerX, 53, "image-backbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);

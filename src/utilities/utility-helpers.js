@@ -75,6 +75,8 @@ export class Helpers {
                         this.setLoseSequence(scene, currentStage, time * 200, byFall);
                         break;
                     default:
+                        let counter = this.setScoreCounter(scene.hudCounters);
+                        this.setScoreRegister(scene.game.registry, counter);
                         if (scene.lifeBarCounter > 1) {
                             scene.scene.restart();
                         } else {
@@ -129,7 +131,7 @@ export class Helpers {
         if (settingsReference.get('settingScoreSet') === undefined) {
             settingsReference.set('settingScoreSet', []);
         }
-        let scoreSetting = settingReference.get('settingScoreSet');
+        let scoreSetting = settingsReference.get('settingScoreSet');
         if (counterValue != undefined && counterValue != null) {
             scoreSetting.push(counterValue);
             settingsReference.set('settingScoreSet', scoreSetting);
