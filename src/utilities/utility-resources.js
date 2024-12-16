@@ -18,7 +18,8 @@ export default class Resources {
         ["image-backbutton", { type: "images", name: "image-backbutton", ext: "png" }],
         ["image-banner", { type: "images", name: "image-banner", ext: "png" }],
         ["image-finalcount", { type: "images", name: "image-finalcount", ext: "png" }],
-        ["image-controlguide", { type: "images", name: "image-controlguide", ext: "png" }]
+        ["image-controlguide", { type: "images", name: "image-controlguide", ext: "png" }],
+        ["image-total", { type: "images", name: "image-total", ext: "png" }]
     ]);
     static createResources = (scene) => {
         for (const [key, value] of this.BaseResources) {
