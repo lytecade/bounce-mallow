@@ -14,7 +14,8 @@ export default class EndScene extends Phaser.Scene {
         UIs.setBackResource(this);
         UIs.setButtonInput(this, this.buttonBack, this.scene.key, 'InitScene');
         UIs.setBannerResource(this);
-        UIs.setBannerTitle(this, "image-finalcount");
+        UIs.setBannerWording(this, "image-finalcount", 13);
+        UIs.setBannerWording(this, "image-total", 32);
         this.countImages = [];
         //Life1
         this.countImages.push(this.add.image(40, 20, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
@@ -31,6 +32,9 @@ export default class EndScene extends Phaser.Scene {
         //Life5
         this.countImages.push(this.add.image(88, 20, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
         this.countImages.push(this.add.image(92, 20, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+        //LifeTotal
+        this.countImages.push(this.add.image(64, 37, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+        this.countImages.push(this.add.image(68, 37, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
     }
     update() {
         const { keys } = this;
