@@ -69,6 +69,14 @@ export default class UIs {
             scene.lifeBarImages.push(scene.add.image(10 + (h * 6), 16, 'sprite-hud', 10).setOrigin(1, 0).setScrollFactor(0));
         }    
     }
+    static setFinalCounter = (scene) => {
+        let scoreSetting = settingsReference.get('settingScoreSet');
+        let leftCounter = 40;
+        let rightCounter = 44;
+        for (let i = 0; i < 5; i++) {
+            console.log(scoreSetting[i]);
+        }
+    }
     static setAudioStatus = (scene, settings) => {
         if (settings.get('settingAudioActive') === undefined) {
             settings.set('settingAudioActive', true);
