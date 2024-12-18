@@ -69,12 +69,16 @@ export default class UIs {
             scene.lifeBarImages.push(scene.add.image(10 + (h * 6), 16, 'sprite-hud', 10).setOrigin(1, 0).setScrollFactor(0));
         }    
     }
-    static setFinalCounter = (scene) => {
+    static setFinalCounter = (scene, settingsReference) => {
         let scoreSetting = settingsReference.get('settingScoreSet');
         let leftCounter = 40;
         let rightCounter = 44;
+        scene.countImages = [];
         for (let i = 0; i < 5; i++) {
-            console.log(scoreSetting[i]);
+            scene.countImages.push(scene.add.image(leftCounter, 20, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(rightCounter, 20, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            leftCounter = leftCounter + 12;
+            rightCounter = rightCounter + 12;
         }
     }
     static setAudioStatus = (scene, settings) => {
