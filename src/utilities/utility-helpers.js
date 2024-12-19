@@ -56,6 +56,8 @@ export class Helpers {
                     scene.cameras.main.stopFollow();
                     this.setLoseSequence(scene, currentStage, time * 400, byFall);
                 } else {
+                    let counter = this.setScoreCounter(scene.hudCounters);
+                    this.setScoreRegister(scene.game.registry, counter);
                     scene.scene.restart();
                 }
             } else {
@@ -128,7 +130,7 @@ export class Helpers {
         return currentScoreCounter;
     }
     static setScoreRegister = (settingsReference, counterValue) => {
-        if (settingsReference.get('settingScoreSet') === undefined) {
+        if (settingsReference.get('settingScoreSet') === null || settingsReference.get('settingScoreSet') === undefined) {
             settingsReference.set('settingScoreSet', []);
         }
         let scoreSetting = settingsReference.get('settingScoreSet');

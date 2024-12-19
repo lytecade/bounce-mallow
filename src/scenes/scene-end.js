@@ -17,8 +17,6 @@ export default class EndScene extends Phaser.Scene {
         UIs.setBannerWording(this, "image-finalcount", 13);
         UIs.setBannerWording(this, "image-total", 32);
         UIs.setFinalCounter(this, this.game.registry);
-        this.countImages.push(this.add.image(64, 37, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
-        this.countImages.push(this.add.image(68, 37, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
     }
     update() {
         const { keys } = this;

@@ -75,11 +75,16 @@ export default class UIs {
         let rightCounter = 44;
         scene.countImages = [];
         for (let i = 0; i < 5; i++) {
+            if (scoreSetting[i]) {
+                console.log(scoreSetting[i]);
+            }
             scene.countImages.push(scene.add.image(leftCounter, 20, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
             scene.countImages.push(scene.add.image(rightCounter, 20, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
             leftCounter = leftCounter + 12;
             rightCounter = rightCounter + 12;
         }
+        scene.countImages.push(scene.add.image(64, 37, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+        scene.countImages.push(scene.add.image(68, 37, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
     }
     static setAudioStatus = (scene, settings) => {
         if (settings.get('settingAudioActive') === undefined) {
