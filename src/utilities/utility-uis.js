@@ -75,11 +75,14 @@ export default class UIs {
         let rightCounter = 44;
         scene.countImages = [];
         for (let i = 0; i < 5; i++) {
+            let leftScore = 0;
+            let rightScore = 0;
             if (scoreSetting[i]) {
-                console.log(scoreSetting[i]);
+                rightScore = scoreSetting[i] % 10;
+                leftScore = scoreSetting[i] - rightScore;
             }
-            scene.countImages.push(scene.add.image(leftCounter, 20, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
-            scene.countImages.push(scene.add.image(rightCounter, 20, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(leftCounter, 20, 'sprite-hud', (leftScore <= 0 ? 20 : (leftScore / 10) + 20)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(rightCounter, 20, 'sprite-hud', (20 + rightScore)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
             leftCounter = leftCounter + 12;
             rightCounter = rightCounter + 12;
         }
