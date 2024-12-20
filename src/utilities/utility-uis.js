@@ -73,18 +73,25 @@ export default class UIs {
         let scoreSetting = settingsReference.get('settingScoreSet');
         let leftCounter = 40;
         let rightCounter = 44;
+        let totalCount = 0;
         scene.countImages = [];
         for (let i = 0; i < 5; i++) {
+            let leftScore = 0;
+            let rightScore = 0;
             if (scoreSetting[i]) {
-                console.log(scoreSetting[i]);
+                rightScore = scoreSetting[i] % 10;
+                leftScore = scoreSetting[i] - rightScore;
+                totalCount = totalCount + scoreSetting[i];
             }
-            scene.countImages.push(scene.add.image(leftCounter, 20, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
-            scene.countImages.push(scene.add.image(rightCounter, 20, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(leftCounter, 20, 'sprite-hud', (leftScore <= 0 ? 20 : (leftScore / 10) + 20)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(rightCounter, 20, 'sprite-hud', (20 + rightScore)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
             leftCounter = leftCounter + 12;
             rightCounter = rightCounter + 12;
         }
-        scene.countImages.push(scene.add.image(64, 37, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
-        scene.countImages.push(scene.add.image(68, 37, 'sprite-hud', 20).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+        let rightTotal = totalCount % 10;
+        let leftTotal = totalCount - rightTotal;
+        scene.countImages.push(scene.add.image(64, 37, 'sprite-hud', (leftTotal <= 0 ? 20 : (leftTotal / 10) + 20)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+        scene.countImages.push(scene.add.image(68, 37, 'sprite-hud', (20 + rightTotal)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
     }
     static setAudioStatus = (scene, settings) => {
         if (settings.get('settingAudioActive') === undefined) {
