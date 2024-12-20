@@ -49,12 +49,12 @@ export default class UIs {
     }
     static setLifeCounter = (scene, settings) => {
         scene.lifeBarCounter = 5;
-        if (settings.get('settingLiveCounter') === undefined) {
+        if (settings.get('settingLiveCounter') === null || settings.get('settingLiveCounter') === undefined) {
             settings.set('settingLiveCounter', scene.lifeBarCounter);
         } else {
             scene.lifeBarCounter = settings.get('settingLiveCounter');
         }
-        if (settings.get('settingLiveRemoved') === undefined) {
+        if (settings.get('settingLiveRemoved') === null || settings.get('settingLiveRemoved') === undefined) {
             settings.set('settingLiveRemoved', false);
         } else if (settings.get('settingLiveRemoved') === true){
             let tempCount = settings.get('settingLiveCounter');
