@@ -17,8 +17,6 @@ export default class EndScene extends Phaser.Scene {
         UIs.setBannerWording(this, "image-finalcount", 13);
         UIs.setBannerWording(this, "image-total", 32);
         UIs.setFinalCounter(this, this.game.registry);
-        this.game.registry.set('settingLiveCounter', null);
-        this.game.registry.set('settingLiveRemoved', null);
     }
     update() {
         const { keys } = this;
