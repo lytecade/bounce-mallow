@@ -58,7 +58,12 @@ export class Helpers {
                 } else {
                     let counter = this.setScoreCounter(scene.hudCounters);
                     this.setScoreRegister(scene.game.registry, counter);
-                    scene.scene.restart();
+		    if (scene.lifeBarCounter > 1) {
+		        scene.scene.restart();
+		    } else {
+		        scene.scene.stop(scene.scene.key);
+		        scene.scene.start('EndScene');
+		    }
                 }
             } else {
                 switch (currentStage) {
