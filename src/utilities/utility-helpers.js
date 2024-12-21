@@ -139,5 +139,10 @@ export class Helpers {
             settingsReference.set('settingScoreSet', scoreSetting);
         }
     }
+    static setSettingReset = (settingReference) => {
+        settingReference.set('settingLiveCounter', null);
+        settingReference.set('settingScoreSet', null);
+        settingReference.set('settingLiveRemoved', null);
+    }
 }
 

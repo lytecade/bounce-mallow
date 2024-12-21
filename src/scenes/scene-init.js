@@ -1,5 +1,6 @@
 import Resources from "../utilities/utility-resources.js"
 import UIs from "../utilities/utility-uis.js"
+import { Helpers } from "../utilities/utility-helpers.js";
 export default class InitScene extends Phaser.Scene {
     constructor() {
         super({ key: 'InitScene' });
@@ -14,6 +15,7 @@ export default class InitScene extends Phaser.Scene {
         UIs.setTitleResource(this);
         UIs.setButtonInput(this, this.buttonPlay, this.scene.key, 'ActionScene');
         UIs.setButtonInput(this, this.buttonGuide, this.scene.key, 'GuideScene');
+        Helpers.setSettingReset(this.game.registry);
     }
     update() {
         const { keys } = this;
