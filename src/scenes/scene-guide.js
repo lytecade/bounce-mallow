@@ -11,7 +11,7 @@ export default class GuideScene extends Phaser.Scene {
         const { ENTER, SPACE } = Phaser.Input.Keyboard.KeyCodes;
         this.keys = this.input.keyboard.addKeys({ enter: ENTER, space: SPACE });
         Resources.createBackgrounds(this, "image-background");
-        UIs.setBackResource(this);
+        UIs.setBackResource(this, true);
         UIs.setButtonInput(this, this.buttonBack, this.scene.key, 'InitScene');
         UIs.setBannerResource(this);
         UIs.setBannerWording(this, "image-controlguide", 13);
