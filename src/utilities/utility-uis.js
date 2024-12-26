@@ -151,9 +151,13 @@ export default class UIs {
         const centerX = scene.cameras.main.width / 2;
         scene.bannerTitle = scene.add.image(centerX, yindex, title).setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
     }
-    static setBackResource = (scene) => {
+    static setBackResource = (scene, addNextAndPrev) => {
         const centerX = scene.cameras.main.width / 2;
         scene.buttonBack = scene.add.image(centerX, 53, "image-backbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+        if (addNextAndPrev === true) {
+            scene.buttonNext = scene.add.image(centerX + 30, 53, "image-nextbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+            scene.buttonPrev = scene.add.image(centerX - 30, 53, "image-prevbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+        }
     }
     static setButtonInput = (scene, buttonReference, stopKey, startKey) => {
         scene.input.on('pointerdown', function (pointer) {
