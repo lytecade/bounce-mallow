@@ -21,6 +21,9 @@ export default class Resources {
         ["image-banner", { type: "images", name: "image-banner", ext: "png" }],
         ["image-finalcount", { type: "images", name: "image-finalcount", ext: "png" }],
         ["image-controlguide", { type: "images", name: "image-controlguide", ext: "png" }],
+        ["image-slide1", { type: "images", name: "image-slide1", ext: "png" }],
+        ["image-slide2", { type: "images", name: "image-slide2", ext: "png" }],
+        ["image-slide3", { type: "images", name: "image-slide3", ext: "png" }],
         ["image-total", { type: "images", name: "image-total", ext: "png" }]
     ]);
     static createResources = (scene) => {
