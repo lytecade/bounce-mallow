@@ -167,5 +167,17 @@ export default class UIs {
             }
         });
     }
+    static setSlideButtonInput = (scene, buttonReference, goForward) => {
+        scene.input.on('pointerdown', function (pointer) {
+            if (buttonReference.getBounds().contains(pointer.x, pointer.y)) {
+                scene.slideCount = goForward === true ? scene.slideCount + 1 : scene.slideCount - 1;
+                if (scene.slideCount > 3) {
+                    scene.slideCount = 3;
+                } else if (scene.slideCount < 1) {
+                    scene.slideCount = 1;
+                }
+            }
+        });
+    }
 }
 
