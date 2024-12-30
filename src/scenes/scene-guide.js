@@ -14,6 +14,8 @@ export default class GuideScene extends Phaser.Scene {
         Resources.createBackgrounds(this, "image-background");
         UIs.setBackResource(this, true);
         UIs.setButtonInput(this, this.buttonBack, this.scene.key, 'InitScene');
+        UIs.setSlideButtonInput(this, this.buttonNext, true);
+        UIs.setSlideButtonInput(this, this.buttonPrev, false);
         UIs.setBannerResource(this);
         UIs.setBannerWording(this, "image-controlguide", 13);
     }
