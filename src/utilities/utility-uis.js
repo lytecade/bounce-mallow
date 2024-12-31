@@ -143,9 +143,35 @@ export default class UIs {
         scene.buttonPlay = scene.add.image(centerX, 43, "image-playbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
         scene.buttonGuide = scene.add.image(centerX, 53, "image-guidebutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
     }
+    static setGuideResource = (scene) => {
+        const centerX = scene.cameras.main.width / 2;
+        if (scene.slideBanner1 == undefined || scene.slideBanner2 == undefined || scene.slideBanner3 == undefined || 
+            scene.slideBanner1 == null || scene.slideBanner2 == null || scene.slideBanner3 == null) {
+            scene.slideBanner1 = scene.add.image(centerX, 22, "image-slide1").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+            scene.slideBanner2 = scene.add.image(centerX, 22, "image-slide2").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+            scene.slideBanner3 = scene.add.image(centerX, 22, "image-slide3").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+        }
+        switch(scene.slideCount) {
+            case 3:
+                scene.slideBanner3.setVisible(true);
+                scene.slideBanner2.setVisible(false);
+                scene.slideBanner1.setVisible(false);
+            break;
+            case 2:
+                scene.slideBanner3.setVisible(false);
+                scene.slideBanner2.setVisible(true);
+                scene.slideBanner1.setVisible(false);
+            break;
+            case 1:
+            default:
+                scene.slideBanner3.setVisible(false);
+                scene.slideBanner2.setVisible(false);
+                scene.slideBanner1.setVisible(true);
+        }
+    }
     static setBannerResource = (scene) => {
         const centerX = scene.cameras.main.width / 2;
-        scene.screenBanner = scene.add.image(centerX, 10, "image-banner").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+        scene.screenBanner = scene.add.image(centerX, 10, "image-banner").setOrigin(0.5, 0).setScrollFactor(0);
     }
     static setBannerWording = (scene, title, yindex) => {
         const centerX = scene.cameras.main.width / 2;
@@ -168,6 +194,7 @@ export default class UIs {
         });
     }
     static setSlideButtonInput = (scene, buttonReference, goForward) => {
+        let utilityContext = this; 
         scene.input.on('pointerdown', function (pointer) {
             if (buttonReference.getBounds().contains(pointer.x, pointer.y)) {
                 scene.slideCount = goForward === true ? scene.slideCount + 1 : scene.slideCount - 1;
@@ -177,6 +204,7 @@ export default class UIs {
                     scene.slideCount = 1;
                 }
             }
+            utilityContext.setGuideResource(scene);
         });
     }
 }
