@@ -18,6 +18,7 @@ export default class GuideScene extends Phaser.Scene {
         UIs.setSlideButtonInput(this, this.buttonPrev, false);
         UIs.setBannerResource(this);
         UIs.setBannerWording(this, "image-controlguide", 13);
+        UIs.setGuideResource(this);
     }
     update() {
         const { keys } = this;
