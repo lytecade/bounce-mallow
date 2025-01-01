@@ -143,10 +143,9 @@ export default class UIs {
         scene.buttonPlay = scene.add.image(centerX, 43, "image-playbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
         scene.buttonGuide = scene.add.image(centerX, 53, "image-guidebutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
     }
-    static setGuideResource = (scene) => {
+    static setGuideResource = (scene, runGuideInit) => {
         const centerX = scene.cameras.main.width / 2;
-        if (scene.slideBanner1 == undefined || scene.slideBanner2 == undefined || scene.slideBanner3 == undefined || 
-            scene.slideBanner1 == null || scene.slideBanner2 == null || scene.slideBanner3 == null) {
+        if (runGuideInit === true) {
             scene.slideBanner1 = scene.add.image(centerX, 22, "image-slide1").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
             scene.slideBanner2 = scene.add.image(centerX, 22, "image-slide2").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
             scene.slideBanner3 = scene.add.image(centerX, 22, "image-slide3").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
@@ -210,7 +209,7 @@ export default class UIs {
                     scene.slideCount = 1;
                 }
             }
-            utilityContext.setGuideResource(scene);
+            utilityContext.setGuideResource(scene, false);
         });
     }
 }
