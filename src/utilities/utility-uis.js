@@ -156,17 +156,23 @@ export default class UIs {
                 scene.slideBanner3.setVisible(true);
                 scene.slideBanner2.setVisible(false);
                 scene.slideBanner1.setVisible(false);
+                scene.buttonPrev.setVisible(true);
+                scene.buttonNext.setVisible(false);
             break;
             case 2:
                 scene.slideBanner3.setVisible(false);
                 scene.slideBanner2.setVisible(true);
                 scene.slideBanner1.setVisible(false);
+                scene.buttonPrev.setVisible(true);
+                scene.buttonNext.setVisible(true);
             break;
             case 1:
             default:
                 scene.slideBanner3.setVisible(false);
                 scene.slideBanner2.setVisible(false);
                 scene.slideBanner1.setVisible(true);
+                scene.buttonPrev.setVisible(false);
+                scene.buttonNext.setVisible(true);
         }
     }
     static setBannerResource = (scene) => {
