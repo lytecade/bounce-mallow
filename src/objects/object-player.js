@@ -23,8 +23,10 @@ export default class Player {
                 this.slowSequenceActive ? SpeedTypes.Slow : 
                 SpeedTypes.Normal;
             sprite.body.setMaxVelocity(this.baseSpeed, SpeedTypes.Jump);
-            if (Phaser.Input.Keyboard.JustDown(keys.enter)) {
-                this.switchMovementState()
+            if (this.movementState === false) {
+                if (Phaser.Input.Keyboard.JustDown(keys.space) || Phaser.Input.Keyboard.JustDown(keys.enter)) {
+                    this.switchMovementState()
+                }
             }
             sprite.body.setVelocityX(this.movementState ? this.baseSpeed : 0);
             this.switchJumpState(keys.space.isDown, keys.space.isUp, sprite);
