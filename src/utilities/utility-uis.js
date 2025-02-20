@@ -75,7 +75,6 @@ export default class UIs {
         let rightCounter = 44;
         let totalCount = 0;
         scene.countImages = [];
-        console.log(scene.countImages);
         for (let i = 0; i < 5; i++) {
             let leftScore = 0;
             let rightScore = 0;
