@@ -16,6 +16,8 @@ export default class InitScene extends Phaser.Scene {
         UIs.setButtonInput(this, this.buttonPlay, this.scene.key, 'ActionScene');
         UIs.setButtonInput(this, this.buttonGuide, this.scene.key, 'GuideScene');
         Helpers.setSettingReset(this.game.registry);
+        UIs.setScreenStatus(this, this.game);
+        UIs.setScreenBar(this, this.screenBar, this.game);
     }
     update() {
         const { keys } = this;

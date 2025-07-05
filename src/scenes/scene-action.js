@@ -32,6 +32,8 @@ export default class ActionScene extends Phaser.Scene {
         UIs.setLifeBar(this);
         UIs.setAudioStatus(this, this.game.registry);
         UIs.setAudioBar(this, this.player, this.audioBar, this.game);
+        UIs.setScreenStatus(this, this.game);
+        UIs.setScreenBar(this, this.screenBar, this.game);
     }
     update(time, delta) {
         UIs.setAudioUpdate(this);
