@@ -83,33 +83,33 @@ export default class UIs {
                 leftScore = scoreSetting[i] - rightScore;
                 totalCount = totalCount + scoreSetting[i];
             }
-            scene.countImages.push(scene.add.image(leftCounter, 20, 'sprite-hud', (leftScore <= 0 ? 20 : (leftScore / 10) + 20)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
-            scene.countImages.push(scene.add.image(rightCounter, 20, 'sprite-hud', (20 + rightScore)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(leftCounter, 21, 'sprite-hud', (leftScore <= 0 ? 20 : (leftScore / 10) + 20)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(rightCounter, 21, 'sprite-hud', (20 + rightScore)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
             leftCounter = leftCounter + 12;
             rightCounter = rightCounter + 12;
         }
         let digitsArray = String(totalCount).split('').map(Number);
         if (digitsArray.length == 3) {
-            scene.countImages.push(scene.add.image(62, 37, 'sprite-hud', (20 + digitsArray[0])).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
-            scene.countImages.push(scene.add.image(66, 37, 'sprite-hud', (20 + digitsArray[1])).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
-            scene.countImages.push(scene.add.image(70, 37, 'sprite-hud', (20 + digitsArray[2])).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(62, 38, 'sprite-hud', (20 + digitsArray[0])).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(66, 38, 'sprite-hud', (20 + digitsArray[1])).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(70, 38, 'sprite-hud', (20 + digitsArray[2])).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
         } else {
             let rightTotal = totalCount % 10;
             let leftTotal = totalCount - rightTotal;
-            scene.countImages.push(scene.add.image(64, 37, 'sprite-hud', (leftTotal <= 0 ? 20 : (leftTotal / 10) + 20)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
-            scene.countImages.push(scene.add.image(68, 37, 'sprite-hud', (20 + rightTotal)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(64, 38, 'sprite-hud', (leftTotal <= 0 ? 20 : (leftTotal / 10) + 20)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(68, 38, 'sprite-hud', (20 + rightTotal)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
         }
     }
     static setAudioStatus = (scene, settings) => {
         if (settings.get('settingAudioActive') === undefined) {
             settings.set('settingAudioActive', true);
-            scene.audioBar = scene.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+            scene.audioBar = scene.add.image(10, 53, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
             scene.sound.volume = 1;
         } else if (settings.get('settingAudioActive') === false) {
-            scene.audioBar = scene.add.image(10, 54, 'sprite-hud', 15).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+            scene.audioBar = scene.add.image(10, 53, 'sprite-hud', 15).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
             scene.sound.volume = 0;
         } else {
-            scene.audioBar = scene.add.image(10, 54, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+            scene.audioBar = scene.add.image(10, 53, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
             scene.sound.volume = 1;
         }
     }
@@ -142,6 +142,26 @@ export default class UIs {
             if (playerReference.movementState !== false) {
                 playerReference.switchJumpState(false, true, playerReference.sprite);
             }
+        });
+    }
+    static setScreenStatus = (scene, screenGame) => {
+        if (screenGame.scale.isFullscreen) {
+            scene.screenBar = scene.add.image(10, 62, 'sprite-hud', 30).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+        } else {
+            scene.screenBar = scene.add.image(10, 62, 'sprite-hud', 31).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+        }
+    }
+    static setScreenBar = (scene, screenBarReference, screenGame) => {
+        scene.input.on('pointerdown', function (pointer) {
+            if (screenBarReference.getBounds().contains(pointer.x, pointer.y)) {
+                if (!screenGame.scale.isFullscreen) {
+                    screenBarReference.setFrame(30);
+                    screenGame.scale.startFullscreen();
+                } else {
+                    screenBarReference.setFrame(31);
+                    screenGame.scale.stopFullscreen();
+                }
+            } 
         });
     }
     static setTitleResource = (scene) => {
