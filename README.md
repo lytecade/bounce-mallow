@@ -18,6 +18,3 @@
 - Fun and addictive gameplay.
 - Beautiful, colorful graphics for a lighthearted experience.
 
-## Coming Soon
-
-The game is still in development, and the official website for **Bounce Mallow** by **LyteCade** will be launching soon. Stay tuned for updates!
