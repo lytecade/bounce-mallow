@@ -17,9 +17,9 @@ export const LoseTileTypes = {
 };
 export const TileSettings = {
     TileSize: 8,
-    TileRows: 11,
+    TileRows: 12,
     TileGroundLevel: 3,
-    TileChunkDefaultSize: 88,
+    TileChunkDefaultSize: 96,
     TileChunkDefaultActive: 4,
 };
 export class Helpers {

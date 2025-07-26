@@ -2,10 +2,10 @@ export default class UIs {
     static setHudCounter = (scene) => {
         scene.hudCounters = [0, 0];
         scene.hudCounterImages = [];
-        scene.hudBar = scene.add.image(10, 9, 'sprite-hud', 16).setOrigin(1, 0).setScrollFactor(0);
+        scene.hudBar = scene.add.image(10, 6, 'sprite-hud', 16).setOrigin(1, 0).setScrollFactor(0);
         scene.hudJumpBarCounter = 0;
         for (let i = 0; i < scene.hudCounters.length; i++) {
-            scene.hudCounterImages.push(scene.add.image(16 + (i * 4), 9, 'sprite-hud', 0).setOrigin(1, 0).setScrollFactor(0));
+            scene.hudCounterImages.push(scene.add.image(16 + (i * 4), 6, 'sprite-hud', 0).setOrigin(1, 0).setScrollFactor(0));
         }
         scene.hudTimer = scene.time.addEvent({ 
             delay: 1000, 
@@ -66,13 +66,13 @@ export default class UIs {
     static setLifeBar = (scene) => {
         scene.lifeBarImages = [];
         for (let h = 0; h < scene.lifeBarCounter; h++) {
-            scene.lifeBarImages.push(scene.add.image(10 + (h * 6), 16, 'sprite-hud', 10).setOrigin(1, 0).setScrollFactor(0));
+            scene.lifeBarImages.push(scene.add.image(10 + (h * 6), 13, 'sprite-hud', 10).setOrigin(1, 0).setScrollFactor(0));
         }    
     }
     static setFinalCounter = (scene, settingsReference) => {
         let scoreSetting = settingsReference.get('settingScoreSet');
-        let leftCounter = 40;
-        let rightCounter = 44;
+        let leftCounter = 28;
+        let rightCounter = 32;
         let totalCount = 0;
         scene.countImages = [];
         for (let i = 0; i < 5; i++) {
@@ -83,8 +83,8 @@ export default class UIs {
                 leftScore = scoreSetting[i] - rightScore;
                 totalCount = totalCount + scoreSetting[i];
             }
-            scene.countImages.push(scene.add.image(leftCounter, 21, 'sprite-hud', (leftScore <= 0 ? 20 : (leftScore / 10) + 20)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
-            scene.countImages.push(scene.add.image(rightCounter, 21, 'sprite-hud', (20 + rightScore)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(leftCounter, 33, 'sprite-hud', (leftScore <= 0 ? 20 : (leftScore / 10) + 20)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(rightCounter, 33, 'sprite-hud', (20 + rightScore)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
             leftCounter = leftCounter + 12;
             rightCounter = rightCounter + 12;
         }
@@ -96,20 +96,20 @@ export default class UIs {
         } else {
             let rightTotal = totalCount % 10;
             let leftTotal = totalCount - rightTotal;
-            scene.countImages.push(scene.add.image(64, 38, 'sprite-hud', (leftTotal <= 0 ? 20 : (leftTotal / 10) + 20)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
-            scene.countImages.push(scene.add.image(68, 38, 'sprite-hud', (20 + rightTotal)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(52, 50, 'sprite-hud', (leftTotal <= 0 ? 20 : (leftTotal / 10) + 20)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
+            scene.countImages.push(scene.add.image(56, 50, 'sprite-hud', (20 + rightTotal)).setOrigin(1, 0).setScrollFactor(0).setDepth(101));
         }
     }
     static setAudioStatus = (scene, settings) => {
         if (settings.get('settingAudioActive') === undefined) {
             settings.set('settingAudioActive', true);
-            scene.audioBar = scene.add.image(10, 53, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+            scene.audioBar = scene.add.image(80, 6, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
             scene.sound.volume = 1;
         } else if (settings.get('settingAudioActive') === false) {
-            scene.audioBar = scene.add.image(10, 53, 'sprite-hud', 15).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+            scene.audioBar = scene.add.image(80, 6, 'sprite-hud', 15).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
             scene.sound.volume = 0;
         } else {
-            scene.audioBar = scene.add.image(10, 53, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+            scene.audioBar = scene.add.image(80, 6, 'sprite-hud', 14).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
             scene.sound.volume = 1;
         }
     }
@@ -146,9 +146,9 @@ export default class UIs {
     }
     static setScreenStatus = (scene, screenGame) => {
         if (screenGame.scale.isFullscreen) {
-            scene.screenBar = scene.add.image(10, 62, 'sprite-hud', 30).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+            scene.screenBar = scene.add.image(90, 6, 'sprite-hud', 30).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
         } else {
-            scene.screenBar = scene.add.image(10, 62, 'sprite-hud', 31).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+            scene.screenBar = scene.add.image(90, 6, 'sprite-hud', 31).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
         }
     }
     static setScreenBar = (scene, screenBarReference, screenGame) => {
@@ -166,16 +166,16 @@ export default class UIs {
     }
     static setTitleResource = (scene) => {
         const centerX = scene.cameras.main.width / 2;
-        scene.titleBanner = scene.add.image(centerX, 10, "image-title").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
-        scene.buttonPlay = scene.add.image(centerX, 43, "image-playbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
-        scene.buttonGuide = scene.add.image(centerX, 53, "image-guidebutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+        scene.titleBanner = scene.add.image(centerX, 26, "image-title").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+        scene.buttonPlay = scene.add.image(centerX, 59, "image-playbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+        scene.buttonGuide = scene.add.image(centerX, 69, "image-guidebutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
     }
     static setGuideResource = (scene, runGuideInit) => {
         const centerX = scene.cameras.main.width / 2;
         if (runGuideInit === true) {
-            scene.slideBanner1 = scene.add.image(centerX, 22, "image-slide1").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
-            scene.slideBanner2 = scene.add.image(centerX, 22, "image-slide2").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
-            scene.slideBanner3 = scene.add.image(centerX, 22, "image-slide3").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+            scene.slideBanner1 = scene.add.image(centerX, 34, "image-slide1").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+            scene.slideBanner2 = scene.add.image(centerX, 34, "image-slide2").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+            scene.slideBanner3 = scene.add.image(centerX, 34, "image-slide3").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
         }
         switch(scene.slideCount) {
             case 3:
@@ -203,7 +203,7 @@ export default class UIs {
     }
     static setBannerResource = (scene) => {
         const centerX = scene.cameras.main.width / 2;
-        scene.screenBanner = scene.add.image(centerX, 10, "image-banner").setOrigin(0.5, 0).setScrollFactor(0);
+        scene.screenBanner = scene.add.image(centerX, 22, "image-banner").setOrigin(0.5, 0).setScrollFactor(0);
     }
     static setBannerWording = (scene, title, yindex) => {
         const centerX = scene.cameras.main.width / 2;
@@ -211,10 +211,10 @@ export default class UIs {
     }
     static setBackResource = (scene, addNextAndPrev) => {
         const centerX = scene.cameras.main.width / 2;
-        scene.buttonBack = scene.add.image(centerX, 53, "image-backbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+        scene.buttonBack = scene.add.image(centerX, 65, "image-backbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
         if (addNextAndPrev === true) {
-            scene.buttonNext = scene.add.image(centerX + 30, 53, "image-nextbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
-            scene.buttonPrev = scene.add.image(centerX - 30, 53, "image-prevbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+            scene.buttonNext = scene.add.image(centerX + 30, 65, "image-nextbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
+            scene.buttonPrev = scene.add.image(centerX - 30, 65, "image-prevbutton").setOrigin(0.5, 0).setScrollFactor(0).setDepth(100);
         }
     }
     static setButtonInput = (scene, buttonReference, stopKey, startKey) => {
