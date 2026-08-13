@@ -1,66 +1,97 @@
-# 🧁 Bounce Mallow
+# Bounce Mallow
 
-A fast-paced cyberpunk arcade platformer where you control a tiny marshmallow navigating an auto-scrolling sci-fi world.
+An endless procedural platformer HTML5 game. Control a tiny marshmallow character as it bounces through an ever-changing world of platforms, spikes, enemies, and gaps.
 
-## How to Play
+![Bounce Mallow](https://img.shields.io/badge/HTML5-Green) ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000)
 
-Open `index.html` in any modern web browser. No installation or server required.
+## Gameplay
+
+- The player character moves automatically to the right
+- **Jump** to avoid obstacles, cross gaps, and climb platforms
+- **Score** is determined by the distance travelled
+- Avoid **spikes**, **spike bugs**, and **gaps** in the ground
+- Fall off a ledge and the game ends!
 
 ## Controls
 
-- **Keyboard**: Press `Space` or `Enter` to jump
-- **Mobile**: Tap or click the screen to jump
-- **Double Jump**: Press again mid-air for an extra boost
+| Action | Keyboard | Mobile |
+|--------|----------|--------|
+| Start / Jump | `Space` / `Enter` | Tap screen |
+| Pause | `ESC` | Not available |
 
-## Objective
+## How to Play
 
-The camera moves automatically through a procedurally generated cyberpunk landscape. Your only job is to **jump** — timing is everything!
-
-- Collect **flash cards** scattered throughout the level
-- Each card has a unique **shape** and **color**
-- Collect matching **pairs** of cards to score points
-- Avoid **spikes**, **enemies**, and **cliffs**
-- Survive as long as possible and find all matching pairs!
+1. Open `index.html` in any modern web browser
+2. On the title screen, press `Space`, `Enter`, or tap the screen
+3. Wait for the 3-second countdown
+4. Jump over obstacles and across gaps
+5. Survive as long as possible to get a high score!
 
 ## Game States
 
-1. **Title Screen** — Press any key, click, or tap to start
-2. **Countdown** — 3-second prep before the camera begins moving
-3. **Gameplay** — Jump, collect cards, avoid hazards
-4. **Game Over** — Hit a spike, enemy, or fall off a ledge
-5. **Victory** — All card pairs collected
-
-## Color Palette
-
-Built entirely with the **Arne16** color scheme:
-
-| Color | Hex | Color | Hex |
-|-------|------|-------|------|
-| Black | #000000 | Gray | #9D9D9D |
-| White | #FFFFFF | Red | #BE2633 |
-| Pink | #E06F8B | Brown | #493C2B |
-| Dark Orange | #A46422 | Orange | #EB8931 |
-| Yellow | #F7E26B | Dark Teal | #2F484E |
-| Green | #44891A | Lime | #A3CE27 |
-| Dark Blue | #1B2632 | Blue | #005784 |
-| Light Blue | #31A2F2 | Cyan | #B2DCEF |
+- **Title Screen** — Welcome screen with game title and instructions
+- **Countdown** — 3-second countdown before gameplay begins
+- **Playing** — Main game loop with procedural generation
+- **Paused** — Pause menu (press ESC) with quit option
+- **Game Over** — Final score display with option to replay
 
 ## Features
 
-- Procedurally generated levels
-- Cyberpunk neon aesthetics
-- Marshmallow character with personality
-- Card matching mini-game within the platformer
-- Mobile-friendly responsive design
-- Square canvas that auto-scales to fit any screen
-- Smooth 60fps gameplay
+- ✅ Endless procedural level generation with chunk-based system
+- ✅ Smooth camera following the player
+- ✅ Marshmallow character with personality (eyes looking right)
+- ✅ Multiple obstacle types: spikes, patrol enemies, gaps
+- ✅ Balanced difficulty progression
+- ✅ Arne16 limited color palette (16 colors only)
+- ✅ Square canvas that scales to fit any browser window
+- ✅ Mobile-friendly touch controls
+- ✅ Distance-based scoring system
+- ✅ No external dependencies
 
-## Files
+## Color Palette
 
-- `index.html` — Main HTML file with canvas and UI
-- `game.js` — Complete game logic and rendering
-- `README.md` — This file
+The game uses the **Arne16** 16-color palette exclusively:
+
+| Color | Hex | Usage |
+|-------|-----|-------|
+| Black | `#000000` | Eyes, text, outlines |
+| Gray | `#9D9D9D` | UI elements |
+| White | `#FFFFFF` | Spikes, marshmallow body, clouds |
+| Red | `#BE2633` | Enemies, danger elements |
+| Pink | `#E06F8B` | Accents |
+| Dark Brown | `#493C2B` | Ground, platforms |
+| Brown | `#A46422` | Platform details |
+| Orange | `#EB8931` | UI accents |
+| Yellow | `#F7E26B` | Score, stars |
+| Dark Teal | `#2F484E` | Background elements |
+| Green | `#44891A` | Decorations |
+| Lime | `#A3CE27` | Decorations |
+| Dark Blue | `#1B2632` | Sky background |
+| Blue | `#005784` | Sky gradient |
+| Light Blue | `#31A2F2` | Sky details |
+| Sky Blue | `#B2DCEF` | Clouds, sky highlights |
+
+## Technical Details
+
+- **Canvas**: Square aspect ratio (800×800), auto-scales to viewport
+- **Frame Rate**: 60 FPS target
+- **Physics**: Custom gravity and collision system
+- **Generation**: Chunk-based procedural generation with cleanup
+- **Collision**: AABB bounding box detection
+
+## File Structure
+
+```
+bmallow/
+├── README.md    # This file
+├── index.html   # Main HTML entry point
+└── game.js      # Complete game logic
+```
+
+## Browser Support
+
+Works in all modern browsers: Chrome, Firefox, Safari, Edge, and mobile browsers.
 
 ---
 
-Made with ❤️ and marshmallows.
+Made with ❤️ using vanilla HTML5 Canvas and JavaScript.
