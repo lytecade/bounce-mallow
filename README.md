@@ -1,97 +1,75 @@
 # Bounce Mallow
 
-An endless procedural platformer HTML5 game. Control a tiny marshmallow character as it bounces through an ever-changing world of platforms, spikes, enemies, and gaps.
-
-![Bounce Mallow](https://img.shields.io/badge/HTML5-Green) ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000)
-
-## Gameplay
-
-- The player character moves automatically to the right
-- **Jump** to avoid obstacles, cross gaps, and climb platforms
-- **Score** is determined by the distance travelled
-- Avoid **spikes**, **spike bugs**, and **gaps** in the ground
-- Fall off a ledge and the game ends!
+An endless procedural auto-runner platformer built with plain HTML5 Canvas + vanilla JavaScript. You are a small marshmallow. You run. The only thing you can do is **jump**.  Avoid white spikes and patrolling spike bugs, don't fall in the gaps, and see how far you can go.
 
 ## Controls
 
-| Action | Keyboard | Mobile |
-|--------|----------|--------|
-| Start / Jump | `Space` / `Enter` | Tap screen |
-| Pause | `ESC` | Not available |
+| Action            | Keyboard            | Mobile            |
+| ----------------- | ------------------- | ----------------- |
+| Jump              | `Enter` or `Space`  | Tap / click       |
+| Pause             | `Esc`               | ⏸ button (top right) |
+| Resume (paused)   | `Esc` / `Enter`     | RESUME button     |
+| Quit to title (paused) | `Q`           | QUIT button       |
+| Start / play again | `Enter` / `Space`  | Tap / click       |
 
-## How to Play
+That's the whole control scheme — one button. Timing is everything.
 
-1. Open `index.html` in any modern web browser
-2. On the title screen, press `Space`, `Enter`, or tap the screen
-3. Wait for the 3-second countdown
-4. Jump over obstacles and across gaps
-5. Survive as long as possible to get a high score!
+## Gameplay
 
-## Game States
+- **Title screen** → press a key or tap to start.
+- **3-2-1 countdown** → then Mallow starts running to the right automatically
+  and the camera follows.
+- **Score** = distance travelled in meters, shown top-left during play and on
+  the Game Over screen. Your best score is saved locally.
+- **Death** by touching white spikes, a spike bug, or falling out of view
+  (missed gap / ledge) → Game Over screen with final + best score and
+  play-again.
+- **Pause** any time with `Esc` (or the on-screen button on mobile) — resume
+  or quit back to the title.
 
-- **Title Screen** — Welcome screen with game title and instructions
-- **Countdown** — 3-second countdown before gameplay begins
-- **Playing** — Main game loop with procedural generation
-- **Paused** — Pause menu (press ESC) with quit option
-- **Game Over** — Final score display with option to replay
+### The World
 
-## Features
+The level is never predefined. It is generated in chunks ahead of the camera:
 
-- ✅ Endless procedural level generation with chunk-based system
-- ✅ Smooth camera following the player
-- ✅ Marshmallow character with personality (eyes looking right)
-- ✅ Multiple obstacle types: spikes, patrol enemies, gaps
-- ✅ Balanced difficulty progression
-- ✅ Arne16 limited color palette (16 colors only)
-- ✅ Square canvas that scales to fit any browser window
-- ✅ Mobile-friendly touch controls
-- ✅ Distance-based scoring system
-- ✅ No external dependencies
+- Ground runs with **gaps** to jump across,
+- **White spike** clusters on the ground,
+- **Spike bugs** that patrol back and forth along the ground,
+- **Floating one-way platforms** you can hop up and climb over.
 
-## Color Palette
+Chunks behind the player are discarded as soon as they scroll off screen.
+Difficulty scales with distance: the run gets faster, gaps get wider, and
+there are more spikes and faster bugs. Generation includes playability
+guarantees — a safe flat opening, minimum spacing between hazards, spike-free
+landing zones after gaps, and bugs never patrol over spikes.
 
-The game uses the **Arne16** 16-color palette exclusively:
+## Technical notes
 
-| Color | Hex | Usage |
-|-------|-----|-------|
-| Black | `#000000` | Eyes, text, outlines |
-| Gray | `#9D9D9D` | UI elements |
-| White | `#FFFFFF` | Spikes, marshmallow body, clouds |
-| Red | `#BE2633` | Enemies, danger elements |
-| Pink | `#E06F8B` | Accents |
-| Dark Brown | `#493C2B` | Ground, platforms |
-| Brown | `#A46422` | Platform details |
-| Orange | `#EB8931` | UI accents |
-| Yellow | `#F7E26B` | Score, stars |
-| Dark Teal | `#2F484E` | Background elements |
-| Green | `#44891A` | Decorations |
-| Lime | `#A3CE27` | Decorations |
-| Dark Blue | `#1B2632` | Sky background |
-| Blue | `#005784` | Sky gradient |
-| Light Blue | `#31A2F2` | Sky details |
-| Sky Blue | `#B2DCEF` | Clouds, sky highlights |
+- **Files:** `index.html` (shell + CSS), `game.js` (everything else).
+- **Canvas:** logical 640×640 square, internal resolution scaled by
+  `devicePixelRatio` (capped at 3) for crisp graphics; CSS size is the largest
+  square that fits the viewport, re-fitted on resize.
+- **Palette:** strictly the 16 colors of the Arne16 scheme
+  (`#000000 #9D9D9D #FFFFFF #BE2633 #E06F8B #493C2B #A46422 #EB8931 #F7E26B
+  #2F484E #44891A #A3CE27 #1B2632 #005784 #31A2F2 #B2DCEF`).
+- **Game loop:** `requestAnimationFrame` with clamped delta time; physics runs
+  in fixed sub-steps for stable collision.
+- **Player:** grounded-state check prevents double/infinite jumping; a short
+  coyote time + jump buffer make jumps feel fair. Squash-and-stretch on
+  jump/land, X-eyes on death.
+- **States:** TITLE → COUNTDOWN → PLAYING → (PAUSED) → GAMEOVER → restart.
+- **Audio:** tiny WebAudio beeps (jump, land, countdown tick, go, death) —
+  the `AudioContext` is created lazily on the first user gesture, all wrapped
+  in try/catch.
+- **Storage:** best score in `localStorage` (guarded; falls back gracefully).
+- **Input:** pointer events (tap/click) + keyboard; touch scrolling/zoom
+  prevented on the page.
 
-## Technical Details
+## Balance
 
-- **Canvas**: Square aspect ratio (800×800), auto-scales to viewport
-- **Frame Rate**: 60 FPS target
-- **Physics**: Custom gravity and collision system
-- **Generation**: Chunk-based procedural generation with cleanup
-- **Collision**: AABB bounding box detection
+Tuned so it is challenging but not impossible:
 
-## File Structure
-
-```
-bmallow/
-├── README.md    # This file
-├── index.html   # Main HTML entry point
-└── game.js      # Complete game logic
-```
-
-## Browser Support
-
-Works in all modern browsers: Chrome, Firefox, Safari, Edge, and mobile browsers.
-
----
-
-Made with ❤️ using vanilla HTML5 Canvas and JavaScript.
+- Base run speed 260 px/s, ramping to 420 px/s (≈ 500 m).
+- Gap width scales 90 → 150 px (a full jump covers ≈ 200–300 px).
+- Hazard spacing, landing zones, and bug patrol bounds are constrained so no
+  generated pattern is unjumpable.
+- Player and hazard hitboxes are slightly inset — forgiving but fair.
