@@ -1,34 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Bounce Mallow</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #1B2632;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            touch-action: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-        canvas {
-            display: block;
-            image-rendering: pixelated;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Bounce Mallow</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #1B2632;
+      overflow: hidden;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    #wrap {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #game {
+      display: block;
+      background: #1B2632;
+      image-rendering: auto;
+    }
+  </style>
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
-    <script src="game.js"></script>
+  <div id="wrap">
+    <canvas id="game" width="640" height="640">Your browser does not support HTML5 canvas.</canvas>
+  </div>
+  <noscript>
+    <div style="color:#FFFFFF; font-family:sans-serif; text-align:center; padding:2rem;">
+      Bounce Mallow requires JavaScript to run.
+    </div>
+  </noscript>
+  <script src="game.js"></script>
 </body>
 </html>
