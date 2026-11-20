@@ -36,6 +36,10 @@ The level is never predefined. It is generated in chunks ahead of the camera:
 - **Armored spike bugs** that patrol safely along spike-free ground runs,
 - **Floating rocky one-way platforms** placed at guaranteed reachable heights
   you can hop up onto and climb over,
+- **Rare speed powerups** that appear occasionally along safe ground or
+  platforms — an **Espresso Cup** that doubles your base run speed (making
+  Mallow super energetic) and a **Chamomile Flower** that halves your base run
+  speed (making Mallow very sleepy). Effects are temporary and non-stackable,
 - Layered **snow-capped alpine peaks**, **drifting clouds**, and **evergreen
   conifer ridges** scrolling with parallax in the background.
 
@@ -44,7 +48,8 @@ Difficulty scales with distance: the run gets faster, gaps get wider, and
 there are more spikes and faster bugs. Generation includes playability
 guarantees — safe flat opening chunks, guaranteed jump-reachable floating rock
 platforms with spike-free takeoff zones, spike-free landing zones after gaps,
-and bugs confined to spike-free single ground runs.
+bugs confined to spike-free single ground runs, and rare spaced-out powerups
+placed clear of spikes.
 
 ## Technical notes
 
@@ -56,13 +61,14 @@ and bugs confined to spike-free single ground runs.
 - **Game loop:** `requestAnimationFrame` with clamped delta time; physics runs
   in fixed sub-steps for stable collision.
 - **Player:** animated hopping feet, spring-damped squash-and-stretch, velocity
-  tilt, natural blinking, dust/stone particles, and dizzy stars / X-eyes on
-  death; grounded-state check prevents double/infinite jumping while coyote time
-  and jump buffering keep jumps responsive.
+  tilt, natural blinking, dust/stone particles, dedicated energetic (espresso)
+  and sleepy (chamomile) animations with speed trails/floating Zzzs, and dizzy
+  stars / X-eyes on death; grounded-state check prevents double/infinite jumping
+  while coyote time and jump buffering keep jumps responsive.
 - **States:** TITLE → COUNTDOWN → PLAYING → (PAUSED) → GAMEOVER → restart.
-- **Audio:** tiny WebAudio beeps (jump, land, countdown tick, go, death) —
-  the `AudioContext` is created lazily on the first user gesture, all wrapped
-  in try/catch.
+- **Audio:** tiny WebAudio beeps (jump, land, countdown tick, go, espresso,
+  chamomile, death) — the `AudioContext` is created lazily on the first user
+  gesture, all wrapped in try/catch.
 - **Storage:** best score in `localStorage` (guarded; falls back gracefully).
 - **Input:** pointer events (tap/click) + keyboard; touch scrolling/zoom
   prevented on the page.
@@ -72,6 +78,10 @@ and bugs confined to spike-free single ground runs.
 Tuned so it is challenging but fair:
 
 - Base run speed 260 px/s, ramping to 420 px/s (≈ 300 m).
+- Speed powerups (non-stackable, 6.0 s duration): **Espresso Cup** sets speed
+  to `2×` base speed; **Chamomile Flower** sets speed to `0.5×` base speed.
+  Powerups spawn rarely (14% chance per eligible chunk with at least a 2-chunk
+  cooldown between spawns) so pace changes stay exciting without chaos.
 - Gap width scales 90 → 150 px (a full jump covers ≈ 200–300 px).
 - Floating rocky platforms sit 66–96 px above ground (safely below the ~120 px
   jump apex) with clear takeoff clearance and one-way top collision.

@@ -82,6 +82,22 @@ const PAL = {
   blue:        '#31A2F2',
   red:         '#C92A3B',
   gray:        '#B8C4D0',
+
+  // Powerups (Espresso & Chamomile)
+  espressoCup:    '#FFF7EC',
+  espressoShade:  '#D9C7B4',
+  espressoCoffee: '#4A2511',
+  espressoCrema:  '#C97B36',
+  espressoBand:   '#D95338',
+  espressoGlow:   '#FFCC33',
+  espressoSpark:  '#FFF07C',
+  chamomilePetal: '#FFFDF4',
+  chamomileShade: '#E3E6D8',
+  chamomileCore:  '#F6C93B',
+  chamomileCoreDk:'#D4941A',
+  chamomileStem:  '#5BA832',
+  chamomileGlow:  '#B8A8F8',
+  chamomileSleep: '#7B68D6',
 };
 
 // ---------------------------------------------------------------------------
@@ -117,6 +133,15 @@ const TIME_TO_APEX = -JUMP_VEL / GRAVITY;                   // ~0.3765 s
 const PLAT_H = 22;
 const MIN_PLAT_HEIGHT = 66;
 const MAX_PLAT_HEIGHT = Math.floor(MAX_JUMP_APEX - 24);     // 96 px
+
+// Powerups (non-stackable speed modifiers)
+const POWERUP_TYPE = { ESPRESSO: 'espresso', CHAMOMILE: 'chamomile' };
+const POWERUP_DURATION = 6.0;
+const POWERUP_ESPRESSO_MULT = 2.0;
+const POWERUP_CHAMOMILE_MULT = 0.5;
+const POWERUP_SIZE = 32;
+const POWERUP_CHANCE = 0.14;
+const POWERUP_MIN_CHUNK_GAP = 2;
 
 // ---------------------------------------------------------------------------
 // Responsive canvas / viewport
@@ -166,7 +191,32 @@ const player = {
   deathCause: '',
   deathT: 0,
   dead: false,
+  powerup: null,
+  powerupTimer: 0,
+  powerupDuration: POWERUP_DURATION,
+  powerupAnimT: 0,
+  powerupBurstT: 0,
+  speedMult: 1,
+  fxTimer: 0,
 };
+
+const playerTrail = [];
+let trailSampleTimer = 0;
+
+const popups = [];
+
+function spawnPopup(x, y, text, color) {
+  popups.push({ x, y, text, color, life: 1.05, maxLife: 1.05 });
+}
+
+function updatePopups(dt) {
+  for (let i = popups.length - 1; i >= 0; i--) {
+    const p = popups[i];
+    p.life -= dt;
+    p.y -= 36 * dt;
+    if (p.life <= 0) popups.splice(i, 1);
+  }
+}
 
 const particles = [];
 const MAX_PARTICLES = 90;
@@ -292,6 +342,7 @@ function newWorld() {
     seed: Math.floor(Math.random() * 1e9),
     chunks: [],
     nextX: -CHUNK_W * 3,
+    chunksSincePowerup: 1,
   };
   // Opening safe flat chunks spanning left of START_X for ultra-wide viewports
   for (let i = 0; i < 5; i++) addChunk(true);
@@ -326,15 +377,16 @@ function subtractInterval(intervals, cutA, cutB) {
   return next;
 }
 
-function buildChunk(x, d, safe) {
+function buildChunk(x, d, safe, allowPowerup = true) {
   const solids = [];
   const platforms = [];
   const spikes = [];
   const bugs = [];
+  const powerups = [];
 
   if (safe) {
     solids.push({ x, y: GROUND_Y, w: CHUNK_W, h: GROUND_SOLID_H, oneWay: false });
-    return { x, w: CHUNK_W, solids, platforms, spikes, bugs };
+    return { x, w: CHUNK_W, solids, platforms, spikes, bugs, powerups };
   }
 
   const maxGap = 95 + 55 * d;
@@ -478,12 +530,73 @@ function buildChunk(x, d, safe) {
     }
   }
 
-  return { x, w: CHUNK_W, solids, platforms, spikes, bugs };
+  // Rare speed powerups (Espresso Cup or Chamomile Flower) placed clear of spikes
+  if (allowPowerup && Math.random() < POWERUP_CHANCE) {
+    const type = Math.random() < 0.5 ? POWERUP_TYPE.ESPRESSO : POWERUP_TYPE.CHAMOMILE;
+    let itemX = null;
+    let itemY = null;
+
+    if (platforms.length > 0 && Math.random() < 0.40) {
+      const plat = platforms[0];
+      itemX = plat.x + plat.w * 0.5 - POWERUP_SIZE * 0.5;
+      itemY = plat.y - POWERUP_SIZE - 12;
+    } else {
+      const spikeFree = [];
+      for (const seg of solids) {
+        if (seg.w < POWERUP_SIZE + 84) continue;
+        let intervals = [[seg.x + 38, seg.x + seg.w - 38]];
+        for (const sp of spikes) {
+          intervals = subtractInterval(intervals, sp.x - 36, sp.x + sp.w + 36);
+        }
+        for (const iv of intervals) {
+          if (iv[1] - iv[0] >= POWERUP_SIZE + 8) spikeFree.push(iv);
+        }
+      }
+
+      const bugAndSpikeFree = [];
+      for (const iv of spikeFree) {
+        let safeIvs = [iv];
+        for (const b of bugs) {
+          safeIvs = subtractInterval(safeIvs, b.minX - 18, b.maxX + b.w + 18);
+        }
+        for (const siv of safeIvs) {
+          if (siv[1] - siv[0] >= POWERUP_SIZE + 8) bugAndSpikeFree.push(siv);
+        }
+      }
+
+      const candidates = bugAndSpikeFree.length > 0 ? bugAndSpikeFree : spikeFree;
+      if (candidates.length > 0) {
+        const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+        const minX = chosen[0];
+        const maxX = chosen[1] - POWERUP_SIZE;
+        itemX = minX + Math.random() * Math.max(0, maxX - minX);
+        itemY = GROUND_Y - POWERUP_SIZE - 12;
+      }
+    }
+
+    if (itemX !== null && itemY !== null) {
+      powerups.push({
+        type,
+        x: itemX,
+        y: itemY,
+        w: POWERUP_SIZE,
+        h: POWERUP_SIZE,
+        collected: false,
+        phase: Math.random() * Math.PI * 2,
+      });
+    }
+  }
+
+  return { x, w: CHUNK_W, solids, platforms, spikes, bugs, powerups };
 }
 
 function addChunk(safe) {
   const d = difficulty();
-  const chunk = buildChunk(world.nextX, d, safe);
+  const allowPowerup = !safe && world.chunksSincePowerup >= POWERUP_MIN_CHUNK_GAP;
+  const chunk = buildChunk(world.nextX, d, safe, allowPowerup);
+  if (!safe) {
+    world.chunksSincePowerup = chunk.powerups.length > 0 ? 0 : world.chunksSincePowerup + 1;
+  }
   world.nextX = chunk.x + chunk.w;
   world.chunks.push(chunk);
 }
@@ -512,10 +625,10 @@ function initAudio() {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   } catch (e) { audioCtx = null; }
 }
-function beep(freq, dur, type, vol, slide) {
+function beep(freq, dur, type, vol, slide, delay) {
   if (!audioCtx) return;
   try {
-    const t = audioCtx.currentTime;
+    const t = audioCtx.currentTime + (delay || 0);
     const o = audioCtx.createOscillator();
     const g = audioCtx.createGain();
     o.type = type || 'square';
@@ -535,6 +648,16 @@ const sfx = {
   go()    { beep(760, 0.18, 'square', 0.10, 200); },
   die()   { beep(300, 0.5, 'sawtooth', 0.12, -250); },
   start() { beep(440, 0.12, 'triangle', 0.10, 220); },
+  espresso() {
+    beep(520, 0.08, 'square', 0.08, 180, 0);
+    beep(700, 0.08, 'square', 0.08, 220, 0.06);
+    beep(940, 0.12, 'triangle', 0.10, 260, 0.12);
+  },
+  chamomile() {
+    beep(460, 0.16, 'sine', 0.09, -40, 0);
+    beep(370, 0.18, 'sine', 0.08, -35, 0.11);
+    beep(295, 0.24, 'sine', 0.08, -25, 0.22);
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -554,15 +677,83 @@ function saveBest(v) {
 // ---------------------------------------------------------------------------
 let lastCount = 4;
 
+function resetPlayerPowerup() {
+  player.powerup = null;
+  player.powerupTimer = 0;
+  player.powerupDuration = POWERUP_DURATION;
+  player.powerupAnimT = 0;
+  player.powerupBurstT = 0;
+  player.speedMult = 1;
+  player.fxTimer = 0;
+  playerTrail.length = 0;
+  trailSampleTimer = 0;
+}
+
+function applyPowerup(type, cx, cy) {
+  player.powerup = type;
+  player.powerupTimer = POWERUP_DURATION;
+  player.powerupDuration = POWERUP_DURATION;
+  player.powerupBurstT = 0.65;
+  player.fxTimer = 0;
+
+  if (type === POWERUP_TYPE.ESPRESSO) {
+    player.speedMult = POWERUP_ESPRESSO_MULT;
+    player.squash = 1.28;
+    player.squashVel = 0;
+    player.blinkDur = 0;
+    spawnParticles(cx, cy, 18, {
+      colors: [PAL.espressoGlow, PAL.espressoSpark, PAL.espressoBand, PAL.white],
+      angleMin: -Math.PI,
+      angleMax: Math.PI,
+      speedMin: 70,
+      speedMax: 210,
+      rMin: 2.2,
+      rMax: 4.5,
+      lifeMin: 0.25,
+      lifeMax: 0.50,
+      gravity: 160,
+      square: true,
+    });
+    spawnPopup(cx, cy - 12, 'ESPRESSO! 2x', PAL.espressoGlow);
+    sfx.espresso();
+  } else {
+    player.speedMult = POWERUP_CHAMOMILE_MULT;
+    player.squash = 0.78;
+    player.squashVel = 0;
+    playerTrail.length = 0;
+    spawnParticles(cx, cy, 16, {
+      colors: [PAL.chamomileGlow, PAL.chamomilePetal, PAL.chamomileCore, PAL.white],
+      angleMin: -Math.PI,
+      angleMax: Math.PI,
+      speedMin: 25,
+      speedMax: 95,
+      rMin: 2.2,
+      rMax: 4.2,
+      lifeMin: 0.40,
+      lifeMax: 0.80,
+      gravity: -35,
+    });
+    spawnPopup(cx, cy - 12, 'CHAMOMILE! \u00BDx', PAL.chamomileGlow);
+    sfx.chamomile();
+  }
+
+  const m = Math.max(0, (player.x - START_X) / PX_PER_M);
+  player.vx = speedForDist(m) * player.speedMult;
+}
+
 function toTitle() {
   state = STATE.TITLE;
   stateTime = 0;
   particles.length = 0;
+  popups.length = 0;
+  resetPlayerPowerup();
 }
 
 function startGame() {
   newWorld();
   particles.length = 0;
+  popups.length = 0;
+  resetPlayerPowerup();
   player.x = START_X;
   player.y = GROUND_Y - PLAYER_SIZE;
   player.vx = 0;
@@ -595,6 +786,7 @@ function onGameOver() {
   player.dead = true;
   player.deathT = 0;
   player.squash = 0.78;
+  playerTrail.length = 0;
   state = STATE.GAMEOVER;
   stateTime = 0;
   spawnParticles(player.x + PLAYER_SIZE * 0.5, player.y + PLAYER_SIZE * 0.5, 16, {
@@ -747,8 +939,17 @@ function overlap(a, b) {
 }
 
 function physicsStep(dt) {
+  if (player.powerup !== null) {
+    player.powerupTimer -= dt;
+    player.powerupAnimT += dt;
+    player.powerupBurstT = Math.max(0, player.powerupBurstT - dt);
+    if (player.powerupTimer <= 0) {
+      resetPlayerPowerup();
+    }
+  }
+
   const m = (player.x - START_X) / PX_PER_M;
-  player.vx = speedForDist(m);
+  player.vx = speedForDist(m) * player.speedMult;
   player.x += player.vx * dt;
 
   // Jump (coyote + buffer)
@@ -811,21 +1012,31 @@ function physicsStep(dt) {
   }
 
   // Spring-damped squash/stretch & tilt animation
-  const springForce = (1 - player.squash) * 140;
+  const squashTarget = player.powerup === POWERUP_TYPE.CHAMOMILE ? 0.94 : 1;
+  const springForce = (squashTarget - player.squash) * 140;
   player.squashVel = (player.squashVel + springForce * dt) * Math.exp(-12 * dt);
   player.squash += player.squashVel * dt;
   player.squash = Math.max(0.70, Math.min(1.30, player.squash));
 
-  const targetTilt = player.grounded
+  const baseTilt = player.grounded
     ? 0.06
     : Math.max(-0.18, Math.min(0.20, player.vy * 0.00028));
+  const targetTilt = player.powerup === POWERUP_TYPE.ESPRESSO
+    ? baseTilt + 0.06
+    : player.powerup === POWERUP_TYPE.CHAMOMILE
+      ? baseTilt * 0.45
+      : baseTilt;
   player.tilt += (targetTilt - player.tilt) * Math.min(1, dt * 14);
 
   if (player.grounded) {
-    player.runPhase += dt * (11 + (player.vx - BASE_SPEED) * 0.03);
+    const speedRate = Math.max(4.5, 11 + (player.vx - BASE_SPEED) * 0.03);
+    const phaseMult = player.powerup === POWERUP_TYPE.ESPRESSO ? 1.25
+      : player.powerup === POWERUP_TYPE.CHAMOMILE ? 0.65 : 1;
+    player.runPhase += dt * speedRate * phaseMult;
     player.dustTimer -= dt;
     if (player.dustTimer <= 0) {
-      player.dustTimer = 0.14;
+      player.dustTimer = player.powerup === POWERUP_TYPE.ESPRESSO ? 0.09
+        : player.powerup === POWERUP_TYPE.CHAMOMILE ? 0.22 : 0.14;
       spawnParticles(player.x + 6, player.y + PLAYER_SIZE - 1, 1, {
         colors: [PAL.turfLit, PAL.white],
         angleMin: -Math.PI * 0.92,
@@ -837,6 +1048,58 @@ function physicsStep(dt) {
         lifeMin: 0.18,
         lifeMax: 0.30,
         gravity: 160,
+      });
+    }
+  }
+
+  // Powerup ambient particles & espresso afterimage trail
+  if (player.powerup === POWERUP_TYPE.ESPRESSO) {
+    trailSampleTimer -= dt;
+    if (trailSampleTimer <= 0) {
+      trailSampleTimer = 0.028;
+      playerTrail.push({
+        x: player.x,
+        y: player.y,
+        squash: player.squash,
+        tilt: player.tilt,
+        runPhase: player.runPhase,
+        grounded: player.grounded,
+      });
+      if (playerTrail.length > 4) playerTrail.shift();
+    }
+    player.fxTimer -= dt;
+    if (player.fxTimer <= 0) {
+      player.fxTimer = 0.065;
+      spawnParticles(player.x + PLAYER_SIZE * 0.25, player.y + PLAYER_SIZE * 0.5, 1, {
+        colors: [PAL.espressoGlow, PAL.espressoSpark, PAL.white],
+        angleMin: Math.PI * 0.65,
+        angleMax: Math.PI * 1.35,
+        speedMin: 40,
+        speedMax: 110,
+        rMin: 1.8,
+        rMax: 3.4,
+        lifeMin: 0.14,
+        lifeMax: 0.26,
+        gravity: 40,
+        square: true,
+      });
+    }
+  } else if (player.powerup === POWERUP_TYPE.CHAMOMILE) {
+    player.fxTimer -= dt;
+    if (player.fxTimer <= 0) {
+      player.fxTimer = 0.16;
+      spawnParticles(player.x + PLAYER_SIZE * 0.5, player.y + 4, 1, {
+        colors: [PAL.chamomileGlow, PAL.chamomilePetal, PAL.chamomileCore],
+        angleMin: -Math.PI * 0.8,
+        angleMax: -Math.PI * 0.2,
+        speedMin: 14,
+        speedMax: 34,
+        rMin: 2.0,
+        rMax: 3.6,
+        lifeMin: 0.45,
+        lifeMax: 0.75,
+        gravity: -35,
+        spreadX: 20,
       });
     }
   }
@@ -865,6 +1128,19 @@ function physicsStep(dt) {
         player.deathCause = 'bug';
         onGameOver();
         return;
+      }
+    }
+  }
+
+  // Powerups (generous pickup hitbox; checked after hazards so dead players cannot collect)
+  const pb = { x: player.x + 2, y: player.y + 2, w: PLAYER_SIZE - 4, h: PLAYER_SIZE - 4 };
+  for (const c of world.chunks) {
+    for (const item of c.powerups) {
+      if (item.collected) continue;
+      const ib = { x: item.x - 4, y: item.y - 4, w: item.w + 8, h: item.h + 8 };
+      if (overlap(pb, ib)) {
+        item.collected = true;
+        applyPowerup(item.type, item.x + item.w * 0.5, item.y + item.h * 0.5);
       }
     }
   }
@@ -904,13 +1180,14 @@ function update(dt) {
     }
 
     case STATE.PLAYING: {
-      const steps = 3;
+      const steps = 4;
       const sdt = dt / steps;
       for (let i = 0; i < steps && state === STATE.PLAYING; i++) physicsStep(sdt);
       if (state !== STATE.PLAYING) break;
       updateCamera();
       updateChunks(camX);
       updateBugs(dt);
+      updatePopups(dt);
       break;
     }
 
@@ -920,6 +1197,7 @@ function update(dt) {
     case STATE.GAMEOVER:
       player.deathT += dt;
       player.squash += (0.88 - player.squash) * Math.min(1, dt * 8);
+      updatePopups(dt);
       break;
   }
 }
@@ -1643,6 +1921,270 @@ function drawBug(b) {
   ctx.restore();
 }
 
+function drawEspressoIcon(cx, cy, r) {
+  ctx.save();
+  const lw = Math.max(1.5, r * 0.14);
+
+  // Saucer
+  ctx.fillStyle = PAL.espressoShade;
+  ctx.strokeStyle = PAL.mallowLine;
+  ctx.lineWidth = lw;
+  ctx.beginPath();
+  ctx.ellipse(cx, cy + r * 0.68, r * 0.86, r * 0.22, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  // Cup handle
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = PAL.mallowLine;
+  ctx.lineWidth = Math.max(3, r * 0.32);
+  ctx.beginPath();
+  ctx.arc(cx + r * 0.44, cy + r * 0.14, r * 0.25, -Math.PI * 0.46, Math.PI * 0.46);
+  ctx.stroke();
+  ctx.strokeStyle = PAL.espressoCup;
+  ctx.lineWidth = Math.max(1.4, r * 0.14);
+  ctx.stroke();
+
+  // Tapered ceramic cup body
+  const drawCupPath = () => {
+    ctx.beginPath();
+    ctx.moveTo(cx - r * 0.56, cy - r * 0.30);
+    ctx.lineTo(cx + r * 0.56, cy - r * 0.30);
+    ctx.lineTo(cx + r * 0.38, cy + r * 0.54);
+    ctx.quadraticCurveTo(cx, cy + r * 0.72, cx - r * 0.38, cy + r * 0.54);
+    ctx.closePath();
+  };
+
+  drawCupPath();
+  ctx.fillStyle = PAL.espressoCup;
+  ctx.fill();
+
+  // Terracotta accent stripe + side shading clipped to cup
+  ctx.save();
+  drawCupPath();
+  ctx.clip();
+  ctx.fillStyle = PAL.espressoShade;
+  ctx.fillRect(cx + r * 0.12, cy - r * 0.35, r * 0.55, r * 1.1);
+  ctx.fillStyle = PAL.espressoBand;
+  ctx.fillRect(cx - r * 0.65, cy + r * 0.04, r * 1.3, r * 0.24);
+  ctx.restore();
+
+  drawCupPath();
+  ctx.strokeStyle = PAL.mallowLine;
+  ctx.lineWidth = lw;
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+
+  // Mini energy lightning bolt emblem on front of cup
+  ctx.fillStyle = PAL.espressoGlow;
+  ctx.beginPath();
+  ctx.moveTo(cx + r * 0.05, cy - r * 0.04);
+  ctx.lineTo(cx - r * 0.10, cy + r * 0.18);
+  ctx.lineTo(cx + r * 0.02, cy + r * 0.18);
+  ctx.lineTo(cx - r * 0.06, cy + r * 0.40);
+  ctx.lineTo(cx + r * 0.12, cy + r * 0.13);
+  ctx.lineTo(cx + 0.0, cy + r * 0.13);
+  ctx.closePath();
+  ctx.fill();
+
+  // Coffee surface & golden crema rim
+  ctx.fillStyle = PAL.espressoCoffee;
+  ctx.strokeStyle = PAL.mallowLine;
+  ctx.lineWidth = lw * 0.85;
+  ctx.beginPath();
+  ctx.ellipse(cx, cy - r * 0.30, r * 0.56, r * 0.19, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = PAL.espressoCrema;
+  ctx.beginPath();
+  ctx.ellipse(cx, cy - r * 0.30, r * 0.42, r * 0.12, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = PAL.espressoCup;
+  ctx.beginPath();
+  ctx.ellipse(cx - r * 0.18, cy - r * 0.32, r * 0.12, r * 0.045, -0.2, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawChamomileIcon(cx, cy, r, sway) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  if (sway) ctx.rotate(sway);
+
+  const lw = Math.max(1.3, r * 0.13);
+  const petals = 8;
+  for (let i = 0; i < petals; i++) {
+    ctx.save();
+    ctx.rotate((i * Math.PI * 2) / petals);
+    ctx.fillStyle = PAL.chamomilePetal;
+    ctx.strokeStyle = PAL.mallowLine;
+    ctx.lineWidth = lw;
+    ctx.beginPath();
+    ctx.ellipse(0, -r * 0.62, r * 0.25, r * 0.42, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = PAL.chamomileShade;
+    ctx.beginPath();
+    ctx.ellipse(0, -r * 0.38, r * 0.12, r * 0.16, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Domed golden center
+  ctx.fillStyle = PAL.chamomileCore;
+  ctx.strokeStyle = PAL.mallowLine;
+  ctx.lineWidth = lw;
+  ctx.beginPath();
+  ctx.arc(0, 0, r * 0.36, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(0, 0, r * 0.35, 0, Math.PI * 2);
+  ctx.clip();
+  ctx.fillStyle = PAL.chamomileCoreDk;
+  ctx.beginPath();
+  ctx.arc(r * 0.08, r * 0.12, r * 0.34, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = PAL.chamomileCore;
+  ctx.beginPath();
+  ctx.arc(-r * 0.06, -r * 0.06, r * 0.26, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  ctx.beginPath();
+  ctx.arc(0, 0, r * 0.36, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Tiny pollen speckles
+  ctx.fillStyle = PAL.chamomileCoreDk;
+  for (const [px, py] of [[-0.12, -0.06], [0.10, -0.10], [0.02, 0.10]]) {
+    ctx.beginPath();
+    ctx.arc(r * px, r * py, Math.max(0.8, r * 0.055), 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawEspressoItem(item) {
+  const cx = item.x + item.w * 0.5;
+  const bob = Math.sin(animTime * 4.5 + item.phase) * 3.5;
+  const cy = item.y + item.h * 0.5 + bob;
+  const pulse = 1 + Math.sin(animTime * 6 + item.phase) * 0.08;
+
+  ctx.save();
+  // Warm golden aura
+  ctx.fillStyle = PAL.espressoGlow;
+  ctx.globalAlpha = 0.24 + 0.08 * Math.sin(animTime * 6 + item.phase);
+  ctx.beginPath();
+  ctx.arc(cx, cy, 20 * pulse, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // Animated rising steam wisps
+  ctx.strokeStyle = PAL.white;
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  for (let i = 0; i < 2; i++) {
+    const sx = cx + (i === 0 ? -4.5 : 4.5);
+    const wave = Math.sin(animTime * 6.5 + item.phase + i * 2.1) * 2.5;
+    ctx.globalAlpha = 0.72;
+    ctx.beginPath();
+    ctx.moveTo(sx, cy - 6);
+    ctx.quadraticCurveTo(sx + wave, cy - 12, sx - wave * 0.8, cy - 18);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  drawEspressoIcon(cx, cy + 2, 13.5);
+
+  // Twinkling energetic sparks around cup
+  ctx.fillStyle = PAL.espressoSpark;
+  for (let i = 0; i < 2; i++) {
+    const ang = animTime * 3.2 + item.phase + i * Math.PI;
+    const spx = cx + Math.cos(ang) * 18;
+    const spy = cy + Math.sin(ang * 1.3) * 11 - 2;
+    const sr = 2.0 + Math.sin(animTime * 10 + i) * 0.8;
+    ctx.beginPath();
+    ctx.moveTo(spx, spy - sr * 1.4);
+    ctx.lineTo(spx + sr * 0.9, spy);
+    ctx.lineTo(spx, spy + sr * 1.4);
+    ctx.lineTo(spx - sr * 0.9, spy);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawChamomileItem(item) {
+  const cx = item.x + item.w * 0.5;
+  const bob = Math.sin(animTime * 2.4 + item.phase) * 3.5;
+  const cy = item.y + item.h * 0.5 + bob;
+  const sway = Math.sin(animTime * 2.0 + item.phase) * 0.14;
+  const pulse = 1 + Math.sin(animTime * 3 + item.phase) * 0.06;
+
+  ctx.save();
+  // Dreamy lavender halo
+  ctx.fillStyle = PAL.chamomileGlow;
+  ctx.globalAlpha = 0.24 + 0.08 * Math.sin(animTime * 3 + item.phase);
+  ctx.beginPath();
+  ctx.arc(cx, cy, 20 * pulse, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // Curved green stem + leaves
+  ctx.strokeStyle = PAL.mallowLine;
+  ctx.lineWidth = 4.6;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(cx, cy + 2);
+  ctx.quadraticCurveTo(cx - 2, cy + 11, cx + 1.5, cy + 17);
+  ctx.stroke();
+  ctx.strokeStyle = PAL.chamomileStem;
+  ctx.lineWidth = 2.4;
+  ctx.stroke();
+
+  for (const [lx, ly, ang] of [[cx - 5, cy + 11, -0.55], [cx + 5.5, cy + 12.5, 0.55]]) {
+    ctx.save();
+    ctx.translate(lx, ly);
+    ctx.rotate(ang);
+    ctx.fillStyle = PAL.chamomileStem;
+    ctx.strokeStyle = PAL.mallowLine;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 4.6, 2.3, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  drawChamomileIcon(cx, cy - 3, 12.5, sway);
+
+  // Soft drifting sparkles
+  ctx.fillStyle = PAL.chamomileGlow;
+  for (let i = 0; i < 2; i++) {
+    const t = ((animTime * 0.55 + i * 0.5 + item.phase) % 1);
+    const sx = cx + (i === 0 ? -13 : 13) + Math.sin(t * Math.PI * 2) * 3;
+    const sy = cy + 6 - t * 22;
+    ctx.globalAlpha = Math.sin(t * Math.PI) * 0.85;
+    ctx.beginPath();
+    ctx.arc(sx, sy, 2.1, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawPowerup(item) {
+  if (item.collected) return;
+  if (item.type === POWERUP_TYPE.ESPRESSO) drawEspressoItem(item);
+  else drawChamomileItem(item);
+}
+
 function drawMallow(opts) {
   const x = opts.x;
   const y = opts.y;
@@ -1657,6 +2199,10 @@ function drawMallow(opts) {
   const lookY = opts.lookY ?? 0;
   const mouthOpen = Boolean(opts.mouthOpen);
   const deathT = opts.deathT || 0;
+  const powerup = opts.powerup || null;
+  const pT = opts.powerupAnimT || 0;
+  const isEspresso = !dead && powerup === POWERUP_TYPE.ESPRESSO;
+  const isChamomile = !dead && powerup === POWERUP_TYPE.CHAMOMILE;
 
   const w = size / sq;
   const h = size * sq;
@@ -1665,17 +2211,31 @@ function drawMallow(opts) {
   const px = cx - w * 0.5;
   const py = bottomY - h;
 
+  const effectiveTilt = isEspresso
+    ? tilt + 0.05
+    : isChamomile
+      ? tilt + Math.sin(pT * 2.4) * 0.06 - 0.03
+      : tilt;
+
   ctx.save();
   ctx.translate(cx, bottomY);
-  ctx.rotate(tilt);
+  ctx.rotate(effectiveTilt);
+
+  if (isEspresso) {
+    ctx.translate(Math.sin(pT * 52) * 1.4, Math.cos(pT * 61) * 0.9);
+  } else if (isChamomile) {
+    ctx.translate(0, Math.max(0, Math.sin(pT * 1.9)) * 1.1);
+  }
 
   // Tiny animated hopping feet underneath body
   if (!dead) {
     const footSep = w * 0.24;
-    const lLift = grounded ? Math.max(0, Math.sin(runPhase)) * 4.5 : 3;
-    const rLift = grounded ? Math.max(0, Math.sin(runPhase + Math.PI)) * 4.5 : 4.5;
-    const lShift = grounded ? Math.cos(runPhase) * 3.5 : -2;
-    const rShift = grounded ? Math.cos(runPhase + Math.PI) * 3.5 : 3;
+    const footLiftAmp = isEspresso ? 6.0 : isChamomile ? 2.2 : 4.5;
+    const footShiftAmp = isEspresso ? 4.4 : isChamomile ? 2.1 : 3.5;
+    const lLift = grounded ? Math.max(0, Math.sin(runPhase)) * footLiftAmp : 3;
+    const rLift = grounded ? Math.max(0, Math.sin(runPhase + Math.PI)) * footLiftAmp : 4.5;
+    const lShift = grounded ? Math.cos(runPhase) * footShiftAmp : -2;
+    const rShift = grounded ? Math.cos(runPhase + Math.PI) * footShiftAmp : 3;
 
     ctx.fillStyle = PAL.mallowBot;
     ctx.strokeStyle = PAL.mallowLine;
@@ -1694,6 +2254,23 @@ function drawMallow(opts) {
   const by = -h;
   const rad = Math.min(w, h) * 0.30;
 
+  // Kinetic speed lines behind espresso Mallow
+  if (isEspresso) {
+    ctx.strokeStyle = PAL.espressoSpark;
+    ctx.lineWidth = Math.max(1.8, size * 0.055);
+    ctx.lineCap = 'round';
+    for (let i = 0; i < 3; i++) {
+      const ly = by + h * (0.24 + i * 0.26);
+      const len = 8 + ((i * 5 + Math.floor(pT * 24)) % 9);
+      ctx.globalAlpha = 0.72 - i * 0.12;
+      ctx.beginPath();
+      ctx.moveTo(bx - 4, ly);
+      ctx.lineTo(bx - 4 - len, ly);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
   // Soft marshmallow vertical gradient
   const bodyGrad = ctx.createLinearGradient(0, by, 0, 0);
   bodyGrad.addColorStop(0, PAL.mallowTop);
@@ -1710,6 +2287,15 @@ function drawMallow(opts) {
   ctx.fillStyle = PAL.mallowShade;
   ctx.globalAlpha = 0.55;
   ctx.fillRect(bx, -h * 0.14, w, h * 0.16);
+  if (isEspresso) {
+    ctx.fillStyle = PAL.espressoGlow;
+    ctx.globalAlpha = 0.25;
+    ctx.fillRect(bx, -h * 0.12, w, h * 0.14);
+  } else if (isChamomile) {
+    ctx.fillStyle = PAL.chamomileGlow;
+    ctx.globalAlpha = 0.34;
+    ctx.fillRect(bx, -h * 0.16, w, h * 0.18);
+  }
   ctx.globalAlpha = 1;
 
   // Top-left glossy highlight pill
@@ -1735,7 +2321,7 @@ function drawMallow(opts) {
   const eyeSpread = w * 0.18;
 
   ctx.fillStyle = PAL.mallowBlush;
-  ctx.globalAlpha = 0.65;
+  ctx.globalAlpha = isEspresso ? 0.85 : isChamomile ? 0.50 : 0.65;
   ctx.beginPath();
   ctx.ellipse(eyeCenterX - eyeSpread - size * 0.09, eyeY + size * 0.11, size * 0.08, size * 0.05, 0, 0, Math.PI * 2);
   ctx.ellipse(eyeCenterX + eyeSpread + size * 0.09, eyeY + size * 0.11, size * 0.08, size * 0.05, 0, 0, Math.PI * 2);
@@ -1777,6 +2363,168 @@ function drawMallow(opts) {
       ctx.fill();
       ctx.stroke();
     }
+  } else if (isEspresso) {
+    // Super energetic wired eyes (wide sclera + darting pupils + star catchlights + hyped brows)
+    const scleraR = size * 0.14;
+    const dartX = Math.sin(pT * 29) * (size * 0.025);
+    const dartY = Math.cos(pT * 23) * (size * 0.015);
+    for (const sx of [-eyeSpread, eyeSpread]) {
+      const ex = eyeCenterX + sx;
+      ctx.fillStyle = PAL.white;
+      ctx.strokeStyle = PAL.mallowLine;
+      ctx.lineWidth = Math.max(1.8, size * 0.05);
+      ctx.beginPath();
+      ctx.arc(ex, eyeY, scleraR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = PAL.mallowLine;
+      ctx.beginPath();
+      ctx.arc(ex + dartX, eyeY + dartY, scleraR * 0.50, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Bright star-like catchlight
+      ctx.fillStyle = PAL.white;
+      ctx.beginPath();
+      ctx.arc(ex + dartX + scleraR * 0.22, eyeY + dartY - scleraR * 0.24, scleraR * 0.25, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Hyped raised angled eyebrow
+      const side = sx < 0 ? -1 : 1;
+      ctx.strokeStyle = PAL.mallowLine;
+      ctx.lineWidth = Math.max(1.8, size * 0.05);
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(ex - scleraR * 0.75, eyeY - scleraR * 1.35 + side * 1.2);
+      ctx.lineTo(ex + scleraR * 0.75, eyeY - scleraR * 1.35 - side * 1.2);
+      ctx.stroke();
+    }
+
+    // Wide open excited ':D' grin
+    ctx.fillStyle = PAL.mallowBlush;
+    ctx.strokeStyle = PAL.mallowLine;
+    ctx.lineWidth = Math.max(1.8, size * 0.05);
+    ctx.beginPath();
+    ctx.arc(eyeCenterX, eyeY + size * 0.11, size * 0.105, 0.05, Math.PI - 0.05);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Crackling lightning bolts above Mallow's head
+    for (let i = 0; i < 2; i++) {
+      const side = i === 0 ? -1 : 1;
+      const pulseY = Math.sin(pT * 18 + i * 2.5) * 2.5;
+      const lx = side * (size * 0.26);
+      const ly = by - 5 + pulseY;
+      ctx.fillStyle = PAL.espressoGlow;
+      ctx.strokeStyle = PAL.mallowLine;
+      ctx.lineWidth = 1.4;
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(lx + side * 2, ly - 9);
+      ctx.lineTo(lx - 3, ly - 3);
+      ctx.lineTo(lx + 1, ly - 3);
+      ctx.lineTo(lx - side * 2, ly + 3);
+      ctx.lineTo(lx + 4, ly - 4);
+      ctx.lineTo(lx, ly - 4);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+  } else if (isChamomile) {
+    // Very sleepy heavy-lidded eyes + periodic cute yawn
+    const eyeR = size * 0.105;
+    const droop = 0.56 + 0.20 * Math.sin(pT * 2.2);
+
+    if (blinking) {
+      ctx.strokeStyle = PAL.mallowLine;
+      ctx.lineWidth = Math.max(2.2, size * 0.068);
+      ctx.lineCap = 'round';
+      for (const sx of [-eyeSpread, eyeSpread]) {
+        const ex = eyeCenterX + sx;
+        ctx.beginPath();
+        ctx.moveTo(ex - size * 0.09, eyeY + 1);
+        ctx.quadraticCurveTo(ex, eyeY + size * 0.06, ex + size * 0.09, eyeY + 1);
+        ctx.stroke();
+      }
+    } else {
+      for (const sx of [-eyeSpread, eyeSpread]) {
+        const ex = eyeCenterX + sx;
+        const side = sx < 0 ? -1 : 1;
+        ctx.fillStyle = PAL.mallowLine;
+        ctx.beginPath();
+        ctx.ellipse(ex, eyeY, eyeR * 0.92, eyeR * 1.02, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = PAL.white;
+        ctx.beginPath();
+        ctx.arc(ex + eyeR * 0.22, eyeY + eyeR * 0.25, eyeR * 0.22, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Heavy upper eyelid covering top part of eye
+        const lidBottomY = eyeY - eyeR + eyeR * 2 * droop;
+        ctx.fillStyle = PAL.mallowTop;
+        ctx.beginPath();
+        ctx.rect(ex - eyeR * 1.35, eyeY - eyeR * 1.45, eyeR * 2.7, lidBottomY - (eyeY - eyeR * 1.45));
+        ctx.fill();
+
+        ctx.strokeStyle = PAL.mallowLine;
+        ctx.lineWidth = Math.max(2.1, size * 0.065);
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(ex - eyeR * 1.15, lidBottomY - side * 1.1);
+        ctx.quadraticCurveTo(ex, lidBottomY + 1.2, ex + eyeR * 1.15, lidBottomY + side * 1.1);
+        ctx.stroke();
+      }
+    }
+
+    // Periodic sleepy yawn vs calm little mouth
+    const yawnPhase = pT % 2.8;
+    ctx.strokeStyle = PAL.mallowLine;
+    ctx.lineWidth = Math.max(1.8, size * 0.05);
+    ctx.lineCap = 'round';
+    if (yawnPhase > 1.85) {
+      const yawnOpen = Math.sin(((yawnPhase - 1.85) / 0.95) * Math.PI);
+      ctx.fillStyle = PAL.mallowBlush;
+      ctx.beginPath();
+      ctx.ellipse(
+        eyeCenterX,
+        eyeY + size * 0.16,
+        size * (0.045 + 0.025 * yawnOpen),
+        size * (0.045 + 0.055 * yawnOpen),
+        0,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.arc(eyeCenterX, eyeY + size * 0.14, size * 0.045, 0.2, Math.PI - 0.2);
+      ctx.stroke();
+    }
+
+    // Floating upright 'Z z z' bubbles rising above Mallow
+    ctx.save();
+    ctx.translate(0, by - 4);
+    ctx.rotate(-effectiveTilt);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const labels = ['z', 'Z', 'z'];
+    for (let i = 0; i < 3; i++) {
+      const cycle = (pT * 0.65 + i * 0.33) % 1;
+      const zx = Math.sin(cycle * Math.PI * 2 + i) * 5 + (i - 1) * 6;
+      const zy = -4 - cycle * 26;
+      const fSize = Math.round(9 + cycle * 6);
+      ctx.globalAlpha = Math.sin(cycle * Math.PI) * 0.95;
+      ctx.font = `bold ${fSize}px "Courier New", monospace`;
+      ctx.strokeStyle = PAL.white;
+      ctx.lineWidth = 3;
+      ctx.strokeText(labels[i], zx, zy);
+      ctx.fillStyle = PAL.chamomileSleep;
+      ctx.fillText(labels[i], zx, zy);
+    }
+    ctx.restore();
   } else if (blinking) {
     // Cute closed eyes blink
     ctx.strokeStyle = PAL.mallowLine;
@@ -1853,6 +2601,7 @@ function findShadowSurfaceY(worldX, feetY) {
 function drawPlayer() {
   // Ground contact shadow on surface below player
   const centerX = player.x + PLAYER_SIZE * 0.5;
+  const centerY = player.y + PLAYER_SIZE * 0.5;
   const surfY = findShadowSurfaceY(centerX, player.y + PLAYER_SIZE);
   if (surfY !== null) {
     const dist = Math.max(0, surfY - (player.y + PLAYER_SIZE));
@@ -1866,6 +2615,48 @@ function drawPlayer() {
       ctx.fill();
       ctx.restore();
     }
+  }
+
+  // Dreamy lavender aura behind chamomile Mallow
+  if (!player.dead && player.powerup === POWERUP_TYPE.CHAMOMILE) {
+    ctx.save();
+    ctx.fillStyle = PAL.chamomileGlow;
+    ctx.globalAlpha = 0.20 + 0.06 * Math.sin(player.powerupAnimT * 3);
+    ctx.beginPath();
+    ctx.ellipse(centerX, centerY, PLAYER_SIZE * 0.72, PLAYER_SIZE * 0.66, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Golden speed afterimages behind espresso Mallow
+  if (!player.dead && player.powerup === POWERUP_TYPE.ESPRESSO && playerTrail.length > 0) {
+    for (let i = 0; i < playerTrail.length; i++) {
+      const tr = playerTrail[i];
+      const frac = (i + 1) / (playerTrail.length + 1);
+      ctx.save();
+      ctx.globalAlpha = frac * 0.24;
+      const w = PLAYER_SIZE / tr.squash;
+      const h = PLAYER_SIZE * tr.squash;
+      ctx.translate(tr.x + PLAYER_SIZE * 0.5, tr.y + PLAYER_SIZE);
+      ctx.rotate(tr.tilt);
+      ctx.fillStyle = PAL.espressoGlow;
+      rr(-w * 0.5, -h, w, h, Math.min(w, h) * 0.30);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // Expanding pickup shockwave ring
+  if (!player.dead && player.powerupBurstT > 0 && player.powerup !== null) {
+    const t = 1 - player.powerupBurstT / 0.65;
+    ctx.save();
+    ctx.strokeStyle = player.powerup === POWERUP_TYPE.ESPRESSO ? PAL.espressoGlow : PAL.chamomileGlow;
+    ctx.globalAlpha = (1 - t) * 0.75;
+    ctx.lineWidth = 3 * (1 - t * 0.5);
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, PLAYER_SIZE * (0.55 + t * 0.95), 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
   }
 
   drawMallow({
@@ -1882,6 +2673,8 @@ function drawPlayer() {
     lookX: 2.5,
     lookY: Math.max(-1.8, Math.min(2.0, player.vy * 0.004)),
     mouthOpen: !player.grounded && Math.abs(player.vy) > 130,
+    powerup: player.powerup,
+    powerupAnimT: player.powerupAnimT,
   });
 }
 
@@ -1898,6 +2691,24 @@ function drawParticles() {
       ctx.arc(p.x, p.y, p.r * (0.4 + 0.6 * alpha), 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.restore();
+  }
+}
+
+function drawPopups() {
+  for (const p of popups) {
+    const alpha = Math.max(0, Math.min(1, p.life / p.maxLife));
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.font = 'bold 15px "Courier New", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.strokeStyle = PAL.navy;
+    ctx.lineWidth = 4;
+    ctx.lineJoin = 'round';
+    ctx.strokeText(p.text, p.x, p.y);
+    ctx.fillStyle = p.color;
+    ctx.fillText(p.text, p.x, p.y);
     ctx.restore();
   }
 }
@@ -1921,10 +2732,12 @@ function drawWorld() {
     for (const p of c.platforms) drawRockyPlatform(p);
     for (const sp of c.spikes) drawSpikes(sp);
     for (const b of c.bugs) drawBug(b);
+    for (const item of c.powerups) drawPowerup(item);
   }
 
   drawPlayer();
   drawParticles();
+  drawPopups();
   ctx.restore();
 }
 
@@ -2053,7 +2866,7 @@ function drawTitle() {
   ctx.globalAlpha = pulseAlpha;
   centerTextFit('PRESS ENTER / SPACE  OR  TAP TO START', promptY, maxTextW, 21, 'bold', PAL.white, PAL.navy);
   ctx.restore();
-  centerTextFit('One button: JUMP. Avoid spikes and spike bugs!', promptY + 34, maxTextW, 15, 'bold', PAL.cloudLit, PAL.navy);
+  centerTextFit('One button: JUMP. Catch Espresso (2x) or Chamomile (\u00BDx)!', promptY + 34, maxTextW, 15, 'bold', PAL.cloudLit, PAL.navy);
   if (best > 0) {
     centerTextFit('BEST: ' + best + ' m', promptY + 72, maxTextW, 20, 'bold', PAL.yellow, PAL.navy);
   }
@@ -2082,10 +2895,64 @@ function drawCountdown() {
   centerTextFit('Get ready...', Math.min(view.groundScreenY - 38, view.h * 0.68), view.w - 48, 24, 'bold', PAL.white, PAL.navy);
 }
 
+function drawPowerupPill() {
+  if (player.powerup === null) return;
+  const isEsp = player.powerup === POWERUP_TYPE.ESPRESSO;
+  const label = isEsp ? 'ESPRESSO 2x' : 'CHAMOMILE \u00BDx';
+  const accent = isEsp ? PAL.espressoGlow : PAL.chamomileGlow;
+  const frac = Math.max(0, Math.min(1, player.powerupTimer / player.powerupDuration));
+  const pulse = player.powerupTimer <= 1.0 ? 0.55 + 0.45 * Math.sin(animTime * 16) : 1;
+
+  ctx.save();
+  ctx.globalAlpha = pulse;
+  ctx.font = 'bold 15px "Courier New", monospace';
+  const tw = ctx.measureText(label).width;
+  const px = 14;
+  const py = 64;
+  const pw = Math.ceil(tw + 48);
+  const ph = 36;
+
+  ctx.fillStyle = PAL.navyPanel;
+  ctx.globalAlpha = 0.88 * pulse;
+  rr(px, py, pw, ph, 11);
+  ctx.fill();
+
+  // Shrinking timer bar clipped to pill bottom
+  ctx.save();
+  rr(px, py, pw, ph, 11);
+  ctx.clip();
+  ctx.fillStyle = accent;
+  ctx.globalAlpha = 0.30 * pulse;
+  ctx.fillRect(px, py + ph - 5, pw, 5);
+  ctx.globalAlpha = 0.95 * pulse;
+  ctx.fillRect(px, py + ph - 5, pw * frac, 5);
+  ctx.restore();
+
+  ctx.strokeStyle = accent;
+  ctx.globalAlpha = 0.65 * pulse;
+  ctx.lineWidth = 2;
+  rr(px, py, pw, ph, 11);
+  ctx.stroke();
+
+  ctx.globalAlpha = pulse;
+  if (isEsp) {
+    drawEspressoIcon(px + 20, py + 15, 8.5);
+  } else {
+    drawChamomileIcon(px + 20, py + 16, 8.5, Math.sin(player.powerupAnimT * 2) * 0.1);
+  }
+
+  ctx.fillStyle = PAL.white;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label, px + 36, py + 16);
+  ctx.restore();
+}
+
 function drawPlaying() {
   drawBackdrop(camX);
   drawWorld();
   drawScorePill();
+  drawPowerupPill();
   drawPauseButton();
 }
 
@@ -2215,16 +3082,27 @@ window.__bounceMallowDebug = {
       MIN_PLAT_HEIGHT,
       MAX_PLAT_HEIGHT,
       FALL_DEATH_Y,
+      POWERUP_TYPE,
+      POWERUP_DURATION,
+      POWERUP_ESPRESSO_MULT,
+      POWERUP_CHAMOMILE_MULT,
+      POWERUP_SIZE,
+      POWERUP_CHANCE,
+      POWERUP_MIN_CHUNK_GAP,
     },
   }),
+  speedForDist,
   sampleChunks: (count, distMeters) => {
     const savedPlayerX = player.x;
     player.x = START_X + (distMeters || 0) * PX_PER_M;
     const d = difficulty();
     const out = [];
     let nx = 0;
+    let sincePowerup = 1;
     for (let i = 0; i < count; i++) {
-      const c = buildChunk(nx, d, false);
+      const allowPowerup = sincePowerup >= POWERUP_MIN_CHUNK_GAP;
+      const c = buildChunk(nx, d, false, allowPowerup);
+      sincePowerup = c.powerups.length > 0 ? 0 : sincePowerup + 1;
       out.push(c);
       nx = c.x + c.w;
     }
