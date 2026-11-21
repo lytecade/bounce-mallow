@@ -188,6 +188,7 @@ const player = {
   blinkTimer: 2.4,
   blinkDur: 0,
   dustTimer: 0,
+  onRock: false,
   deathCause: '',
   deathT: 0,
   dead: false,
@@ -219,27 +220,34 @@ function updatePopups(dt) {
 }
 
 const particles = [];
-const MAX_PARTICLES = 90;
+const MAX_PARTICLES = 140;
 
 function spawnParticles(x, y, count, opts) {
   const o = opts || {};
   const colors = o.colors || [PAL.white];
+  const isCloud = Boolean(o.cloud);
   for (let i = 0; i < count; i++) {
     if (particles.length >= MAX_PARTICLES) particles.shift();
     const ang = (o.angleMin ?? -Math.PI) + Math.random() * ((o.angleMax ?? 0) - (o.angleMin ?? -Math.PI));
     const spd = (o.speedMin ?? 40) + Math.random() * ((o.speedMax ?? 130) - (o.speedMin ?? 40));
     const life = (o.lifeMin ?? 0.25) + Math.random() * ((o.lifeMax ?? 0.5) - (o.lifeMin ?? 0.25));
+    const r = (o.rMin ?? 2.2) + Math.random() * ((o.rMax ?? 4.8) - (o.rMin ?? 2.2));
     particles.push({
       x: x + (Math.random() - 0.5) * (o.spreadX ?? 10),
       y: y + (Math.random() - 0.5) * (o.spreadY ?? 4),
       vx: Math.cos(ang) * spd + (o.vxBias ?? 0),
       vy: Math.sin(ang) * spd + (o.vyBias ?? 0),
-      r: (o.rMin ?? 2.2) + Math.random() * ((o.rMax ?? 4.8) - (o.rMin ?? 2.2)),
+      r,
+      rEnd: o.rEnd ?? (isCloud ? r * 1.85 : r),
       life,
       maxLife: life,
       gravity: o.gravity ?? 420,
+      drag: o.drag ?? (isCloud ? 4.2 : 0),
       color: colors[Math.floor(Math.random() * colors.length)],
+      shadeColor: o.shadeColor || PAL.cloudShade,
       square: Boolean(o.square),
+      cloud: isCloud,
+      seed: Math.random() * Math.PI * 2,
     });
   }
 }
@@ -253,6 +261,10 @@ function updateParticles(dt) {
       continue;
     }
     p.vy += p.gravity * dt;
+    if (p.drag) {
+      const damp = Math.exp(-p.drag * dt);
+      p.vx *= damp;
+    }
     p.x += p.vx * dt;
     p.y += p.vy * dt;
   }
@@ -768,6 +780,7 @@ function startGame() {
   player.blinkTimer = 2.2;
   player.blinkDur = 0;
   player.dustTimer = 0;
+  player.onRock = false;
   player.deathCause = '';
   player.deathT = 0;
   player.dead = false;
@@ -913,22 +926,56 @@ function updatePlayerBlink(dt) {
 }
 
 function land(isRock) {
-  if (!player.grounded && player.vy > 220) {
-    player.squash = 0.76;
+  player.onRock = Boolean(isRock);
+  if (!player.grounded && player.vy > 140) {
+    const impact = Math.min(1, (player.vy - 140) / 420);
+    player.squash = Math.min(player.squash, 0.84 - impact * 0.10);
     player.squashVel = 0;
-    spawnParticles(player.x + PLAYER_SIZE * 0.5, player.y + PLAYER_SIZE, 6, {
-      colors: isRock ? [PAL.rockTop, PAL.rockLit, PAL.white] : [PAL.turfLit, PAL.white, PAL.soilTop],
-      angleMin: -Math.PI * 0.9,
-      angleMax: -Math.PI * 0.1,
-      speedMin: 40,
-      speedMax: 115,
-      rMin: 2,
-      rMax: 4,
-      lifeMin: 0.18,
-      lifeMax: 0.34,
-      square: isRock,
+    const baseY = player.y + PLAYER_SIZE - 2;
+    const cloudOpts = {
+      cloud: true,
+      colors: [PAL.white, PAL.cloudLit, PAL.cloudShade],
+      angleMin: -Math.PI * 0.72,
+      angleMax: -Math.PI * 0.12,
+      speedMin: 24,
+      speedMax: 68 + impact * 32,
+      rMin: 3.5,
+      rMax: 5.8,
+      rEnd: 9 + impact * 4,
+      lifeMin: 0.22,
+      lifeMax: 0.42,
+      gravity: -18,
+      drag: 5.0,
+      spreadX: 6,
+      spreadY: 3,
+    };
+    spawnParticles(player.x + 5, baseY, 4, {
+      ...cloudOpts,
+      angleMin: -Math.PI * 0.92,
+      angleMax: -Math.PI * 0.35,
+      vxBias: -55 - impact * 55,
     });
-    sfx.land();
+    spawnParticles(player.x + PLAYER_SIZE - 5, baseY, 4, {
+      ...cloudOpts,
+      angleMin: -Math.PI * 0.65,
+      angleMax: -Math.PI * 0.08,
+      vxBias: 55 + impact * 55,
+    });
+    if (player.vy > 220) {
+      spawnParticles(player.x + PLAYER_SIZE * 0.5, player.y + PLAYER_SIZE, 4, {
+        colors: isRock ? [PAL.rockTop, PAL.rockLit] : [PAL.turfLit, PAL.white],
+        angleMin: -Math.PI * 0.9,
+        angleMax: -Math.PI * 0.1,
+        speedMin: 40,
+        speedMax: 115,
+        rMin: 2,
+        rMax: 4,
+        lifeMin: 0.18,
+        lifeMax: 0.34,
+        square: isRock,
+      });
+      sfx.land();
+    }
   }
   player.grounded = true;
   player.vy = 0;
@@ -962,17 +1009,21 @@ function physicsStep(dt) {
     player.jumpBuf = 0;
     player.squash = 1.24;
     player.squashVel = 0;
-    spawnParticles(player.x + PLAYER_SIZE * 0.5, player.y + PLAYER_SIZE, 7, {
-      colors: [PAL.white, PAL.cloudShade],
-      angleMin: -Math.PI * 0.85,
-      angleMax: -Math.PI * 0.15,
-      speedMin: 35,
-      speedMax: 105,
-      rMin: 2.5,
-      rMax: 4.8,
-      lifeMin: 0.2,
-      lifeMax: 0.38,
-      vxBias: -player.vx * 0.15,
+    spawnParticles(player.x + PLAYER_SIZE * 0.5, player.y + PLAYER_SIZE - 1, 8, {
+      cloud: true,
+      colors: [PAL.white, PAL.cloudLit, PAL.cloudShade],
+      angleMin: -Math.PI * 0.95,
+      angleMax: -Math.PI * 0.05,
+      speedMin: 45,
+      speedMax: 125,
+      rMin: 3.6,
+      rMax: 6.0,
+      lifeMin: 0.24,
+      lifeMax: 0.44,
+      gravity: -15,
+      drag: 4.5,
+      spreadX: 18,
+      vxBias: -player.vx * 0.18,
     });
     sfx.jump();
   }
@@ -1035,19 +1086,23 @@ function physicsStep(dt) {
     player.runPhase += dt * speedRate * phaseMult;
     player.dustTimer -= dt;
     if (player.dustTimer <= 0) {
-      player.dustTimer = player.powerup === POWERUP_TYPE.ESPRESSO ? 0.09
-        : player.powerup === POWERUP_TYPE.CHAMOMILE ? 0.22 : 0.14;
-      spawnParticles(player.x + 6, player.y + PLAYER_SIZE - 1, 1, {
-        colors: [PAL.turfLit, PAL.white],
-        angleMin: -Math.PI * 0.92,
-        angleMax: -Math.PI * 0.55,
-        speedMin: 25,
-        speedMax: 60,
-        rMin: 1.8,
-        rMax: 3.2,
-        lifeMin: 0.18,
-        lifeMax: 0.30,
-        gravity: 160,
+      player.dustTimer = player.powerup === POWERUP_TYPE.ESPRESSO ? 0.055
+        : player.powerup === POWERUP_TYPE.CHAMOMILE ? 0.13 : 0.08;
+      spawnParticles(player.x + 5, player.y + PLAYER_SIZE - 2, 2, {
+        cloud: true,
+        colors: [PAL.white, PAL.cloudLit, PAL.cloudShade],
+        angleMin: -Math.PI * 0.94,
+        angleMax: -Math.PI * 0.48,
+        speedMin: 32,
+        speedMax: 82,
+        rMin: 3.0,
+        rMax: 5.0,
+        lifeMin: 0.22,
+        lifeMax: 0.38,
+        gravity: -22,
+        drag: 4.2,
+        spreadX: 8,
+        vxBias: -player.vx * 0.12,
       });
     }
   }
@@ -2204,6 +2259,9 @@ function drawMallow(opts) {
   const isEspresso = !dead && powerup === POWERUP_TYPE.ESPRESSO;
   const isChamomile = !dead && powerup === POWERUP_TYPE.CHAMOMILE;
 
+  const moving = Boolean(opts.moving);
+  const titleHopAmount = opts.titleHopAmount || 0;
+
   const w = size / sq;
   const h = size * sq;
   const cx = x + size * 0.5;
@@ -2227,26 +2285,55 @@ function drawMallow(opts) {
     ctx.translate(0, Math.max(0, Math.sin(pT * 1.9)) * 1.1);
   }
 
-  // Tiny animated hopping feet underneath body
-  if (!dead) {
-    const footSep = w * 0.24;
-    const footLiftAmp = isEspresso ? 6.0 : isChamomile ? 2.2 : 4.5;
-    const footShiftAmp = isEspresso ? 4.4 : isChamomile ? 2.1 : 3.5;
-    const lLift = grounded ? Math.max(0, Math.sin(runPhase)) * footLiftAmp : 3;
-    const rLift = grounded ? Math.max(0, Math.sin(runPhase + Math.PI)) * footLiftAmp : 4.5;
-    const lShift = grounded ? Math.cos(runPhase) * footShiftAmp : -2;
-    const rShift = grounded ? Math.cos(runPhase + Math.PI) * footShiftAmp : 3;
+  // Ground-contact cloud/dust puffs (replaces feet while keeping ground-action feedback)
+  const drawLocalCloudPuff = (pxLocal, pyLocal, r, alpha) => {
+    if (alpha <= 0.02 || r <= 0.5) return;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = PAL.cloudShade;
+    ctx.beginPath();
+    ctx.arc(pxLocal, pyLocal + r * 0.22, r * 0.86, 0, Math.PI * 2);
+    ctx.fill();
 
-    ctx.fillStyle = PAL.mallowBot;
-    ctx.strokeStyle = PAL.mallowLine;
-    ctx.lineWidth = Math.max(2, size * 0.065);
+    ctx.fillStyle = PAL.cloudLit;
+    ctx.beginPath();
+    ctx.arc(pxLocal, pyLocal, r, 0, Math.PI * 2);
+    ctx.arc(pxLocal - r * 0.52, pyLocal + r * 0.12, r * 0.72, 0, Math.PI * 2);
+    ctx.arc(pxLocal + r * 0.52, pyLocal + r * 0.14, r * 0.68, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  };
 
-    for (const [fx, fy] of [[-footSep + lShift, -1 - lLift], [footSep + rShift, -1 - rLift]]) {
-      ctx.beginPath();
-      ctx.ellipse(fx, fy, size * 0.13, size * 0.085, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
+  if (!dead && grounded && moving) {
+    const puffScale = isEspresso ? 1.28 : isChamomile ? 0.72 : 1;
+    for (let k = 0; k < 3; k++) {
+      const cycle = ((runPhase * 0.9 + k * 2.094) % (Math.PI * 2)) / (Math.PI * 2);
+      const puffX = -w * 0.18 - cycle * (size * 0.48 * puffScale);
+      const puffY = -2 - Math.sin(cycle * Math.PI) * (size * 0.16 * puffScale);
+      const puffR = (size * 0.085 + cycle * size * 0.09) * puffScale;
+      const puffAlpha = Math.sin((1 - cycle) * Math.PI * 0.5) * 0.78;
+      drawLocalCloudPuff(puffX, puffY, puffR, puffAlpha);
     }
+    const baseCycle = ((runPhase * 1.8) % (Math.PI * 2)) / (Math.PI * 2);
+    drawLocalCloudPuff(
+      w * 0.06 - baseCycle * (size * 0.2),
+      -1 - baseCycle * (size * 0.06),
+      size * (0.075 + 0.04 * (1 - baseCycle)) * puffScale,
+      (1 - baseCycle) * 0.55
+    );
+  } else if (!dead && titleHopAmount > 0) {
+    const spread = (1 - titleHopAmount * 0.35) * (size * 0.22);
+    const puffR = size * 0.095 * (0.65 + 0.35 * titleHopAmount);
+    const puffAlpha = titleHopAmount * 0.72;
+    drawLocalCloudPuff(-w * 0.38 - spread, -2 - titleHopAmount * 2, puffR, puffAlpha);
+    drawLocalCloudPuff(w * 0.38 + spread, -2 - titleHopAmount * 2, puffR, puffAlpha);
+  }
+
+  // Subtle grounded body scoot/bounce cadence without feet
+  if (!dead && grounded && moving) {
+    const stride = Math.sin(runPhase * 2);
+    const scootLift = Math.max(0, stride) * (size * 0.045);
+    ctx.translate(0, -scootLift);
   }
 
   // Body local rect relative to (cx, bottomY)
@@ -2667,6 +2754,7 @@ function drawPlayer() {
     tilt: player.tilt,
     runPhase: player.runPhase,
     grounded: player.grounded,
+    moving: state === STATE.PLAYING && player.vx > 1,
     dead: player.dead,
     deathT: player.deathT,
     blinking: player.blinkDur > 0,
@@ -2680,15 +2768,31 @@ function drawPlayer() {
 
 function drawParticles() {
   for (const p of particles) {
-    const alpha = Math.max(0, Math.min(1, p.life / p.maxLife));
+    const frac = Math.max(0, Math.min(1, p.life / p.maxLife));
+    const t = 1 - frac;
+    const alpha = p.cloud ? Math.sin(frac * Math.PI * 0.5) * 0.92 : frac;
     ctx.save();
     ctx.globalAlpha = alpha;
-    ctx.fillStyle = p.color;
-    if (p.square) {
+    if (p.cloud) {
+      const curR = p.r + (p.rEnd - p.r) * t;
+      ctx.fillStyle = p.shadeColor;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y + curR * 0.22, curR * 0.86, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, curR, 0, Math.PI * 2);
+      ctx.arc(p.x - curR * 0.55, p.y + curR * 0.12, curR * 0.72, 0, Math.PI * 2);
+      ctx.arc(p.x + curR * 0.55, p.y + curR * 0.15, curR * 0.68, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (p.square) {
+      ctx.fillStyle = p.color;
       ctx.fillRect(p.x - p.r * 0.5, p.y - p.r * 0.5, p.r * 1.4, p.r * 1.4);
     } else {
+      ctx.fillStyle = p.color;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r * (0.4 + 0.6 * alpha), 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, p.r * (0.4 + 0.6 * frac), 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.restore();
@@ -2837,6 +2941,7 @@ function drawTitle() {
   ctx.fill();
   ctx.restore();
 
+  const groundContact = Math.max(0, 1 - hopLift / (mascotSize * 0.18));
   drawMallow({
     x: mallowX,
     y: mallowY,
@@ -2845,6 +2950,8 @@ function drawTitle() {
     tilt: hopLift > 2 ? -0.05 : 0.02,
     runPhase: animTime * 11,
     grounded: hopLift < 2,
+    moving: false,
+    titleHopAmount: groundContact,
     blinking: player.blinkDur > 0,
     lookX: 0.8,
     lookY: hopLift > 2 ? -1.0 : 0,

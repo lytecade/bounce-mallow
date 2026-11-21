@@ -60,7 +60,7 @@ placed clear of spikes.
   internal backing resolution scaled by `devicePixelRatio` (capped at 3).
 - **Game loop:** `requestAnimationFrame` with clamped delta time; physics runs
   in fixed sub-steps for stable collision.
-- **Player:** animated hopping feet, spring-damped squash-and-stretch, velocity
+- **Player:** cloud/dust ground-interaction effects (billowing run-dust clouds, takeoff bursts, and landing plumes) instead of feet to preserve a pure marshmallow silhouette, spring-damped squash-and-stretch, velocity
   tilt, natural blinking, dust/stone particles, dedicated energetic (espresso)
   and sleepy (chamomile) animations with speed trails/floating Zzzs, and dizzy
   stars / X-eyes on death; grounded-state check prevents double/infinite jumping
